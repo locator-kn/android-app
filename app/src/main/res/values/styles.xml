@@ -12,14 +12,4 @@
 
     </style>
 
-    <!--<style name="WelcomeActionBarTitle"-->
-        <!--parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title" >-->
-        <!--<item name="android:textAlignment">center</item>-->
-        <!--<item name="android:textColor"></item>-->
-        <!--&lt;!&ndash; Support library compatibility &ndash;&gt;-->
-        <!--<item name="background">@color/colorWelcome</item>-->
-    <!--</style>-->
-
-
-
 </resources>
