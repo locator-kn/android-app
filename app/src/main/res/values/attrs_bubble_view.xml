@@ -1,0 +1,9 @@
+<resources>
+    <declare-styleable name="BubbleView">
+        <attr name="radius" format="integer" />
+        <attr name="fillColor" format="color" />
+        <attr name="strokeColor" format="color" />
+        <attr name="strokeWidth" format="integer" />
+        <attr name="shadowWidth" format="integer" />
+    </declare-styleable>
+</resources>

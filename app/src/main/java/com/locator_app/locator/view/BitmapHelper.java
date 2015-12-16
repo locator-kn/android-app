@@ -1,21 +1,11 @@
-package com.locator_app.playground.bubblesample;
+package com.locator_app.locator.view;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
-import android.graphics.Rect;
-import android.graphics.RectF;
 
-/*
-    BitmapHelper offers helper functions to manipulate Bitmaps.
-    usage:
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.esschon);
-        bitmap = getRoundBitmap(bitmap, size);
-
-        canvas.drawBitmap(bitmap, 0, 0, paint);
- */
 
 public class BitmapHelper {
 

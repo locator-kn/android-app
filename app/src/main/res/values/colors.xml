@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="innerRed">#ff8470</color>
+    <color name="borderRed">#ff664c</color>
+    <color name="innerYellow">#fcbf44</color>
+    <color name="borderYellow">#f9ad16</color>
+    <color name="innerGreen">#d3db4c</color>
+    <color name="borderGreen">#c6d121</color>
+    <color name="innerBlue">#91c4d6</color>
+    <color name="borderBlue">#75b5cc</color>
+    <color name="innerPurple">#9996e2</color>
+    <color name="borderPurple">#7f7cdd</color>
 </resources>
