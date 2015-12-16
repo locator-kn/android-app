@@ -11,7 +11,7 @@ public class LoginRegisterStart extends AppCompatActivity {
 
     private ImageView loginYes;
     private ImageView loginNo;
-    
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
