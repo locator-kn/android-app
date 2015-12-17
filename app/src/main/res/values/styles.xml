@@ -9,7 +9,6 @@
         parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse" >
         <item name="android:background">@color/colorWelcome</item>
         <item name="background">@color/colorWelcome</item>
-
     </style>
 
 </resources>
