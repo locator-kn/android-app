@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Locator</string>
+    <string name="welcome_to">Willkommen bei</string>
+    <string name="login_or_register">Möchtest du dich anmelden oder registrieren?</string>
 </resources>
