@@ -8,7 +8,7 @@
         android:label="@string/welcome_to"
         android:supportsRtl="true"
         android:theme="@style/WelcomeActionBarTheme">
-        <activity android:name=".LoginRegisterStart">
+        <activity android:name=".LoginRegisterStart" android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
