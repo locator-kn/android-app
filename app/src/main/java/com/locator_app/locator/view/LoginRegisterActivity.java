@@ -29,7 +29,7 @@ public class LoginRegisterActivity extends AppCompatActivity {
         login = (ImageView) findViewById(R.id.login);
         loginFacebook = (ImageView) findViewById(R.id.login_facebook);
         register = (ImageView) findViewById(R.id.register);
-        loadBitmap(R.drawable.locator_logo, locatorLogo, 700, 400);
+        loadBitmap(R.drawable.locator_logo, locatorLogo, 500, 300);
         loadBitmap(R.drawable.login, login, 200, 170);
         loadBitmap(R.drawable.login_facebook, loginFacebook, 200, 170);
         loadBitmap(R.drawable.register, register, 200, 170);

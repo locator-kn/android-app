@@ -27,9 +27,9 @@ public class LoginRegisterStartActivity extends AppCompatActivity {
         locatorLogo = (ImageView) findViewById(R.id.locator_logo);
         loginYes = (ImageView) findViewById(R.id.login_yes);
         loginNo = (ImageView) findViewById(R.id.login_no);
-        loadBitmap(R.drawable.locator_logo, locatorLogo, 700, 400);
-        loadBitmap(R.drawable.yes, loginYes, 200, 200);
-        loadBitmap(R.drawable.no, loginNo, 200, 200);
+        loadBitmap(R.drawable.locator_logo, locatorLogo, 500, 300);
+        loadBitmap(R.drawable.yes, loginYes, 150, 150);
+        loadBitmap(R.drawable.no, loginNo, 150, 150);
 
         loginYes.setOnClickListener(new View.OnClickListener() {
             @Override
