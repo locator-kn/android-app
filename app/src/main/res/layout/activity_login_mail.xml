@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:background="@color/colorWelcome">
+
+    <EditText
+        android:id="@+id/loginMail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorWhite"
+        android:fontFamily="source-sans-pro"
+        android:textAlignment="center"
+        android:hint="@string/mail"
+        android:textColorHint="@color/colorHint"
+        android:background="@null"
+        android:paddingTop="20dp"
+        />
+
+</LinearLayout>
