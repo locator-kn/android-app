@@ -5,10 +5,10 @@
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
-        android:label="@string/welcome_to"
+        android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/WelcomeActionBarTheme">
-        <activity android:name=".view.LoginRegisterStart" android:screenOrientation="portrait">
+        <activity android:name=".view.LoginRegisterStartActivity" android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -16,5 +16,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".view.HomeActivity" android:screenOrientation="portrait"></activity>
+        <activity android:name=".view.LoginRegisterActivity" android:screenOrientation="portrait"></activity>
     </application>
 </manifest>
