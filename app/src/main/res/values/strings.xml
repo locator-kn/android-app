@@ -5,4 +5,5 @@
     <string name="how_to_continue">Wie möchtest du fortfahren?</string>
     <string name="login">Anmelden</string>
     <string name="mail">E-Mail eingeben</string>
+    <string name="password">Passwort eingeben</string>
 </resources>
