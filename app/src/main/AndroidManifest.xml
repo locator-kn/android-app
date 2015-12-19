@@ -24,9 +24,7 @@
             android:name=".view.LoginRegisterActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".view.LoginMailActivity"
-            android:label="@string/login" >
-        </activity>
+            android:name=".view.LoginMailActivity" />
     </application>
 
 </manifest>
