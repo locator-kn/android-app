@@ -4,8 +4,10 @@ import android.content.Intent;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageView;;
+import android.widget.ImageView;
+import android.widget.TextView;;
 import com.locator_app.locator.R;
 import com.locator_app.locator.service.BitmapWorkerTask;
 
@@ -21,6 +23,12 @@ public class LoginRegisterStartActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login_register_start);
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setCustomView(R.layout.actionbar_custom);
+
+        //set action bar title
+        View v = getSupportActionBar().getCustomView();
+        TextView titleTxtView = (TextView) v.findViewById(R.id.actionbar_title);
+        titleTxtView.setText(R.string.welcome_to);
+
         //TODO: check if already authenticated
         //TODO: getDeviceId
 
