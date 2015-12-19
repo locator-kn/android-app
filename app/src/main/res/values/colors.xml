@@ -10,4 +10,7 @@
     <color name="borderBlue">#75b5cc</color>
     <color name="innerPurple">#9996e2</color>
     <color name="borderPurple">#7f7cdd</color>
+    <color name="colorWelcome">#cc513d</color>
+    <color name="colorWhite">#ffffff</color>
+    <color name="colorHint">#d2d2d2</color>
 </resources>

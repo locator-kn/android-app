@@ -28,7 +28,7 @@ public class HomeActivity extends AppCompatActivity {
         double lon = 9.169753789901733;
         double lat = 47.66868204997508;
         double dis = 2;
-        int max = -1;
+        int max = 3;
         service.getSchoenHiers(lon, lat, dis, max)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())

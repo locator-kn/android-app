@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Locator</string>
+    <string name="welcome_to">Willkommen bei</string>
+    <string name="login_or_register">Möchtest du dich anmelden oder registrieren?</string>
+    <string name="how_to_continue">Wie möchtest du fortfahren?</string>
+    <string name="login">Anmelden</string>
+    <string name="mail">E-Mail eingeben</string>
+    <string name="password">Passwort eingeben</string>
 </resources>
