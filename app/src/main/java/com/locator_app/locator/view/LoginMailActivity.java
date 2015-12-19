@@ -15,7 +15,6 @@ import com.locator_app.locator.R;
 
 public class LoginMailActivity extends AppCompatActivity {
 
-    private TextView actionbarTitle;
     private EditText loginMail;
 
     @Override
@@ -24,9 +23,12 @@ public class LoginMailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login_mail);
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setCustomView(R.layout.actionbar_custom);
-//        actionbarTitle = (TextView) findViewById(R.id.actionbar_title);
-//        actionbarTitle.setText(R.string.login);
-        View view = (View) findViewById(R.id.actionbar_title);
+
+        //set action bar title
+        View v = getSupportActionBar().getCustomView();
+        TextView titleTxtView = (TextView) v.findViewById(R.id.actionbar_title);
+        titleTxtView.setText(R.string.login);
+
         loginMail = (EditText) findViewById(R.id.loginMail);
 
         loginMail.setOnKeyListener(new View.OnKeyListener() {
