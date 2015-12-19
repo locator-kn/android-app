@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.neenbedankt.android-apt'
+apply plugin: 'me.tatarka.retrolambda'
 
 android {
     compileSdkVersion 23
@@ -25,12 +26,15 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.1.0'
 
-    apt 'org.androidannotations:androidannotations:3.2'
-
-    compile 'org.androidannotations:androidannotations-api:3.2'
-    compile 'com.fasterxml.jackson.core:jackson-core:2.4.2'
-    compile 'com.fasterxml.jackson.core:jackson-annotations:2.4.0'
-    compile 'com.fasterxml.jackson.core:jackson-databind:2.4.2'
-    compile 'org.springframework.android:spring-android-rest-template:2.0.0.M1'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
+
+    compile 'com.jakewharton:butterknife:7.0.1'
+
+    compile 'io.reactivex:rxjava:1.0.16'
+    compile 'io.reactivex:rxandroid:1.0.1'
+    compile 'com.squareup.okhttp:okhttp:2.7.0'
+    compile 'com.squareup.retrofit:retrofit:2.0.0-beta1'
+    compile 'com.squareup.retrofit:adapter-rxjava:2.0.0-beta2'
+    compile 'com.squareup.retrofit:converter-gson:2.0.0-beta2'
+    compile 'com.google.code.gson:gson:2.4'
 }

@@ -1,0 +1,3 @@
+<resources>
+    <string name="serverUrl">www.locator-app.com/api/v2</string>
+</resources>
