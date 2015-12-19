@@ -33,7 +33,7 @@ public class LoginMailActivity extends AppCompatActivity {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
-                    Intent intent = new Intent(v.getContext(), LoginRegisterActivity.class);
+                    Intent intent = new Intent(v.getContext(), LoginPasswordActivity.class);
                     startActivity(intent);
                     return true;
                 }
