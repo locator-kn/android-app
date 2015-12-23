@@ -11,6 +11,8 @@ import android.widget.TextView;
 
 import com.locator_app.locator.R;
 import com.locator_app.locator.controller.LoginController;
+import com.locator_app.locator.service.LoginService;
+import com.locator_app.locator.service.ServiceFactory;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -37,6 +39,8 @@ public class LoginPasswordActivity extends AppCompatActivity {
                 if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
                     loginController.setPassword(loginPassword.getText().toString());
                     loginController.login();
+                    LoginService service = ServiceFactory.createService(LoginService.class);
+                    service.login(loginController.getMail(), loginController.getPassword());
                     //TODO: Start activity
                     //Intent intent = new Intent(v.getContext(), LoginRegisterActivity.class);
                     //startActivity(intent);
