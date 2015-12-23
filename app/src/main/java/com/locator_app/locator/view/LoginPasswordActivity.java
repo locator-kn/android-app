@@ -10,10 +10,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.locator_app.locator.R;
+import com.locator_app.locator.controller.LoginController;
 
 public class LoginPasswordActivity extends AppCompatActivity {
 
     private EditText loginPassword;
+    private LoginController loginController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +28,7 @@ public class LoginPasswordActivity extends AppCompatActivity {
         View v = getSupportActionBar().getCustomView();
         TextView titleTxtView = (TextView) v.findViewById(R.id.actionbar_title);
         titleTxtView.setText(R.string.login);
+        loginController = LoginController.getInstance();
 
         loginPassword = (EditText) findViewById(R.id.loginMail);
 
@@ -33,8 +36,11 @@ public class LoginPasswordActivity extends AppCompatActivity {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
-                    Intent intent = new Intent(v.getContext(), LoginRegisterActivity.class);
-                    startActivity(intent);
+                    loginController.setPassword(loginPassword.getText().toString());
+                    loginController.login();
+                    //TODO: Start activity
+                    //Intent intent = new Intent(v.getContext(), LoginRegisterActivity.class);
+                    //startActivity(intent);
                     return true;
                 }
                 return false;
