@@ -52,7 +52,7 @@ public class LoginRegisterStartActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void setCustomActionBar() {
+    private void setCustomActionBar() {
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setCustomView(R.layout.actionbar_custom);
         View v = getSupportActionBar().getCustomView();
@@ -60,7 +60,7 @@ public class LoginRegisterStartActivity extends AppCompatActivity {
         titleTxtView.setText(R.string.welcome_to);
     }
 
-    public void loadImages() {
+    private void loadImages() {
         UniversalImageLoader universalImageLoader = new UniversalImageLoader(getApplicationContext());
 
         //set display image options
