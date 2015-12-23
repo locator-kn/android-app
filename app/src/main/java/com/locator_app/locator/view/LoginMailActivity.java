@@ -16,25 +16,24 @@ import com.locator_app.locator.controller.LoginController;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 public class LoginMailActivity extends AppCompatActivity {
 
-    private EditText loginMail;
+    @Bind(R.id.loginMail)
+    EditText loginMail;
     private LoginController controller;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_mail);
-        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-        getSupportActionBar().setCustomView(R.layout.actionbar_custom);
+        ButterKnife.bind(this);
 
-        //set action bar title
-        View v = getSupportActionBar().getCustomView();
-        TextView titleTxtView = (TextView) v.findViewById(R.id.actionbar_title);
-        titleTxtView.setText(R.string.login);
+        setCustomActionBar();
 
         controller = LoginController.getInstance();
-        loginMail = (EditText) findViewById(R.id.loginMail);
 
         loginMail.setOnKeyListener(new View.OnKeyListener() {
             @Override
@@ -66,5 +65,13 @@ public class LoginMailActivity extends AppCompatActivity {
             isValid = true;
         }
         return isValid;
+    }
+
+    private void setCustomActionBar() {
+        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        getSupportActionBar().setCustomView(R.layout.actionbar_custom);
+        View v = getSupportActionBar().getCustomView();
+        TextView titleTxtView = (TextView) v.findViewById(R.id.actionbar_title);
+        titleTxtView.setText(R.string.login);
     }
 }
