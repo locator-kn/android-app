@@ -12,25 +12,24 @@ import android.widget.TextView;
 import com.locator_app.locator.R;
 import com.locator_app.locator.controller.LoginController;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 public class LoginPasswordActivity extends AppCompatActivity {
 
-    private EditText loginPassword;
+    @Bind(R.id.loginPassword)
+    EditText loginPassword;
     private LoginController loginController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_password);
-        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-        getSupportActionBar().setCustomView(R.layout.actionbar_custom);
+        ButterKnife.bind(this);
 
-        //set action bar title
-        View v = getSupportActionBar().getCustomView();
-        TextView titleTxtView = (TextView) v.findViewById(R.id.actionbar_title);
-        titleTxtView.setText(R.string.login);
+        setCustomActionBar();
+
         loginController = LoginController.getInstance();
-
-        loginPassword = (EditText) findViewById(R.id.loginMail);
 
         loginPassword.setOnKeyListener(new View.OnKeyListener() {
             @Override
@@ -46,6 +45,14 @@ public class LoginPasswordActivity extends AppCompatActivity {
                 return false;
             }
         });
+    }
+
+    private void setCustomActionBar() {
+        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        getSupportActionBar().setCustomView(R.layout.actionbar_custom);
+        View v = getSupportActionBar().getCustomView();
+        TextView titleTxtView = (TextView) v.findViewById(R.id.actionbar_title);
+        titleTxtView.setText(R.string.login);
     }
 
 
