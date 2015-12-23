@@ -9,7 +9,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.locator_app.locator.R;
-import com.locator_app.locator.service.BitmapWorkerTask;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 
 public class LoginRegisterActivity extends AppCompatActivity {
