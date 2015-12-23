@@ -14,7 +14,7 @@
         android:textColor="@color/colorWhite"
         android:fontFamily="source-sans-pro"
         android:textAlignment="center"
-        android:hint="@string/password"
+        android:hint="@string/mail"
         android:textColorHint="@color/colorHint"
         android:background="@null"
         android:paddingTop="20dp"
