@@ -6,15 +6,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;;
+import android.widget.TextView;
 import com.locator_app.locator.R;
-import com.locator_app.locator.service.BitmapWorkerTask;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
 
 public class LoginRegisterStartActivity extends AppCompatActivity {
 
     private ImageView locatorLogo;
     private ImageView loginYes;
     private ImageView loginNo;
+    private UniversalImageLoader universalImageLoader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,12 +32,26 @@ public class LoginRegisterStartActivity extends AppCompatActivity {
         //TODO: check if already authenticated
         //TODO: getDeviceId
 
+        //initialize components
+        universalImageLoader = new UniversalImageLoader(getApplicationContext());
         locatorLogo = (ImageView) findViewById(R.id.locator_logo);
         loginYes = (ImageView) findViewById(R.id.login_yes);
         loginNo = (ImageView) findViewById(R.id.login_no);
-        loadBitmap(R.drawable.locator_logo, locatorLogo, 500, 300);
-        loadBitmap(R.drawable.yes, loginYes, 150, 150);
-        loadBitmap(R.drawable.no, loginNo, 150, 150);
+
+        //set display image options
+        DisplayImageOptions options = new DisplayImageOptions.Builder().cacheInMemory(true)
+                .cacheOnDisc(true).resetViewBeforeLoading(true)
+                .build();
+
+        //set images url's
+        String urlLocator = "drawable://" + R.drawable.locator_logo;
+        String urlYes = "drawable://" + R.drawable.yes;
+        String urlNo = "drawable://" + R.drawable.no;
+
+        //display images
+        universalImageLoader.displayImage(urlLocator, locatorLogo, options);
+        universalImageLoader.displayImage(urlYes, loginYes, options);
+        universalImageLoader.displayImage(urlNo, loginNo, options);
 
         loginYes.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,11 +68,5 @@ public class LoginRegisterStartActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-    }
-
-    //Load every image in separate thread
-    public void loadBitmap(int resId, ImageView imageView, int width, int height) {
-        BitmapWorkerTask task = new BitmapWorkerTask(imageView, getResources());
-        task.execute(resId, width, height);
     }
 }

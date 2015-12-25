@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.locator_app.locator.R;
 import com.locator_app.locator.service.BitmapWorkerTask;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
 
 public class LoginRegisterActivity extends AppCompatActivity {
 
@@ -17,6 +18,7 @@ public class LoginRegisterActivity extends AppCompatActivity {
     private ImageView login;
     private ImageView loginFacebook;
     private ImageView register;
+    private UniversalImageLoader universalImageLoader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,15 +32,29 @@ public class LoginRegisterActivity extends AppCompatActivity {
         TextView titleTxtView = (TextView) v.findViewById(R.id.actionbar_title);
         titleTxtView.setText(R.string.welcome_to);
 
+        //initialize components
+        universalImageLoader = new UniversalImageLoader(getApplicationContext());
         locatorLogo = (ImageView) findViewById(R.id.locator_logo);
         login = (ImageView) findViewById(R.id.login);
         loginFacebook = (ImageView) findViewById(R.id.login_facebook);
         register = (ImageView) findViewById(R.id.register);
 
-        loadBitmap(R.drawable.locator_logo, locatorLogo, 500, 300);
-        loadBitmap(R.drawable.login, login, 200, 170);
-        loadBitmap(R.drawable.login_facebook, loginFacebook, 200, 170);
-        loadBitmap(R.drawable.register, register, 200, 170);
+        //set display image options
+        DisplayImageOptions options = new DisplayImageOptions.Builder().cacheInMemory(true)
+                .cacheOnDisc(true).resetViewBeforeLoading(true)
+                .build();
+
+        //set images url's
+        String urlLocator = "drawable://" + R.drawable.locator_logo;
+        String urlLogin = "drawable://" + R.drawable.login;
+        String urlLoginFacebook = "drawable://" + R.drawable.login_facebook;
+        String urlRegister= "drawable://" + R.drawable.register;
+
+        //display images
+        universalImageLoader.displayImage(urlLocator, locatorLogo, options);
+        universalImageLoader.displayImage(urlLogin, login, options);
+        universalImageLoader.displayImage(urlLoginFacebook, loginFacebook, options);
+        universalImageLoader.displayImage(urlRegister, register, options);
 
         login.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -48,11 +64,4 @@ public class LoginRegisterActivity extends AppCompatActivity {
             }
         });
     }
-
-    //Load every image in separate thread
-    public void loadBitmap(int resId, ImageView imageView, int width, int height) {
-        BitmapWorkerTask task = new BitmapWorkerTask(imageView, getResources());
-        task.execute(resId, width, height);
-    }
-
 }
