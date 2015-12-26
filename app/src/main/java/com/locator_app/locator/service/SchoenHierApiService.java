@@ -13,7 +13,7 @@ public class SchoenHierApiService {
 
     public Observable<SchoenHierResponse> getSchoenHierResponse(double lon, double lat,
                                               double distance,
-                                              int limit) throws NetworkError {
+                                              int limit) {
         if (service == null) {
             service = ServiceFactory.createService(SchoenHierApi.class);
         }
