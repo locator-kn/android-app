@@ -19,12 +19,4 @@ public class SchoenHier {
 
     @SerializedName("modified_date")
     public String modifiedDate;
-
-    public Date getCreationDate() {
-        return StringToDateConverter.toDate(creationDate);
-    }
-
-    public Date getModifiedDate() {
-        return StringToDateConverter.toDate(modifiedDate);
-    }
 }

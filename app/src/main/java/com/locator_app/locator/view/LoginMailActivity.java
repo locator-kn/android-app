@@ -13,13 +13,18 @@ import android.widget.Toast;
 import com.locator_app.locator.R;
 import com.locator_app.locator.controller.LoginController;
 
+import org.androidannotations.annotations.Bean;
+import org.androidannotations.annotations.EBean;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@EBean
 public class LoginMailActivity extends AppCompatActivity {
 
     private EditText loginMail;
-    private LoginController controller;
+    @Bean
+    LoginController controller;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +38,7 @@ public class LoginMailActivity extends AppCompatActivity {
         TextView titleTxtView = (TextView) v.findViewById(R.id.actionbar_title);
         titleTxtView.setText(R.string.login);
 
-        controller = LoginController.getInstance();
+        //controller = LoginController.getInstance();
         loginMail = (EditText) findViewById(R.id.loginMail);
 
         loginMail.setOnKeyListener(new View.OnKeyListener() {

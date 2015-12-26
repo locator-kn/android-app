@@ -6,16 +6,16 @@ import com.locator_app.locator.service.LoginService;
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.rest.RestService;
 
-import java.io.Serializable;
 
-@EBean
+@EBean(scope = EBean.Scope.Singleton)
 public class LoginController {
     @RestService
     LoginService loginService;
     private Login login;
-    private static LoginController instance;
 
-    private LoginController() {
+    /*private static LoginController instance;
+
+    public LoginController() {
         login = new Login();
     }
 
@@ -25,7 +25,7 @@ public class LoginController {
         }
 
         return instance;
-    }
+    }*/
 
     public void login() {
         loginService.login();

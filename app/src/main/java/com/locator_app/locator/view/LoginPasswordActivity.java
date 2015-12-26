@@ -1,9 +1,8 @@
 package com.locator_app.locator.view;
 
-import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
@@ -28,7 +27,7 @@ public class LoginPasswordActivity extends AppCompatActivity {
         View v = getSupportActionBar().getCustomView();
         TextView titleTxtView = (TextView) v.findViewById(R.id.actionbar_title);
         titleTxtView.setText(R.string.login);
-        loginController = LoginController.getInstance();
+        //loginController = LoginController.getInstance();
 
         loginPassword = (EditText) findViewById(R.id.loginMail);
 

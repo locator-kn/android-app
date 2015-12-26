@@ -23,16 +23,6 @@ public class SchoenHierResponse {
     }
 
     public class SchoenHierStats {
-        @SerializedName("nscanned")
-        public int nScanned;
 
-        @SerializedName("objectsLoaded")
-        public int nLoaded;
-
-        @SerializedName("avgDistance")
-        public double averageDistance;
-
-        @SerializedName("maxDistance")
-        public double maxDistance;
     }
 }
