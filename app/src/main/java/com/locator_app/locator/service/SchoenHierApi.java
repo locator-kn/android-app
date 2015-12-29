@@ -1,15 +1,20 @@
 package com.locator_app.locator.service;
 
 import retrofit.Response;
+import retrofit.http.Body;
 import retrofit.http.GET;
+import retrofit.http.POST;
 import retrofit.http.Query;
 import rx.Observable;
 
 public interface SchoenHierApi {
 
     @GET("schoenhiers/nearby")
-    Observable<Response> getSchoenHiers(@Query("long") double lon,
+    Observable<Response> schoenHiersNearby(@Query("long") double lon,
                                         @Query("lat") double lat,
                                         @Query("maxDistance") double distance,
                                         @Query("limit") int limit);
+
+    @POST("schoenhiers")
+    Observable<Response> schoenHier(@Body SchoenHierRequest schoenHierRequest);
 }
