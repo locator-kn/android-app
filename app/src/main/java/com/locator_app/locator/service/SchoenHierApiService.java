@@ -10,10 +10,10 @@ public class SchoenHierApiService {
 
     private SchoenHierApi service = ServiceFactory.createService(SchoenHierApi.class);
 
-    public Observable<SchoenHierResponse> getSchoenHierResponse(double lon, double lat,
+    public Observable<SchoenHierResponse> schoenHiersNearby(double lon, double lat,
                                                                 double distance,
                                                                 int limit) {
-        return service.getSchoenHiers(lon, lat, distance, limit)
+        return service.schoenHiersNearby(lon, lat, distance, limit)
                 .doOnError(this::handleError)
                 .flatMap(this::parseSchoenHierResponse);
     }

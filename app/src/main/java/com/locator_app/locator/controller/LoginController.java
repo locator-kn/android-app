@@ -1,17 +1,6 @@
 package com.locator_app.locator.controller;
 
-import android.widget.Toast;
-
 import com.locator_app.locator.model.Login;
-import com.locator_app.locator.service.LoginRequest;
-import com.locator_app.locator.service.LoginResponse;
-import com.locator_app.locator.service.LoginService;
-import com.locator_app.locator.service.UsersRequestManager;
-
-import org.androidannotations.annotations.EBean;
-import org.androidannotations.annotations.rest.RestService;
-
-import rx.Observer;
 
 
 public class LoginController {

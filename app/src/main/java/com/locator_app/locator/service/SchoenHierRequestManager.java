@@ -4,16 +4,10 @@ import rx.Observable;
 
 public class SchoenHierRequestManager {
 
-    SchoenHierApiService service;
+    SchoenHierApiService service = new SchoenHierApiService();
 
-    public Observable<SchoenHierResponse> getSchoenHiers() {
-        if (service == null) {
-            service = new SchoenHierApiService();
-        }
-        double lon = 9.169753789901733;
-        double lat = 47.66868204997508;
-        double dis = 2;
-        int max = 3;
-        return service.getSchoenHierResponse(lon, lat, dis, max);
+    public Observable<SchoenHierResponse> schoenHiersNearby(double lon, double lat, double dist,
+                                                            int max) {
+        return service.schoenHiersNearby(lon, lat, dist, max);
     }
 }
