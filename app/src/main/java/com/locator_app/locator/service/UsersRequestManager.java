@@ -22,4 +22,8 @@ public class UsersRequestManager {
     public Observable<LoginResponse> login(LoginRequest request) {
         return service.login(request);
     }
+
+    public Observable<LogoutResponse> logout() {
+        return service.logout();
+    }
 }

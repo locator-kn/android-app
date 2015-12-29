@@ -12,7 +12,8 @@ public class ServiceFactory {
         if (retrofit == null) {
 
             retrofit = new Retrofit.Builder()
-                    .baseUrl("https://locator-app.com/api/v2")
+                    //.baseUrl("https://locator-app.com/api/v2")
+                    .baseUrl("http://locator.in.htwg-konstanz.de:2020")
                     .addConverterFactory(GsonConverterFactory.create())
                     .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                     .build();

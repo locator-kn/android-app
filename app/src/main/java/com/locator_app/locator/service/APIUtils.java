@@ -12,7 +12,7 @@ import retrofit.Response;
 
 public class APIUtils {
 
-    public static Object parseResponse(Response response, Class responseClass) {
+    private static Object parseResponse(Response response, Class responseClass) {
         String body = (String) response.body();
         Gson gson = new Gson();
         Object parsedResponse = gson.fromJson(body, responseClass);

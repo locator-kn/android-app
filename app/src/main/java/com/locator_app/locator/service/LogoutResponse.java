@@ -6,5 +6,5 @@ import com.google.gson.annotations.SerializedName;
 public class LogoutResponse {
 
     @SerializedName("message")
-    String message;
+    public String message;
 }

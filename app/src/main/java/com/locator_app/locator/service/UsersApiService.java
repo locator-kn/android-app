@@ -38,13 +38,10 @@ public class UsersApiService {
     }
 
     private Observable<LogoutResponse> parseLogoutResponse(Response response) {
-        LogoutResponse parsedResponse = (LogoutResponse)
-                APIUtils.parseResponse(response, LogoutResponse.class);
-        if (parsedResponse != null) {
-            return Observable.just(parsedResponse);
-        } else {
-            return Observable.error(new Exception());
+        if (response.isSuccess()) {
+            return Observable.just((LogoutResponse)response.body());
         }
+        return Observable.error(new Exception("http-error: " + Integer.toString(response.code())));
     }
 
     public Observable<RegistrationResponse> register(RegistrationRequest request) {
@@ -54,13 +51,10 @@ public class UsersApiService {
     }
 
     private Observable<RegistrationResponse> parseRegisterResponse(Response response) {
-        RegistrationResponse parsedResponse = (RegistrationResponse)
-                APIUtils.parseResponse(response, RegistrationResponse.class);
-        if (parsedResponse != null) {
-            return Observable.just(parsedResponse);
-        } else {
-            return Observable.error(new Exception());
+        if (response.isSuccess()) {
+            return Observable.just((RegistrationResponse) response.body());
         }
+        return Observable.error(new Exception("http-error: " + Integer.toString(response.code())));
     }
 
     private void handleError(Throwable throwable) {

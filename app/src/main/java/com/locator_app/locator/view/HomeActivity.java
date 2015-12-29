@@ -6,12 +6,15 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.locator_app.locator.R;
+import com.locator_app.locator.service.LogoutResponse;
 import com.locator_app.locator.service.SchoenHierRequestManager;
+import com.locator_app.locator.service.UsersRequestManager;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import rx.Observable;
+import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -29,6 +32,17 @@ public class HomeActivity extends AppCompatActivity {
 
     @OnClick(R.id.button)
     public void register() {
-
+        UsersRequestManager manager = new UsersRequestManager();
+        manager.logout()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        (logoutResponse) -> {
+                            Toast.makeText(getApplicationContext(), logoutResponse.message, Toast.LENGTH_SHORT).show();
+                        },
+                        (error) -> {
+                            Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                );
     }
 }
