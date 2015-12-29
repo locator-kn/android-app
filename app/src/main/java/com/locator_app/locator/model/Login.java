@@ -1,15 +1,10 @@
 package com.locator_app.locator.model;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class Login {
-    @JsonProperty("mail")
+
     private String mail;
 
-    @JsonProperty("password")
     private String password;
 
     public void setMail(String mail) {
