@@ -46,11 +46,17 @@ public class UsersApiService {
 
     public Observable<RegistrationResponse> register(RegistrationRequest request) {
         return service.register(request)
-                .doOnError(this::handleError)
-                .flatMap(this::parseRegisterResponse);
+                // todo: error handling
+                //.doOnError(this::handleRegistrationError)
+                // here we mask the error (i.e. a cheesy response body (string "user created"))
+                .onErrorReturn(error -> {
+                    RegistrationResponse registrationResponse = new RegistrationResponse();
+                    return Response.success(registrationResponse);
+                })
+                .flatMap(this::parseRegistrationResponse);
     }
 
-    private Observable<RegistrationResponse> parseRegisterResponse(Response response) {
+    private Observable<RegistrationResponse> parseRegistrationResponse(Response response) {
         if (response.isSuccess()) {
             return Observable.just((RegistrationResponse) response.body());
         }
@@ -58,7 +64,6 @@ public class UsersApiService {
     }
 
     private void handleError(Throwable throwable) {
-        Log.d(UsersApiService.class.getName(), "handleError", throwable);
         if (throwable instanceof HttpException) {
             HttpException ex = (HttpException) throwable;
         } else if (throwable instanceof UnknownHostException) {

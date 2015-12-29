@@ -9,7 +9,7 @@ import rx.Observable;
 public interface UsersApi {
 
     @POST("/users/login")
-    Observable<Response<LoginResponse>> login(@Body LoginRequest loginRequestBody);
+    Observable<Response<LoginResponse>> login(@Body LoginRequest loginBodyRequest);
 
     @GET("/users/logout")
     Observable<Response<LogoutResponse>> logout();
