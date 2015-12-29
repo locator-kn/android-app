@@ -6,7 +6,7 @@ import com.locator_app.locator.model.SchoenHier;
 
 import java.util.List;
 
-public class SchoenHierResponse {
+public class SchoenHiersNearbyResponse {
 
     @SerializedName("results")
     public List<SchoenHierResult> results;

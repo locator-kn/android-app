@@ -10,17 +10,30 @@ public class SchoenHierApiService {
 
     private SchoenHierApi service = ServiceFactory.createService(SchoenHierApi.class);
 
-    public Observable<SchoenHierResponse> schoenHiersNearby(double lon, double lat,
+    public Observable<SchoenHiersNearbyResponse> schoenHiersNearby(double lon, double lat,
                                                                 double distance,
                                                                 int limit) {
         return service.schoenHiersNearby(lon, lat, distance, limit)
                 .doOnError(this::handleError)
-                .flatMap(this::parseSchoenHierResponse);
+                .flatMap(this::parseSchoenHiersNearbyResponse);
     }
 
-    private Observable<SchoenHierResponse> parseSchoenHierResponse(Response response) {
+    private Observable<SchoenHiersNearbyResponse> parseSchoenHiersNearbyResponse(Response response) {
         if (response.isSuccess()) {
-            return Observable.just((SchoenHierResponse) response.body());
+            return Observable.just((SchoenHiersNearbyResponse) response.body());
+        }
+        return Observable.error(new Exception("http-error: " + Integer.toString(response.code())));
+    }
+
+    public Observable<SchoenHiersResponse> markAsSchoenHier(SchoenHierRequest request) {
+        return service.markAsSchoenHier(request)
+                .doOnError(this::handleError)
+                .flatMap(this::parseSchoenHiersResponse);
+    }
+
+    private Observable<SchoenHiersResponse> parseSchoenHiersResponse(Response response) {
+        if (response.isSuccess()) {
+            return Observable.just((SchoenHiersResponse)response.body());
         }
         return Observable.error(new Exception("http-error: " + Integer.toString(response.code())));
     }

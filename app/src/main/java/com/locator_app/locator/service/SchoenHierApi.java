@@ -16,5 +16,5 @@ public interface SchoenHierApi {
                                         @Query("limit") int limit);
 
     @POST("schoenhiers")
-    Observable<Response> schoenHier(@Body SchoenHierRequest schoenHierRequest);
+    Observable<Response> markAsSchoenHier(@Body SchoenHierRequest schoenHierRequest);
 }
