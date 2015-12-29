@@ -1,5 +1,8 @@
 package com.locator_app.locator.service;
 
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.logging.HttpLoggingInterceptor;
+
 import retrofit.GsonConverterFactory;
 import retrofit.Retrofit;
 import retrofit.RxJavaCallAdapterFactory;
@@ -10,8 +13,9 @@ public class ServiceFactory {
 
     public static <T> T createService(final Class<T> className) {
         if (retrofit == null) {
+
             retrofit = new Retrofit.Builder()
-                    .baseUrl("http://locator-app.com/api/v2/")
+                    .baseUrl("https://locator-app.com/api/v2")
                     .addConverterFactory(GsonConverterFactory.create())
                     .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                     .build();

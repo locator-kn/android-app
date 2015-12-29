@@ -10,12 +10,20 @@ import android.widget.TextView;
 import com.locator_app.locator.R;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 public class LoginRegisterStartActivity extends AppCompatActivity {
 
-    private ImageView locatorLogo;
-    private ImageView loginYes;
-    private ImageView loginNo;
-    private UniversalImageLoader universalImageLoader;
+    @Bind(R.id.locator_logo)
+    ImageView locatorLogo;
+
+    @Bind(R.id.login_yes)
+    ImageView loginYes;
+
+    @Bind(R.id.login_no)
+    ImageView loginNo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +32,10 @@ public class LoginRegisterStartActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setCustomView(R.layout.actionbar_custom);
 
+        ButterKnife.bind(this);
+
+        loadImages();
+
         //set action bar title
         View v = getSupportActionBar().getCustomView();
         TextView titleTxtView = (TextView) v.findViewById(R.id.actionbar_title);
@@ -31,12 +43,23 @@ public class LoginRegisterStartActivity extends AppCompatActivity {
 
         //TODO: check if already authenticated
         //TODO: getDeviceId
+    }
 
+    @OnClick(R.id.login_yes)
+    void onLoginYesClicked() {
+        Intent intent = new Intent(getApplicationContext(), LoginRegisterActivity.class);
+        startActivity(intent);
+    }
+
+    @OnClick(R.id.login_no)
+    void onLoginNoClicked() {
+        Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+        startActivity(intent);
+    }
+
+    void loadImages() {
         //initialize components
-        universalImageLoader = new UniversalImageLoader(getApplicationContext());
-        locatorLogo = (ImageView) findViewById(R.id.locator_logo);
-        loginYes = (ImageView) findViewById(R.id.login_yes);
-        loginNo = (ImageView) findViewById(R.id.login_no);
+        UniversalImageLoader universalImageLoader = new UniversalImageLoader(getApplicationContext());
 
         //set display image options
         DisplayImageOptions options = new DisplayImageOptions.Builder().cacheInMemory(true)
@@ -52,21 +75,5 @@ public class LoginRegisterStartActivity extends AppCompatActivity {
         universalImageLoader.displayImage(urlLocator, locatorLogo, options);
         universalImageLoader.displayImage(urlYes, loginYes, options);
         universalImageLoader.displayImage(urlNo, loginNo, options);
-
-        loginYes.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(), LoginRegisterActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        loginNo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(), HomeActivity.class);
-                startActivity(intent);
-            }
-        });
     }
 }

@@ -1,23 +1,18 @@
 package com.locator_app.locator.service;
 
-import com.squareup.okhttp.Response;
-
 import java.net.UnknownHostException;
 
 import retrofit.HttpException;
+import retrofit.Response;
 import rx.Observable;
 
 public class SchoenHierApiService {
 
-    private SchoenHierApi service;
+    private SchoenHierApi service = ServiceFactory.createService(SchoenHierApi.class);
 
     public Observable<SchoenHierResponse> getSchoenHierResponse(double lon, double lat,
                                               double distance,
                                               int limit) {
-        if (service == null) {
-            service = ServiceFactory.createService(SchoenHierApi.class);
-        }
-
         return service.getSchoenHiers(lon, lat, distance, limit)
                 .doOnError(this::handleError)
                 .flatMap(this::parseSchoenHierResponse);

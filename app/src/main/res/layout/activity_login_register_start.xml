@@ -12,12 +12,12 @@
         android:id="@+id/locator_logo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:adjustViewBounds="true"
         android:layout_gravity="center_horizontal"
         android:layout_weight="1"
         android:paddingLeft="50dp"
         android:paddingRight="50dp"
         android:paddingTop="10dp"
+        android:adjustViewBounds="true"
         />
 
     <TextView
@@ -46,6 +46,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_weight="2"
         />
+
 </LinearLayout>
 
 

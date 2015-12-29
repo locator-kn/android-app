@@ -1,21 +1,26 @@
 package com.locator_app.locator.controller;
 
+import android.widget.Toast;
+
 import com.locator_app.locator.model.Login;
+import com.locator_app.locator.service.LoginRequest;
+import com.locator_app.locator.service.LoginResponse;
 import com.locator_app.locator.service.LoginService;
+import com.locator_app.locator.service.UsersRequestManager;
 
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.rest.RestService;
 
+import rx.Observer;
 
-@EBean(scope = EBean.Scope.Singleton)
+
 public class LoginController {
-    @RestService
-    LoginService loginService;
+
     private Login login;
 
-    /*private static LoginController instance;
+    private static LoginController instance;
 
-    public LoginController() {
+    private LoginController() {
         login = new Login();
     }
 
@@ -25,10 +30,6 @@ public class LoginController {
         }
 
         return instance;
-    }*/
-
-    public void login() {
-        loginService.login();
     }
 
     public void setMail(String mail) {

@@ -25,45 +25,10 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         ButterKnife.bind(this);
-        // 1. you wont need 'findViewById' anymore
-        // 2. no need for 'setOnClickListener'
-        button.setText("SchoenHiers");
     }
 
     @OnClick(R.id.button)
-    public void loadSchoenHiers() {
-        /*SchoenHierApiService service = ServiceFactory.createService(SchoenHierApiService.class);
-        double lon = 9.169753789901733;
-        double lat = 47.66868204997508;
-        double dis = 2;
-        int max = 3;
-        service.getSchoenHiers(lon, lat, dis, max)
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .map(schoenHierResponse -> schoenHierResponse.results)
-                .flatMap(results -> rx.Observable.from(results))
-                .map(result -> result.schoenHier)
-                .map(schoenHier -> schoenHier.creationDate + "/" + schoenHier.modifiedDate)
-                .subscribe(
-                        (val) -> Toast.makeText(getApplicationContext(), val,
-                                Toast.LENGTH_SHORT).show()/*,
-                        (err) -> Toast.makeText(getApplicationContext(), err.toString(),
-                                Toast.LENGTH_SHORT).show(),
-                        () -> Toast.makeText(getApplicationContext(), "done",
-                                Toast.LENGTH_SHORT).show()
-                );*/
+    public void register() {
 
-        SchoenHierRequestManager rqManager = new SchoenHierRequestManager();
-        rqManager.getSchoenHiers()
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .map(schoenHierResponse -> schoenHierResponse.results)
-                .flatMap(results -> Observable.from(results))
-                .map(result -> result.schoenHier)
-                .map(schoenHier -> schoenHier.creationDate)
-                .subscribe(
-                        (val) -> Toast.makeText(getApplicationContext(), val, Toast.LENGTH_SHORT).show(),
-                        (err) -> Toast.makeText(getApplicationContext(), err.toString(), Toast.LENGTH_SHORT).show()
-                );
     }
 }

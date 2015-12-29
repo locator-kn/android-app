@@ -13,6 +13,7 @@ import java.util.List;
 
 @Rest(rootUrl = Server.apiUrl, converters = MappingJackson2HttpMessageConverter.class)
 public interface LoginService {
+
     @Post("/login")
     Login login();
 }

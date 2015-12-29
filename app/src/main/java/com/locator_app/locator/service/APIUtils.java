@@ -1,24 +1,22 @@
 package com.locator_app.locator.service;
 
 import com.google.gson.Gson;
-import com.squareup.okhttp.Response;
+
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import retrofit.Response;
+
 public class APIUtils {
 
     public static Object parseResponse(Response response, Class responseClass) {
-        try {
-            String body = fromStream(response.body().byteStream());
-            Gson gson = new Gson();
-            Object parsedResponse = gson.fromJson(body, responseClass);
-            return parsedResponse;
-        } catch (IOException ex) {
-            return null;
-        }
+        String body = (String) response.body();
+        Gson gson = new Gson();
+        Object parsedResponse = gson.fromJson(body, responseClass);
+        return parsedResponse;
     }
 
     private static String fromStream(InputStream in) throws IOException {

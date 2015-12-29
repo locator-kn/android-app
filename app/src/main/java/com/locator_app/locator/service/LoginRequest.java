@@ -10,4 +10,11 @@ public class LoginRequest {
 
     @SerializedName("password")
     public String password;
+
+    static LoginRequest fromRegistrationRequest(RegistrationRequest registrationRequest) {
+        LoginRequest loginRequest = new LoginRequest();
+        loginRequest.mail = registrationRequest.mail;
+        loginRequest.password = registrationRequest.password;
+        return loginRequest;
+    }
 }
