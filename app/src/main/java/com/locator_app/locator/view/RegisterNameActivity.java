@@ -68,7 +68,7 @@ public class RegisterNameActivity extends AppCompatActivity {
         if (registerName.getText().length() < MIN_NAME_LENGTH) {
             return false;
         }
-        
+
         return true;
     }
 }
