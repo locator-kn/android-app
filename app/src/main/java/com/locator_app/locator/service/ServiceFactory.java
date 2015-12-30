@@ -28,6 +28,4 @@ public class ServiceFactory {
         }
         return retrofit.create(className);
     }
-
-    public static String apiVersion = "/api/v2";
 }
