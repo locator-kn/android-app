@@ -118,28 +118,5 @@ public class RegisterProfilePictureActivity extends AppCompatActivity {
         universalImageLoader.displayImage(urlProfile, profilePicture, options);
         universalImageLoader.displayImage(urlNo, profileNo, options);
     }
-
-    void login(String mail, String password) {
-        /*final Context context = getApplicationContext();
-
-        UserController userController = UserController.getInstance();
-        LoginRequest loginRequest = new LoginRequest();
-        loginRequest.mail = mail;
-        loginRequest.password = password;
-        userController.login(loginRequest)
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        (loginResponse) -> {
-                            Toast.makeText(context, "Hi " + loginResponse.name, Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(context, HomeActivity.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            startActivity(intent);
-                        },
-                        (error) -> {
-                            Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
-                            LoginPasswordActivity.this.finish();
-                        });*/
-    }
 }
 
