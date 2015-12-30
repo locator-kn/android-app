@@ -12,6 +12,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import rx.Observable;
+
 public class Couch {
 
     private Manager manager;
@@ -49,7 +51,8 @@ public class Couch {
     }
 
     public void onLogin(User user) {
-        switchToDatabase(user.mail.replace("@", ""));
+        String dbName = user.mail.replace("@", "");
+        switchToDatabase(dbName);
         save(user);
     }
 
@@ -106,6 +109,17 @@ public class Couch {
             }
         } catch (CouchbaseLiteException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void deleteAllDatabases() {
+        for (String db: manager.getAllDatabaseNames()) {
+            switchToDatabase(db);
+            try {
+                database.delete();
+            } catch (CouchbaseLiteException e) {
+                e.printStackTrace();
+            }
         }
     }
 
