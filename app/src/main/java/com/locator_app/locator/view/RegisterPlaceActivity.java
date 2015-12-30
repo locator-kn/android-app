@@ -23,13 +23,13 @@ public class RegisterPlaceActivity extends AppCompatActivity {
 
     private static final int MIN_NAME_LENGTH = 3;
 
-    @Bind(R.id.registerName)
-    EditText registerName;
+    @Bind(R.id.registerPlace)
+    EditText registerPlace;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register_name);
+        setContentView(R.layout.activity_register_place);
         ButterKnife.bind(this);
 
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
@@ -46,30 +46,16 @@ public class RegisterPlaceActivity extends AppCompatActivity {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
 
-        registerName.setOnKeyListener((v1, keyCode, event) -> {
+        registerPlace.setOnKeyListener((v1, keyCode, event) -> {
             if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
-                if (checkUsernameLength()) {
-                    String name = registerName.getText().toString();
-                    Intent intent = new Intent(v1.getContext(), LoginPasswordActivity.class);
-                    intent.putExtra("name", name);
-                    startActivity(intent);
-                    return true;
-                } else {
-                    Toast.makeText(getApplicationContext(),
-                            "Dein Name sollte aus mindestens " + MIN_NAME_LENGTH + " Zeichen bestehen!",
-                            Toast.LENGTH_SHORT).show();
-                }
+                String place = registerPlace.getText().toString();
+                //Intent intent = new Intent(v1.getContext(), LoginPasswordActivity.class);
+                //intent.putExtra("place", place);
+                //startActivity(intent);
+                return true;
             }
             return false;
         });
-    }
-
-    private boolean checkUsernameLength() {
-        if (registerName.getText().length() < MIN_NAME_LENGTH) {
-            return false;
-        }
-
-        return true;
     }
 }
 
