@@ -3,12 +3,12 @@ package com.locator_app.locator.controller;
 
 import com.locator_app.locator.db.Couch;
 import com.locator_app.locator.model.User;
-import com.locator_app.locator.service.LoginRequest;
-import com.locator_app.locator.service.LoginResponse;
-import com.locator_app.locator.service.LogoutResponse;
-import com.locator_app.locator.service.RegistrationRequest;
-import com.locator_app.locator.service.RegistrationResponse;
-import com.locator_app.locator.service.UsersApiService;
+import com.locator_app.locator.service.users.LoginRequest;
+import com.locator_app.locator.service.users.LoginResponse;
+import com.locator_app.locator.service.users.LogoutResponse;
+import com.locator_app.locator.service.users.RegistrationRequest;
+import com.locator_app.locator.service.users.RegistrationResponse;
+import com.locator_app.locator.service.users.UsersApiService;
 
 import rx.Observable;
 

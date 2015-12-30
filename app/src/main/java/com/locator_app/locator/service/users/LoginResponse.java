@@ -1,4 +1,4 @@
-package com.locator_app.locator.service;
+package com.locator_app.locator.service.users;
 
 import com.google.gson.annotations.SerializedName;
 

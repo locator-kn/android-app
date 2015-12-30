@@ -14,7 +14,7 @@ import android.widget.Toast;
 import com.locator_app.locator.R;
 import com.locator_app.locator.controller.LoginController;
 import com.locator_app.locator.controller.UserController;
-import com.locator_app.locator.service.LoginRequest;
+import com.locator_app.locator.service.users.LoginRequest;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;

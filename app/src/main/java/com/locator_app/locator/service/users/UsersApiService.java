@@ -1,9 +1,14 @@
-package com.locator_app.locator.service;
+package com.locator_app.locator.service.users;
 
-
-import android.util.Log;
 
 import com.google.gson.JsonSyntaxException;
+import com.locator_app.locator.service.ServiceFactory;
+import com.locator_app.locator.service.users.LoginRequest;
+import com.locator_app.locator.service.users.LoginResponse;
+import com.locator_app.locator.service.users.LogoutResponse;
+import com.locator_app.locator.service.users.RegistrationRequest;
+import com.locator_app.locator.service.users.RegistrationResponse;
+import com.locator_app.locator.service.users.UsersApi;
 
 import java.net.UnknownHostException;
 
