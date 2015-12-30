@@ -38,6 +38,9 @@
         <activity
             android:name=".view.RegisterResidenceActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.RegisterMailActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>
