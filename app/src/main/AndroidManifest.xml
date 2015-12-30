@@ -41,6 +41,9 @@
         <activity
             android:name=".view.RegisterMailActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.RegisterPasswordActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>
