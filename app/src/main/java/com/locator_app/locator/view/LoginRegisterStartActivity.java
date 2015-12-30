@@ -70,6 +70,7 @@ public class LoginRegisterStartActivity extends AppCompatActivity {
 
     private void jumpToHomeScreen() {
         Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
 
