@@ -1,10 +1,9 @@
 package com.locator_app.locator.service;
 
 import com.locator_app.locator.model.User;
+import com.locator_app.locator.db.Couch;
 
 import rx.Observable;
-import rx.functions.Action1;
-import rx.functions.Func1;
 
 public class UsersRequestManager {
 
@@ -32,6 +31,7 @@ public class UsersRequestManager {
         User.me().mail = loginResponse.mail;
         User.me().residence = loginResponse.residence;
         User.me().loggedIn = true;
+        Couch.get().onLogin(User.me());
     }
 
     public Observable<LogoutResponse> logout() {
@@ -45,5 +45,6 @@ public class UsersRequestManager {
         User.me().mail = "";
         User.me().residence = "";
         User.me().loggedIn = false;
+        Couch.get().onLogout();
     }
 }
