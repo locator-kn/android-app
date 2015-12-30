@@ -1,4 +1,4 @@
-package com.locator_app.locator.service;
+package com.locator_app.locator.service.schoenhier;
 
 import retrofit.Response;
 import retrofit.http.Body;

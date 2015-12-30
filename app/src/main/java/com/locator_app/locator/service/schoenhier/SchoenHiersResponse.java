@@ -1,4 +1,4 @@
-package com.locator_app.locator.service;
+package com.locator_app.locator.service.schoenhier;
 
 import com.google.gson.annotations.SerializedName;
 import com.locator_app.locator.model.GeoTag;

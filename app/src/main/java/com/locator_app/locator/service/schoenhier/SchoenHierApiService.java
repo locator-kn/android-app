@@ -1,4 +1,6 @@
-package com.locator_app.locator.service;
+package com.locator_app.locator.service.schoenhier;
+
+import com.locator_app.locator.service.ServiceFactory;
 
 import java.net.UnknownHostException;
 
