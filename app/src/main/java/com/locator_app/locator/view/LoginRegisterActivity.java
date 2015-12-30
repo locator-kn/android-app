@@ -11,32 +11,50 @@ import android.widget.TextView;
 import com.locator_app.locator.R;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 public class LoginRegisterActivity extends AppCompatActivity {
 
-    private ImageView locatorLogo;
-    private ImageView login;
-    private ImageView loginFacebook;
-    private ImageView register;
-    private UniversalImageLoader universalImageLoader;
+    @Bind(R.id.locator_logo)
+    ImageView locatorLogo;
+    @Bind(R.id.login)
+    ImageView login;
+    @Bind(R.id.login_facebook)
+    ImageView loginFacebook;
+    @Bind(R.id.register)
+    ImageView register;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_register);
+        ButterKnife.bind(this);
+
+        //set custom action bar
+        setCustomActionBar();
+
+        //load all images of the activity
+        loadImages();
+    }
+
+    @OnClick(R.id.login)
+    public void onLoginClick() {
+        Intent intent = new Intent(getApplicationContext(), LoginMailActivity.class);
+        startActivity(intent);
+    }
+
+    private void setCustomActionBar() {
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setCustomView(R.layout.actionbar_custom);
-
-        //set action bar title
         View v = getSupportActionBar().getCustomView();
         TextView titleTxtView = (TextView) v.findViewById(R.id.actionbar_title);
         titleTxtView.setText(R.string.welcome_to);
+    }
 
-        //initialize components
-        universalImageLoader = new UniversalImageLoader(getApplicationContext());
-        locatorLogo = (ImageView) findViewById(R.id.locator_logo);
-        login = (ImageView) findViewById(R.id.login);
-        loginFacebook = (ImageView) findViewById(R.id.login_facebook);
-        register = (ImageView) findViewById(R.id.register);
+    private void loadImages() {
+        UniversalImageLoader universalImageLoader = new UniversalImageLoader(getApplicationContext());
 
         //set display image options
         DisplayImageOptions options = new DisplayImageOptions.Builder().cacheInMemory(true)
@@ -54,13 +72,5 @@ public class LoginRegisterActivity extends AppCompatActivity {
         universalImageLoader.displayImage(urlLogin, login, options);
         universalImageLoader.displayImage(urlLoginFacebook, loginFacebook, options);
         universalImageLoader.displayImage(urlRegister, register, options);
-
-        login.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(), LoginMailActivity.class);
-                startActivity(intent);
-            }
-        });
     }
 }
