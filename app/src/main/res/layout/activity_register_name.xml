@@ -14,6 +14,7 @@
         android:textColor="@color/colorWhite"
         android:fontFamily="source-sans-pro"
         android:textAlignment="center"
+        android:inputType="textCapSentences"
         android:hint="@string/name"
         android:singleLine="true"
         android:textColorHint="@color/colorHint"
