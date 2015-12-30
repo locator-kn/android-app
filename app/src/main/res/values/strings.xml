@@ -6,4 +6,6 @@
     <string name="login">Anmelden</string>
     <string name="mail">E-Mail eingeben</string>
     <string name="password">Passwort eingeben</string>
+    <string name="name">Name eingeben</string>
+    <string name="whats_your_name">Wie heißt du?</string>
 </resources>
