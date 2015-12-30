@@ -12,7 +12,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.locator_app.locator.R;
-import com.locator_app.locator.controller.LoginController;
 import com.locator_app.locator.controller.UserController;
 import com.locator_app.locator.service.users.LoginRequest;
 
@@ -22,8 +21,6 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 public class LoginPasswordActivity extends AppCompatActivity {
-
-    LoginController loginController;
 
     @Bind(R.id.loginPassword)
     TextView loginPassword;
@@ -44,25 +41,24 @@ public class LoginPasswordActivity extends AppCompatActivity {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
 
-        loginController = LoginController.getInstance();
-
         loginPassword.setOnKeyListener((v1, keyCode, event) -> {
             if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
-                loginController.setPassword(loginPassword.getText().toString());
-                login();
+                String mail = getIntent().getStringExtra("mail");
+                String password = loginPassword.getText().toString();
+                login(mail, password);
                 return true;
             }
             return false;
         });
     }
 
-    void login() {
+    void login(String mail, String password) {
         final Context context = getApplicationContext();
 
         UserController userController = UserController.getInstance();
         LoginRequest loginRequest = new LoginRequest();
-        loginRequest.mail = loginController.getMail();
-        loginRequest.password = loginController.getPassword();
+        loginRequest.mail = mail;
+        loginRequest.password = password;
         userController.login(loginRequest)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())

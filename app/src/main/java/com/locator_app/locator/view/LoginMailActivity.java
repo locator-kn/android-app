@@ -14,14 +14,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.locator_app.locator.R;
-import com.locator_app.locator.controller.LoginController;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class LoginMailActivity extends AppCompatActivity {
-
-    LoginController controller;
 
     @Bind(R.id.loginMail)
     EditText loginMail;
@@ -42,17 +39,16 @@ public class LoginMailActivity extends AppCompatActivity {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
 
-        controller = LoginController.getInstance();
-
         loginMail.setOnKeyListener((v1, keyCode, event) -> {
             if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
-                if (!isValidEmail(loginMail.getText().toString())) {
+                String mail = loginMail.getText().toString();
+                if (!isValidEmail(mail)) {
                     Toast.makeText(getApplicationContext(),
                             "E-Mail enthält unzulässige Zeichen mein Freund :-)",
                             Toast.LENGTH_SHORT).show();
                 } else {
-                    controller.setMail(loginMail.getText().toString());
                     Intent intent = new Intent(v1.getContext(), LoginPasswordActivity.class);
+                    intent.putExtra("mail", mail);
                     startActivity(intent);
                     return true;
                 }
