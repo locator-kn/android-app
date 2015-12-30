@@ -15,6 +15,8 @@ import android.widget.TextView;
 
 import com.locator_app.locator.R;
 
+import java.util.HashMap;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -41,15 +43,16 @@ public class RegisterResidenceActivity extends AppCompatActivity {
         TextView titleTxtView = (TextView) v.findViewById(R.id.actionbar_title);
         titleTxtView.setText(R.string.where_do_you_live);
 
-
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
 
         registerResidence.setOnKeyListener((v1, keyCode, event) -> {
             if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
-                String place = registerResidence.getText().toString();
+                HashMap<String, String> registerValues =
+                        (HashMap<String, String>)getIntent().getSerializableExtra("registerValues");
+                registerValues.put("residence", registerResidence.getText().toString());
                 Intent intent = new Intent(v1.getContext(), RegisterMailActivity.class);
-                intent.putExtra("place", place);
+                intent.putExtra("registerValues", registerValues);
                 startActivity(intent);
                 return true;
             }

@@ -16,6 +16,10 @@ import android.widget.Toast;
 
 import com.locator_app.locator.R;
 
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -49,9 +53,10 @@ public class RegisterNameActivity extends AppCompatActivity {
         registerName.setOnKeyListener((v1, keyCode, event) -> {
             if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
                 if (checkUsernameLength()) {
-                    String name = registerName.getText().toString();
+                    HashMap<String, String> registerValues = new HashMap<>();
+                    registerValues.put("name", registerName.getText().toString());
                     Intent intent = new Intent(v1.getContext(), RegisterResidenceActivity.class);
-                    intent.putExtra("name", name);
+                    intent.putExtra("registerValues", registerValues);
                     startActivity(intent);
                     return true;
                 } else {

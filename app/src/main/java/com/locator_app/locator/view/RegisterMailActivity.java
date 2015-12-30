@@ -18,6 +18,8 @@ import android.widget.Toast;
 
 import com.locator_app.locator.R;
 
+import java.util.HashMap;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -52,8 +54,11 @@ public class RegisterMailActivity extends AppCompatActivity {
                             "E-Mail nicht vollständig oder fehlerhaft!",
                             Toast.LENGTH_SHORT).show();
                 } else {
-                    Intent intent = new Intent(v1.getContext(), LoginPasswordActivity.class);
-                    intent.putExtra("mail", mail);
+                    HashMap<String, String> registerValues =
+                            (HashMap<String, String>)getIntent().getSerializableExtra("registerValues");
+                    registerValues.put("mail", mail);
+                    Intent intent = new Intent(v1.getContext(), RegisterPasswordActivity.class);
+                    intent.putExtra("registerValues", registerValues);
                     startActivity(intent);
                     return true;
                 }
