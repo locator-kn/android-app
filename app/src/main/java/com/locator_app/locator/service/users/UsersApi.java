@@ -1,10 +1,6 @@
 package com.locator_app.locator.service.users;
 
-import com.locator_app.locator.service.users.LoginRequest;
-import com.locator_app.locator.service.users.LoginResponse;
-import com.locator_app.locator.service.users.LogoutResponse;
-import com.locator_app.locator.service.users.RegistrationRequest;
-import com.locator_app.locator.service.users.RegistrationResponse;
+import com.locator_app.locator.service.Api;
 
 import retrofit.Response;
 import retrofit.http.Body;
@@ -14,16 +10,16 @@ import rx.Observable;
 
 public interface UsersApi {
 
-    @POST("/users/login")
+    @POST(Api.version + "/users/login")
     Observable<Response<LoginResponse>> login(@Body LoginRequest loginBodyRequest);
 
-    @GET("/users/logout")
+    @GET(Api.version + "/users/logout")
     Observable<Response<LogoutResponse>> logout();
 
-    @GET("/users/protected")
+    @GET(Api.version + "/users/protected")
     Observable<Response<Object>> requestProtected();
 
-    @POST("/users/register")
+    @POST(Api.version + "/users/register")
     Observable<Response<RegistrationResponse>> register(@Body RegistrationRequest registrationBodyRequest);
 
 }
