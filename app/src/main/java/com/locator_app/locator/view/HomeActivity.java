@@ -7,18 +7,11 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.locator_app.locator.R;
-import com.locator_app.locator.model.SchoenHier;
-import com.locator_app.locator.service.LoginResponse;
-import com.locator_app.locator.service.LogoutResponse;
-import com.locator_app.locator.service.RegistrationRequest;
-import com.locator_app.locator.service.SchoenHierRequestManager;
-import com.locator_app.locator.service.UsersRequestManager;
+import com.locator_app.locator.controller.UserController;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import rx.Observable;
-import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -37,8 +30,8 @@ public class HomeActivity extends AppCompatActivity {
     @OnClick(R.id.button)
     public void logout() {
 
-        UsersRequestManager requestManager = new UsersRequestManager();
-        requestManager.logout()
+        UserController controller = UserController.getInstance();
+        controller.logout()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(

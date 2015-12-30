@@ -10,6 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.locator_app.locator.R;
+import com.locator_app.locator.controller.UserController;
 import com.locator_app.locator.model.User;
 import com.locator_app.locator.db.Couch;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -45,9 +46,10 @@ public class LoginRegisterStartActivity extends AppCompatActivity {
         TextView titleTxtView = (TextView) v.findViewById(R.id.actionbar_title);
         titleTxtView.setText(R.string.welcome_to);
 
-        Couch.get().onAppStart(User.me());
-        if (User.me().loggedIn)  {
-            Toast.makeText(getApplicationContext(), "Welcome back " + User.me().name,
+        UserController userController = UserController.getInstance();
+        Couch.get().onAppStart(userController.me());
+        if (userController.me().loggedIn)  {
+            Toast.makeText(getApplicationContext(), "Welcome back " + userController.me().name,
                     Toast.LENGTH_LONG).show();
             jumpToHomeScreen();
         }

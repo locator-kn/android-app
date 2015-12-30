@@ -1,28 +1,23 @@
 package com.locator_app.locator.view;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.locator_app.locator.R;
 import com.locator_app.locator.controller.LoginController;
+import com.locator_app.locator.controller.UserController;
 import com.locator_app.locator.service.LoginRequest;
-import com.locator_app.locator.service.LoginResponse;
-import com.locator_app.locator.service.UsersRequestManager;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -64,15 +59,16 @@ public class LoginPasswordActivity extends AppCompatActivity {
     void login() {
         final Context context = getApplicationContext();
 
-        UsersRequestManager manager = new UsersRequestManager();
+        UserController userController = UserController.getInstance();
         LoginRequest loginRequest = new LoginRequest();
         loginRequest.mail = loginController.getMail();
         loginRequest.password = loginController.getPassword();
-        manager.login(loginRequest)
+        userController.login(loginRequest)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         (loginResponse) -> {
+                            Toast.makeText(context, "Hi " + loginResponse.name, Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(context, HomeActivity.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
