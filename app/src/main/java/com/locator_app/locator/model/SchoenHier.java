@@ -1,10 +1,6 @@
 package com.locator_app.locator.model;
 
 import com.google.gson.annotations.SerializedName;
-import com.locator_app.locator.util.StringToDateConverter;
-
-import java.util.ArrayList;
-import java.util.Date;
 
 public class SchoenHier {
 
