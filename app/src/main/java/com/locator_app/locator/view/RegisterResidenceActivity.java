@@ -1,6 +1,7 @@
 package com.locator_app.locator.view;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -47,9 +48,9 @@ public class RegisterResidenceActivity extends AppCompatActivity {
         registerResidence.setOnKeyListener((v1, keyCode, event) -> {
             if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
                 String place = registerResidence.getText().toString();
-                //Intent intent = new Intent(v1.getContext(), LoginPasswordActivity.class);
-                //intent.putExtra("place", place);
-                //startActivity(intent);
+                Intent intent = new Intent(v1.getContext(), RegisterMailActivity.class);
+                intent.putExtra("place", place);
+                startActivity(intent);
                 return true;
             }
             return false;
