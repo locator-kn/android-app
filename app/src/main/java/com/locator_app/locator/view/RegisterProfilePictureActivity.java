@@ -1,22 +1,16 @@
 package com.locator_app.locator.view;
 
-import android.content.Context;
-import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.view.KeyEvent;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.locator_app.locator.R;
 import com.locator_app.locator.controller.UserController;
-import com.locator_app.locator.service.users.LoginRequest;
 import com.locator_app.locator.service.users.RegistrationRequest;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 
@@ -51,16 +45,6 @@ public class RegisterProfilePictureActivity extends AppCompatActivity {
         titleTxtView.setText(R.string.register);
 
         loadImages();
-
-        /*loginPassword.setOnKeyListener((v1, keyCode, event) -> {
-            if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
-                String mail = getIntent().getStringExtra("mail");
-                String password = loginPassword.getText().toString();
-                login(mail, password);
-                return true;
-            }
-            return false;
-        });*/
     }
 
     @OnClick(R.id.profilePicture)
