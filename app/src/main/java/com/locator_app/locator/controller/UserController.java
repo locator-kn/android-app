@@ -11,8 +11,6 @@ import com.locator_app.locator.service.RegistrationResponse;
 import com.locator_app.locator.service.UsersApiService;
 
 import rx.Observable;
-import rx.functions.Action1;
-import rx.functions.Func1;
 
 public class UserController {
 
