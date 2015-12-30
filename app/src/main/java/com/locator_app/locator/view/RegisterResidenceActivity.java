@@ -21,14 +21,14 @@ public class RegisterResidenceActivity extends AppCompatActivity {
 
     private static final int MIN_NAME_LENGTH = 3;
 
-    @Bind(R.id.registerPlace)
-    EditText registerPlace;
+    @Bind(R.id.registerResidence)
+    EditText registerResidence;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_residence);
-        //ButterKnife.bind(this);
+        ButterKnife.bind(this);
 
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setCustomView(R.layout.actionbar_custom);
@@ -44,9 +44,9 @@ public class RegisterResidenceActivity extends AppCompatActivity {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
 
-        registerPlace.setOnKeyListener((v1, keyCode, event) -> {
+        registerResidence.setOnKeyListener((v1, keyCode, event) -> {
             if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
-                String place = registerPlace.getText().toString();
+                String place = registerResidence.getText().toString();
                 //Intent intent = new Intent(v1.getContext(), LoginPasswordActivity.class);
                 //intent.putExtra("place", place);
                 //startActivity(intent);
