@@ -36,9 +36,11 @@ public class HomeActivity extends AppCompatActivity {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        (val) -> {
-                            Toast.makeText(getApplicationContext(), "logged out", Toast.LENGTH_LONG).show();
-                            Intent intent = new Intent(getApplicationContext(), LoginRegisterStartActivity.class);
+                        (logoutResponse) -> {
+                            Toast.makeText(getApplicationContext(), logoutResponse.message,
+                                    Toast.LENGTH_LONG).show();
+                            Intent intent = new Intent(getApplicationContext(),
+                                    LoginRegisterStartActivity.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
                         },
