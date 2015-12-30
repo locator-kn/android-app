@@ -1,7 +1,6 @@
 package com.locator_app.locator.view;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -12,14 +11,13 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.locator_app.locator.R;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class RegisterPlaceActivity extends AppCompatActivity {
+public class RegisterResidenceActivity extends AppCompatActivity {
 
     private static final int MIN_NAME_LENGTH = 3;
 
@@ -29,8 +27,8 @@ public class RegisterPlaceActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register_place);
-        ButterKnife.bind(this);
+        setContentView(R.layout.activity_register_residence);
+        //ButterKnife.bind(this);
 
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setCustomView(R.layout.actionbar_custom);
