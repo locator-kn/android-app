@@ -45,6 +45,12 @@ public class LoginRegisterActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    @OnClick(R.id.register)
+    public void onRegisterClick() {
+        Intent intent = new Intent(getApplicationContext(), RegisterNameActivity.class);
+        startActivity(intent);
+    }
+
     private void setCustomActionBar() {
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setCustomView(R.layout.actionbar_custom);
