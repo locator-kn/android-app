@@ -34,17 +34,12 @@ public class LoginRegisterStartActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_register_start);
-        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-        getSupportActionBar().setCustomView(R.layout.actionbar_custom);
-
         ButterKnife.bind(this);
+        setCustomActionBar();
 
         loadImages();
 
-        //set action bar title
-        View v = getSupportActionBar().getCustomView();
-        TextView titleTxtView = (TextView) v.findViewById(R.id.actionbar_title);
-        titleTxtView.setText(R.string.welcome_to);
+
 
         UserController userController = UserController.getInstance();
         Couch.get().onAppStart(userController.me());
@@ -72,6 +67,18 @@ public class LoginRegisterStartActivity extends AppCompatActivity {
         Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
+    }
+
+    void setCustomActionBar() {
+        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        getSupportActionBar().setCustomView(R.layout.actionbar_custom);
+        View v = getSupportActionBar().getCustomView();
+        TextView titleTxtView = (TextView) v.findViewById(R.id.actionbar_title);
+        titleTxtView.setText(R.string.welcome_to);
+        ImageView backButton = (ImageView) v.findViewById(R.id.actionbar_back);
+        backButton.setVisibility(View.INVISIBLE);
+        ImageView crossButton = (ImageView) v.findViewById(R.id.actionbar_cross);
+        crossButton.setVisibility(View.INVISIBLE);
     }
 
     void loadImages() {
