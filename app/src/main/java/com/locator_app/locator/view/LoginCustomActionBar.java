@@ -35,9 +35,13 @@ public class LoginCustomActionBar {
         this.backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //close software keyboard
-                InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
+
+                if (activity.getCurrentFocus() != null) {
+                    //close software keyboard
+                    InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
+                }
+
                 activity.finish();
             }
         });
@@ -50,9 +54,12 @@ public class LoginCustomActionBar {
                     cls = HomeActivity.class;
                 }
 
-                //close software keyboard
-                InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
+                if (activity.getCurrentFocus() != null) {
+                    //close software keyboard
+                    InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
+                }
+
                 Intent intent = new Intent(activity.getApplicationContext(), cls);
                 intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                 activity.startActivity(intent);
