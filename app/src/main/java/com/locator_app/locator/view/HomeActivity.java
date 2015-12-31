@@ -9,13 +9,10 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.locator_app.locator.R;
-import com.locator_app.locator.controller.UserController;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -45,15 +42,17 @@ public class HomeActivity extends AppCompatActivity {
         Toast.makeText(getApplicationContext(), "scheonhier", Toast.LENGTH_SHORT).show();
     }
 
-    private void placeUserProfileBubble() {
+    private void initUserProfileBubble() {
         setBubbleRadius(userProfileBubble, 75);
         setBubbleCenter(userProfileBubble, 0.5, 0.87);
+        userProfileBubble.loadImage("drawable://" + R.drawable.no);
         userProfileBubble.setFillColor(Color.GREEN);
     }
 
-    private void placeSchoenHierBubble() {
+    private void initSchoenHierBubble() {
         setBubbleRadius(schoenHierBubble, 140);
         setBubbleCenter(schoenHierBubble, 0.62, 0.38);
+        schoenHierBubble.loadImage("drawable://" + R.drawable.yes);
         schoenHierBubble.setFillColor(Color.RED);
     }
 
@@ -102,7 +101,7 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
-        placeUserProfileBubble();
-        placeSchoenHierBubble();
+        initUserProfileBubble();
+        initSchoenHierBubble();
     }
 }
