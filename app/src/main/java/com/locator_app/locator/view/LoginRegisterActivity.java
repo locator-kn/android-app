@@ -52,19 +52,10 @@ public class LoginRegisterActivity extends AppCompatActivity {
     }
 
     private void setCustomActionBar() {
-        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-        getSupportActionBar().setCustomView(R.layout.actionbar_custom);
-        View v = getSupportActionBar().getCustomView();
-        TextView titleTxtView = (TextView) v.findViewById(R.id.actionbar_title);
-        titleTxtView.setText(R.string.welcome_to);
-        ImageView backButton = (ImageView) v.findViewById(R.id.actionbar_back);
-        backButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-        ImageView crossButton = (ImageView) v.findViewById(R.id.actionbar_cross);
+        LoginCustomActionBar customActionBar = new LoginCustomActionBar(getSupportActionBar(), this);
+        customActionBar.setTitle(getResources().getString(R.string.welcome_to));
+        customActionBar.setBackButtonVisibility(View.INVISIBLE);
+        customActionBar.setCrossButtonJumpScreen(LoginRegisterStartActivity.class);
     }
 
     private void loadImages() {
