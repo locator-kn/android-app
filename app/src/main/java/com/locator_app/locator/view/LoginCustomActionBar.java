@@ -1,10 +1,12 @@
 package com.locator_app.locator.view;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -31,6 +33,9 @@ public class LoginCustomActionBar {
         this.backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //close software keyboard
+                InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
                 activity.finish();
             }
         });
@@ -43,6 +48,9 @@ public class LoginCustomActionBar {
                     cls = HomeActivity.class;
                 }
 
+                //close software keyboard
+                InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
                 Intent intent = new Intent(activity.getApplicationContext(), cls);
                 intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                 activity.startActivity(intent);

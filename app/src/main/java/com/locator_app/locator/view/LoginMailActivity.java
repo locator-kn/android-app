@@ -22,21 +22,16 @@ public class LoginMailActivity extends AppCompatActivity {
 
     @Bind(R.id.loginMail)
     EditText loginMail;
+    private InputMethodManager imm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_mail);
-        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-        getSupportActionBar().setCustomView(R.layout.actionbar_custom);
         ButterKnife.bind(this);
+        setCustomActionBar();
 
-        //set action bar title
-        View v = getSupportActionBar().getCustomView();
-        TextView titleTxtView = (TextView) v.findViewById(R.id.actionbar_title);
-        titleTxtView.setText(R.string.login);
-
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
 
         loginMail.setOnKeyListener((v1, keyCode, event) -> {
@@ -57,7 +52,19 @@ public class LoginMailActivity extends AppCompatActivity {
         });
     }
 
+    private void setCustomActionBar() {
+        LoginCustomActionBar customActionBar = new LoginCustomActionBar(getSupportActionBar(), this);
+        customActionBar.setTitle(getResources().getString(R.string.login));
+        customActionBar.setCrossButtonJumpScreen(LoginRegisterStartActivity.class);
+    }
+
     public boolean isValidEmail(String email) {
         return Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
+
+//    @Override
+//    public void onStop () {
+//        super.onStop();
+//
+//    }
 }
