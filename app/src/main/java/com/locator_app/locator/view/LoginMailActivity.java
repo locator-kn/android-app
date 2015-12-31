@@ -22,7 +22,6 @@ public class LoginMailActivity extends AppCompatActivity {
 
     @Bind(R.id.loginMail)
     EditText loginMail;
-    private InputMethodManager imm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +30,7 @@ public class LoginMailActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         setCustomActionBar();
 
-        imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
 
         loginMail.setOnKeyListener((v1, keyCode, event) -> {
@@ -61,10 +60,4 @@ public class LoginMailActivity extends AppCompatActivity {
     public boolean isValidEmail(String email) {
         return Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
-
-//    @Override
-//    public void onStop () {
-//        super.onStop();
-//
-//    }
 }

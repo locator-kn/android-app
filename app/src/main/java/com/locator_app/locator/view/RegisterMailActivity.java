@@ -32,16 +32,9 @@ public class RegisterMailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_mail);
-        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-        getSupportActionBar().setCustomView(R.layout.actionbar_custom);
+        setCustomActionBar();
         ButterKnife.bind(this);
 
-        //set action bar title and color
-        getSupportActionBar().setBackgroundDrawable(new ColorDrawable
-                (ContextCompat.getColor(getApplicationContext(), R.color.colorRegister)));
-        View v = getSupportActionBar().getCustomView();
-        TextView titleTxtView = (TextView) v.findViewById(R.id.actionbar_title);
-        titleTxtView.setText(R.string.register);
 
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
@@ -65,6 +58,13 @@ public class RegisterMailActivity extends AppCompatActivity {
             }
             return false;
         });
+    }
+
+    private void setCustomActionBar() {
+        LoginCustomActionBar customActionBar = new LoginCustomActionBar(getSupportActionBar(), this);
+        customActionBar.setTitle(getResources().getString(R.string.register));
+        customActionBar.setCrossButtonJumpScreen(LoginRegisterStartActivity.class);
+        customActionBar.setColor(R.color.colorRegister);
     }
 
     public boolean isValidEmail(String email) {

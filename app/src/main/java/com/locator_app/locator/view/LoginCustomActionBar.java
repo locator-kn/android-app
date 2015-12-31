@@ -3,6 +3,8 @@ package com.locator_app.locator.view;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -73,5 +75,10 @@ public class LoginCustomActionBar {
 
     public void setCrossButtonJumpScreen(Class<?> cls) {
         this.cls = cls;
+    }
+
+    public void setColor(int color) {
+        this.actionBar.setBackgroundDrawable(new ColorDrawable
+                (ContextCompat.getColor(this.activity.getApplicationContext(), color)));
     }
 }
