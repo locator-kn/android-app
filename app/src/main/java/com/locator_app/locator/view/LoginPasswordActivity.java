@@ -29,14 +29,8 @@ public class LoginPasswordActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_password);
-        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-        getSupportActionBar().setCustomView(R.layout.actionbar_custom);
         ButterKnife.bind(this);
-
-        //set action bar title
-        View v = getSupportActionBar().getCustomView();
-        TextView titleTxtView = (TextView) v.findViewById(R.id.actionbar_title);
-        titleTxtView.setText(R.string.login);
+        setCustomActionBar();
 
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
@@ -50,6 +44,12 @@ public class LoginPasswordActivity extends AppCompatActivity {
             }
             return false;
         });
+    }
+
+    private void setCustomActionBar() {
+        LoginCustomActionBar customActionBar = new LoginCustomActionBar(getSupportActionBar(), this);
+        customActionBar.setTitle(getResources().getString(R.string.login));
+        customActionBar.setCrossButtonJumpScreen(LoginRegisterStartActivity.class);
     }
 
     void login(String mail, String password) {
