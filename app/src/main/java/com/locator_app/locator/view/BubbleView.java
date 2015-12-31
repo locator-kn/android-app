@@ -60,7 +60,7 @@ public class BubbleView extends View {
     private Bitmap icon;
     private void roundAndSetIcon(Bitmap icon) {
         this.originalIcon = icon;
-        final int iconSize = (radius -strokeWidth)*2;
+        int iconSize = (radius - strokeWidth) * 2;
         this.icon = BitmapHelper.getRoundBitmap(icon, iconSize);
         invalidate();
     }
