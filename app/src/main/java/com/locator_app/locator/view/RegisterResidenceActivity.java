@@ -32,16 +32,7 @@ public class RegisterResidenceActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_residence);
         ButterKnife.bind(this);
-
-        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-        getSupportActionBar().setCustomView(R.layout.actionbar_custom);
-
-        //set action bar title and color
-        getSupportActionBar().setBackgroundDrawable(new ColorDrawable
-                (ContextCompat.getColor(getApplicationContext(), R.color.colorRegister)));
-        View v = getSupportActionBar().getCustomView();
-        TextView titleTxtView = (TextView) v.findViewById(R.id.actionbar_title);
-        titleTxtView.setText(R.string.where_do_you_live);
+        setCustomActionBar();
 
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
@@ -58,6 +49,13 @@ public class RegisterResidenceActivity extends AppCompatActivity {
             }
             return false;
         });
+    }
+
+    private void setCustomActionBar() {
+        LoginCustomActionBar customActionBar = new LoginCustomActionBar(getSupportActionBar(), this);
+        customActionBar.setTitle(getResources().getString(R.string.where_do_you_live));
+        customActionBar.setCrossButtonJumpScreen(LoginRegisterStartActivity.class);
+        customActionBar.setColor(R.color.colorRegister);
     }
 }
 

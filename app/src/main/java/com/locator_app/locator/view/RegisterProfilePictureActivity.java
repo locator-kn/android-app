@@ -1,13 +1,8 @@
 package com.locator_app.locator.view;
 
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.locator_app.locator.R;
 import com.locator_app.locator.controller.UserController;
@@ -34,16 +29,7 @@ public class RegisterProfilePictureActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_profile_picture);
         ButterKnife.bind(this);
-        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-        getSupportActionBar().setCustomView(R.layout.actionbar_custom);
-
-        //set action bar title and color
-        getSupportActionBar().setBackgroundDrawable(new ColorDrawable
-                (ContextCompat.getColor(getApplicationContext(), R.color.colorRegister)));
-        View v = getSupportActionBar().getCustomView();
-        TextView titleTxtView = (TextView) v.findViewById(R.id.actionbar_title);
-        titleTxtView.setText(R.string.register);
-
+        setCustomActionBar();
         loadImages();
     }
 
@@ -62,6 +48,13 @@ public class RegisterProfilePictureActivity extends AppCompatActivity {
                 (HashMap<String, String>)getIntent().getSerializableExtra("registerValues");
         registerValues.put("profilePicture", null);
         register(registerValues);
+    }
+
+    private void setCustomActionBar() {
+        LoginCustomActionBar customActionBar = new LoginCustomActionBar(getSupportActionBar(), this);
+        customActionBar.setTitle(getResources().getString(R.string.register));
+        customActionBar.setCrossButtonJumpScreen(LoginRegisterStartActivity.class);
+        customActionBar.setColor(R.color.colorRegister);
     }
 
     private void register(HashMap<String, String> regValues) {
