@@ -19,6 +19,8 @@ import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 public class BubbleView extends View {
 
+    private Point center;
+    private int radius;
     private Paint painter;
 
     private int fillColor;
@@ -26,15 +28,6 @@ public class BubbleView extends View {
         if (fillColor != this.fillColor) {
             this.fillColor = fillColor;
             invalidate();
-        }
-    }
-
-    private int radius;
-    public void setRadius(int radius) {
-        if (radius != this.radius) {
-            this.radius = radius;
-            roundAndSetIcon(originalIcon);
-            updateLayoutParams();
         }
     }
 
@@ -59,7 +52,7 @@ public class BubbleView extends View {
     public void setShadowWidth(int shadowWidth) {
         if (shadowWidth != this.shadowWidth) {
             this.shadowWidth = shadowWidth;
-            requestLayout();
+            invalidate();
         }
     }
 
@@ -67,7 +60,7 @@ public class BubbleView extends View {
     private Bitmap icon;
     private void roundAndSetIcon(Bitmap icon) {
         this.originalIcon = icon;
-        final int iconSize = (radius-strokeWidth)*2;
+        final int iconSize = (radius -strokeWidth)*2;
         this.icon = BitmapHelper.getRoundBitmap(icon, iconSize);
         invalidate();
     }
@@ -94,97 +87,73 @@ public class BubbleView extends View {
         painter = new Paint(Paint.ANTI_ALIAS_FLAG);
         painter.setStyle(Paint.Style.FILL);
         fillColor = a.getColor(R.styleable.BubbleView_fillColor, Color.TRANSPARENT);
-        radius = a.getInteger(R.styleable.BubbleView_radius, 100);
         strokeColor = a.getColor(R.styleable.BubbleView_strokeColor, Color.MAGENTA);
         strokeWidth = a.getInteger(R.styleable.BubbleView_strokeWidth, 10);
         shadowWidth = a.getInteger(R.styleable.BubbleView_shadowWidth, 0);
+        center = new Point();
         a.recycle();
     }
 
-    public void moveTo(float x, float y) {
-        int radius = getRadius();
-        setX(x - radius);
-        setY(y - radius);
-        requestLayout();
-    }
-
-    public Point getCenter() {
-        return new Point((int)getX() + getRadius(), (int)getY() + getRadius());
-    }
-
-    private void updateLayoutParams() {
-
-        int currentRadius = Math.min(getMeasuredWidth(), getMeasuredHeight()) / 2;
-        currentRadius = Math.min(currentRadius, radius);
-        float x = getX() + currentRadius;
-        float y = getY() + currentRadius;
-        if (getLayoutParams() != null) {
-            int newRadius = getRadius();
-            getLayoutParams().width = newRadius * 2;
-            getLayoutParams().height = newRadius * 2;
-        }
-        moveTo(x, y);
-
-    }
-
-    @Override
-    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-        updateLayoutParams();
-    }
-
-    public int getRadius() {
-        return radius;
-    }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        final int x = getMeasuredWidth() / 2;
-        final int y = getMeasuredHeight() / 2;
-
-        painter.setStyle(Paint.Style.STROKE);
+        /*painter.setStyle(Paint.Style.STROKE);
         painter.setColor(strokeColor);
         painter.setStrokeWidth(strokeWidth);
         final int shadowColor = 0x80000000;
         painter.setShadowLayer(shadowWidth, 0, 0, shadowColor);
-        canvas.drawCircle(x, y, radius - strokeWidth/2, painter);
+        canvas.drawCircle(x, y, radius - strokeWidth/2, painter);*/
 
         if (icon == null) {
             painter.setStyle(Paint.Style.FILL);
             painter.setColor(fillColor);
-            canvas.drawCircle(x, y, radius - strokeWidth, painter);
+            canvas.drawCircle(center.x, center.y, radius, painter);
         } else {
-            canvas.drawBitmap(icon, x - icon.getWidth()/2, y - icon.getHeight()/2, painter);
+            canvas.drawBitmap(icon, center.x - icon.getWidth()/2, center.y - icon.getHeight()/2, painter);
+        }
+    }
+
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec,
+                             int heightMeasureSpec) {
+        int width, height;
+
+        int contentWidth = 200;
+        int contentHeight = 200;
+        width = getMeasurement(widthMeasureSpec, contentWidth);
+        height = getMeasurement(heightMeasureSpec, contentHeight);
+
+        setMeasuredDimension(width, height);
+    }
+
+    private int getMeasurement(int measureSpec, int contentSize) {
+        int specSize = MeasureSpec.getSize(measureSpec);
+        switch (MeasureSpec.getMode(measureSpec)) {
+            case MeasureSpec.AT_MOST:
+                return Math.min(specSize, contentSize);
+            case MeasureSpec.UNSPECIFIED:
+                return contentSize;
+            case MeasureSpec.EXACTLY:
+                return specSize;
+            default:
+                return 0;
         }
     }
 
     @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-
-        final int widthMode = MeasureSpec.getMode(widthMeasureSpec);
-        final int widthSize = MeasureSpec.getSize(widthMeasureSpec);
-        final int heightMode = MeasureSpec.getMode(heightMeasureSpec);
-        final int heightSize = MeasureSpec.getSize(heightMeasureSpec);
-
-        final int desiredSize = radius * 2;
-        int width = desiredSize;
-        int height = desiredSize;
-
-        if (widthMode == MeasureSpec.EXACTLY) {
-            width = widthSize;
-        } else if (widthMode == MeasureSpec.AT_MOST) {
-            width = Math.min(desiredSize, widthSize);
+    protected void onSizeChanged(int w, int h,
+                                 int oldw, int oldh) {
+        if (w != oldw || h != oldh) {
+            //If there was a change, reset the parameters
+            center.x = w / 2;
+            center.y = h / 2;
+            radius = Math.min(center.x, center.y);
         }
-
-        if (heightMode == MeasureSpec.EXACTLY) {
-            height = heightSize;
-        } else if (heightMode == MeasureSpec.AT_MOST) {
-            height = Math.min(desiredSize, heightSize);
-        }
-
-        setMeasuredDimension(width, height);
     }
+
 
     public void loadImage(String imageUri) {
         if (!ImageLoader.getInstance().isInited()) {

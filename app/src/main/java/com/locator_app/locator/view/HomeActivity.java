@@ -1,36 +1,32 @@
 package com.locator_app.locator.view;
 
-import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.Button;
+import android.util.Log;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.locator_app.locator.R;
-import com.locator_app.locator.controller.LocationController;
 import com.locator_app.locator.controller.UserController;
-import com.locator_app.locator.model.LocatorLocation;
-import com.locator_app.locator.service.users.RegistrationRequest;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import rx.Observable;
-import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 public class HomeActivity extends AppCompatActivity {
 
-    @Bind(R.id.logout)
-    Button logout;
+    @Bind(R.id.mainLayout)
+    RelativeLayout mainLayout;
 
-    @Bind(R.id.loadLocation)
-    Button loadLocation;
+    @Bind(R.id.schoenHierBubble)
+    BubbleView schoenHierBubble;
 
-    @Bind(R.id.loadLocationsNearby)
-    Button loadLocationsNearby;
+    @Bind(R.id.userProfileBubble)
+    BubbleView userProfileBubble;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,59 +35,74 @@ public class HomeActivity extends AppCompatActivity {
         ButterKnife.bind(this);
     }
 
-    @OnClick(R.id.logout)
-    public void logout() {
-
-        UserController controller = UserController.getInstance();
-        controller.logout()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .map(logoutResponse -> logoutResponse.message)
-                .subscribe(
-                        (message) -> {
-                            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
-                            Intent intent = new Intent(getApplicationContext(), LoginRegisterStartActivity.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            startActivity(intent);
-                        },
-                        (err) -> {
-                            Toast.makeText(getApplicationContext(), "could not log out, sorry!", Toast.LENGTH_LONG).show();
-                        }
-                );
+    @OnClick(R.id.userProfileBubble)
+    void onUserProfileClick() {
+        Toast.makeText(getApplicationContext(), "user", Toast.LENGTH_SHORT).show();
     }
 
-    @OnClick(R.id.loadLocation)
-    public void loadLocation() {
-
-        final String locatorHqId = "567a96f3990007900125f56b";
-        final String noSuchLocation = "067a96f3990007900125f56b";
-
-        LocationController controller = LocationController.getInstance();
-        controller.getLocationById(locatorHqId)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .map(locatorLocation -> locatorLocation.title)
-                .subscribe(
-                        (title) -> Toast.makeText(getApplicationContext(), title, Toast.LENGTH_SHORT).show(),
-                        (error) -> Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_SHORT).show()
-                );
+    @OnClick(R.id.schoenHierBubble)
+    void onSchoenHierBubbleClick() {
+        Toast.makeText(getApplicationContext(), "scheonhier", Toast.LENGTH_SHORT).show();
     }
 
-    @OnClick(R.id.loadLocationsNearby)
-    public void loadLocationsNearby() {
+    private void placeUserProfileBubble() {
+        setBubbleRadius(userProfileBubble, 75);
+        setBubbleCenter(userProfileBubble, 0.5, 0.87);
+        userProfileBubble.setFillColor(Color.GREEN);
+    }
 
-        LocationController controller = LocationController.getInstance();
-        controller.getLocationsNearby(9.169753789901733,
-                47.66868204997508, 20000, 100)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .map(location -> location.city)
-                .map(city -> city.title)
-                .distinct()
-                .subscribe(
-                        (name) -> Toast.makeText(getApplicationContext(), name, Toast.LENGTH_SHORT).show(),
-                        (err) -> Toast.makeText(getApplicationContext(), err.toString(), Toast.LENGTH_LONG).show(),
-                        () -> Toast.makeText(getApplicationContext(), "done", Toast.LENGTH_LONG).show()
-                );
+    private void placeSchoenHierBubble() {
+        setBubbleRadius(schoenHierBubble, 140);
+        setBubbleCenter(schoenHierBubble, 0.62, 0.38);
+        schoenHierBubble.setFillColor(Color.RED);
+    }
+
+    void setBubbleRadius(BubbleView bubble, int radius) {
+        Point center = getBubbleCenter(bubble);
+        updateBubble(bubble, radius, center.x, center.y);
+    }
+
+    void setBubbleCenter(BubbleView bubble, double percentScreenWidth, double percentScreenHeight) {
+        int x = (int) (mainLayout.getWidth() * percentScreenWidth);
+        int y = (int) (mainLayout.getHeight() * percentScreenHeight);
+        setBubbleCenter(bubble, x, y);
+    }
+
+    void setBubbleCenter(BubbleView bubble, int centerX, int centerY) {
+        int radius = getBubbleRadius(bubble);
+        updateBubble(bubble, radius, centerX, centerY);
+    }
+
+    void updateBubble(BubbleView bubble, int radius, int centerX, int centerY) {
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) bubble.getLayoutParams();
+        params.width = radius * 2;
+        params.height = radius * 2;
+        params.leftMargin = centerX - radius;
+        params.topMargin = centerY - radius;
+        bubble.setLayoutParams(params);
+    }
+
+    int getBubbleRadius(BubbleView bubble) {
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) bubble.getLayoutParams();
+        int width = params.width;
+        int height = params.height;
+        int radius = Math.min(width, height) / 2;
+        return radius;
+    }
+
+    Point getBubbleCenter(BubbleView bubble) {
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) bubble.getLayoutParams();
+        int radius = getBubbleRadius(bubble);
+        int centerX = params.leftMargin + radius;
+        int centerY = params.topMargin + radius;
+        Point center = new Point(centerX, centerY);
+        return center;
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        placeUserProfileBubble();
+        placeSchoenHierBubble();
     }
 }
