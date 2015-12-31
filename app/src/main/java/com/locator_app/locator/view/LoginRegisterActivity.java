@@ -57,6 +57,14 @@ public class LoginRegisterActivity extends AppCompatActivity {
         View v = getSupportActionBar().getCustomView();
         TextView titleTxtView = (TextView) v.findViewById(R.id.actionbar_title);
         titleTxtView.setText(R.string.welcome_to);
+        ImageView backButton = (ImageView) v.findViewById(R.id.actionbar_back);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+        ImageView crossButton = (ImageView) v.findViewById(R.id.actionbar_cross);
     }
 
     private void loadImages() {

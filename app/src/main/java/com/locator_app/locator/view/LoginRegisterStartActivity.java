@@ -55,6 +55,7 @@ public class LoginRegisterStartActivity extends AppCompatActivity {
     @OnClick(R.id.login_yes)
     void onLoginYesClicked() {
         Intent intent = new Intent(getApplicationContext(), LoginRegisterActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         startActivity(intent);
     }
 
