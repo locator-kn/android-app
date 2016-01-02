@@ -1,6 +1,10 @@
 package com.locator_app.locator.view;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 
@@ -24,6 +28,9 @@ public class RegisterProfilePictureActivity extends AppCompatActivity {
     @Bind(R.id.profileNo)
     ImageView profileNo;
 
+    private static final int REQUEST_CAMERA = 1;
+    private static final int SELECT_FILE = 2;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +45,7 @@ public class RegisterProfilePictureActivity extends AppCompatActivity {
         HashMap<String, String> registerValues =
                 (HashMap<String, String>)getIntent().getSerializableExtra("registerValues");
         //TODO: load image
+        selectImage();
         registerValues.put("profilePicture", null);
         register(registerValues);
     }
@@ -55,6 +63,35 @@ public class RegisterProfilePictureActivity extends AppCompatActivity {
         customActionBar.setTitle(getResources().getString(R.string.register));
         customActionBar.setCrossButtonJumpScreen(LoginRegisterStartActivity.class);
         customActionBar.setColor(R.color.colorRegister);
+    }
+
+    private void selectImage() {
+        String takePhoto = getResources().getString(R.string.take_photo);
+        String choosePhoto = getResources().getString(R.string.choose_photo);
+        String cancel = getResources().getString(R.string.cancel);
+        final CharSequence[] items = { takePhoto, choosePhoto, cancel};
+        AlertDialog.Builder builder = new AlertDialog.Builder(RegisterProfilePictureActivity.this);
+        builder.setTitle(getResources().getString(R.string.choose_profile_picture));
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int item) {
+                if (items[item].equals(takePhoto)) {
+                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    startActivityForResult(intent, REQUEST_CAMERA);
+                } else if (items[item].equals(choosePhoto)) {
+                    Intent intent = new Intent(
+                            Intent.ACTION_PICK,
+                            android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    intent.setType("image/*");
+                    startActivityForResult(
+                            Intent.createChooser(intent, getResources().getString(R.string.select_file)),
+                            SELECT_FILE);
+                } else if (items[item].equals(cancel)) {
+                    dialog.dismiss();
+                }
+            }
+        });
+        builder.show();
     }
 
     private void register(HashMap<String, String> regValues) {

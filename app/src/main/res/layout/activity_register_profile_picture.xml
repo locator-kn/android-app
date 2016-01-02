@@ -10,7 +10,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/choose_profile_picture"
+        android:text="@string/choose_profile_picture_question"
         android:textSize="16pt"
         android:textColor="@color/colorWhite"
         android:textAlignment="center"
