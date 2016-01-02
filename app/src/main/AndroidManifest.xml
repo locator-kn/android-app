@@ -48,6 +48,12 @@
         <activity
             android:name=".view.RegisterProfilePictureActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.FacebookLoginMailActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.FacebookLoginPasswordActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

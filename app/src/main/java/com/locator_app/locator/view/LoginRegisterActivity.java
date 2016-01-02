@@ -45,6 +45,12 @@ public class LoginRegisterActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    @OnClick(R.id.login_facebook)
+    public void onLoginFacebookClick() {
+        Intent intent = new Intent(getApplicationContext(), FacebookLoginMailActivity.class);
+        startActivity(intent);
+    }
+
     @OnClick(R.id.register)
     public void onRegisterClick() {
         Intent intent = new Intent(getApplicationContext(), RegisterNameActivity.class);
