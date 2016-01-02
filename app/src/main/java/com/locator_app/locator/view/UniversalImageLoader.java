@@ -13,6 +13,7 @@ import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingProgressListener;
 
 public class UniversalImageLoader extends View {
+
     public UniversalImageLoader(Context context) {
         super(context);
     }
