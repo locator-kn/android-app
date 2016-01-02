@@ -11,5 +11,10 @@
     <string name="where_do_you_live">Wo wohnst du?</string>
     <string name="residence">Ort eingeben</string>
     <string name="register">Registrierung</string>
+    <string name="choose_profile_picture_question">Profilbild auswählen?</string>
     <string name="choose_profile_picture">Profilbild auswählen?</string>
+    <string name="take_photo">Foto aufnehmen</string>
+    <string name="choose_photo">Foto auswählen</string>
+    <string name="cancel">Abbrechen</string>
+    <string name="select_file">Datei auswählen</string>
 </resources>
