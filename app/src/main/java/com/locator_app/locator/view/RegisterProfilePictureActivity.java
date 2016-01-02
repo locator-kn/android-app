@@ -1,18 +1,29 @@
 package com.locator_app.locator.view;
 
+import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.locator_app.locator.R;
 import com.locator_app.locator.controller.UserController;
 import com.locator_app.locator.service.users.RegistrationRequest;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.HashMap;
 
 import butterknife.Bind;
@@ -23,13 +34,16 @@ import rx.schedulers.Schedulers;
 
 public class RegisterProfilePictureActivity extends AppCompatActivity {
 
+    private static final int REQUEST_CAMERA = 1;
+    private static final int SELECT_FILE = 2;
+    private static final int PIC_CROP = 3;
+
     @Bind(R.id.profilePicture)
     ImageView profilePicture;
     @Bind(R.id.profileNo)
     ImageView profileNo;
-
-    private static final int REQUEST_CAMERA = 1;
-    private static final int SELECT_FILE = 2;
+    @Bind(R.id.profilePictureText)
+    TextView profilePictureText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,12 +56,7 @@ public class RegisterProfilePictureActivity extends AppCompatActivity {
 
     @OnClick(R.id.profilePicture)
     public void onProfilePictureClick() {
-        HashMap<String, String> registerValues =
-                (HashMap<String, String>)getIntent().getSerializableExtra("registerValues");
-        //TODO: load image
         selectImage();
-        registerValues.put("profilePicture", null);
-        register(registerValues);
     }
 
     @OnClick(R.id.profileNo)
@@ -92,6 +101,65 @@ public class RegisterProfilePictureActivity extends AppCompatActivity {
             }
         });
         builder.show();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            if (requestCode == REQUEST_CAMERA) {
+                //save image
+                Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
+                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+                thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+                File destination = new File(Environment.getExternalStorageDirectory(),
+                        System.currentTimeMillis() + ".jpg");
+                FileOutputStream fo;
+                try {
+                    destination.createNewFile();
+                    fo = new FileOutputStream(destination);
+                    fo.write(bytes.toByteArray());
+                    fo.close();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                cropImage(data.getData());
+
+            } else if (requestCode == SELECT_FILE) {
+                cropImage(data.getData());
+            }
+            else if(requestCode == PIC_CROP) {
+                Bundle extras = data.getExtras();
+                Bitmap thePic = extras.getParcelable("data");
+                Bitmap roundedBitmap = BitmapHelper.getRoundBitmap(thePic, 500);
+                profilePicture.setImageBitmap(roundedBitmap);
+                profilePictureText.setText(getResources().getString(R.string.your_profile_picture));
+                //TODO: replace "no"-image with "continue"-image or something
+            }
+        }
+    }
+
+    private void cropImage(Uri selectedImageUri) {
+        try {
+            Intent cropIntent = new Intent("com.android.camera.action.CROP");
+            cropIntent.setDataAndType(selectedImageUri, "image/*");
+            cropIntent.putExtra("crop", "true");
+            cropIntent.putExtra("aspectX", 1);
+            cropIntent.putExtra("aspectY", 1);
+            cropIntent.putExtra("outputX", 200);
+            cropIntent.putExtra("outputY", 200);
+            cropIntent.putExtra("return-data", true);
+            cropIntent.putExtra("circleCrop", new String(""));
+            startActivityForResult(cropIntent, PIC_CROP);
+        }
+        catch(ActivityNotFoundException anfe){
+            String errorMessage = "Whoops - your device doesn't support the crop action!";
+            Toast toast = Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT);
+            toast.show();
+        }
     }
 
     private void register(HashMap<String, String> regValues) {
