@@ -59,10 +59,12 @@ public class BubbleView extends View {
     private Bitmap originalIcon;
     private Bitmap icon;
     private void roundAndSetIcon(Bitmap icon) {
-        this.originalIcon = icon;
-        int iconSize = (radius - strokeWidth) * 2;
-        this.icon = BitmapHelper.getRoundBitmap(icon, iconSize);
-        invalidate();
+        if (icon != null) {
+            this.originalIcon = icon;
+            int iconSize = (radius - strokeWidth - shadowWidth) * 2;
+            this.icon = BitmapHelper.getRoundBitmap(icon, iconSize);
+            invalidate();
+        }
     }
 
     public void setIcon(Bitmap icon) {
@@ -88,7 +90,7 @@ public class BubbleView extends View {
         painter.setStyle(Paint.Style.FILL);
         fillColor = a.getColor(R.styleable.BubbleView_fillColor, Color.TRANSPARENT);
         strokeColor = a.getColor(R.styleable.BubbleView_strokeColor, Color.MAGENTA);
-        strokeWidth = a.getInteger(R.styleable.BubbleView_strokeWidth, 10);
+        strokeWidth = a.getInteger(R.styleable.BubbleView_strokeWidth, 0);
         shadowWidth = a.getInteger(R.styleable.BubbleView_shadowWidth, 0);
         center = new Point();
         a.recycle();
@@ -99,22 +101,24 @@ public class BubbleView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        /*painter.setStyle(Paint.Style.STROKE);
-        painter.setColor(strokeColor);
-        painter.setStrokeWidth(strokeWidth);
+        final int x = center.x;
+        final int y = center.y;
+
         final int shadowColor = 0x80000000;
         painter.setShadowLayer(shadowWidth, 0, 0, shadowColor);
-        canvas.drawCircle(x, y, radius - strokeWidth/2, painter);*/
+        painter.setStrokeWidth(strokeWidth);
+        painter.setColor(strokeColor);
+        painter.setStyle(Paint.Style.STROKE);
+        canvas.drawCircle(x, y, radius - shadowWidth - strokeWidth, painter);
 
+        painter.setStyle(Paint.Style.FILL);
         if (icon == null) {
-            painter.setStyle(Paint.Style.FILL);
             painter.setColor(fillColor);
-            canvas.drawCircle(center.x, center.y, radius, painter);
+            canvas.drawCircle(x, y, radius - shadowWidth - strokeWidth, painter);
         } else {
-            canvas.drawBitmap(icon, center.x - icon.getWidth()/2, center.y - icon.getHeight()/2, painter);
+            canvas.drawBitmap(icon, strokeWidth + shadowWidth, strokeWidth + shadowWidth, painter);
         }
     }
-
 
     @Override
     protected void onMeasure(int widthMeasureSpec,
@@ -125,6 +129,8 @@ public class BubbleView extends View {
         int contentHeight = 200;
         width = getMeasurement(widthMeasureSpec, contentWidth);
         height = getMeasurement(heightMeasureSpec, contentHeight);
+
+        roundAndSetIcon(originalIcon);
 
         setMeasuredDimension(width, height);
     }
