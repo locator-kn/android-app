@@ -2,21 +2,35 @@ package com.locator_app.locator.service.users;
 
 
 import com.google.gson.JsonSyntaxException;
+import com.locator_app.locator.service.Api;
 import com.locator_app.locator.service.ServiceFactory;
-import com.locator_app.locator.service.users.LoginRequest;
-import com.locator_app.locator.service.users.LoginResponse;
-import com.locator_app.locator.service.users.LogoutResponse;
-import com.locator_app.locator.service.users.RegistrationRequest;
-import com.locator_app.locator.service.users.RegistrationResponse;
-import com.locator_app.locator.service.users.UsersApi;
 
 import java.net.UnknownHostException;
 
 import retrofit.HttpException;
 import retrofit.Response;
+import retrofit.http.Body;
+import retrofit.http.GET;
+import retrofit.http.POST;
 import rx.Observable;
 
 public class UsersApiService {
+
+    public interface UsersApi {
+
+        @POST(Api.version + "/users/login")
+        Observable<Response<LoginResponse>> login(@Body LoginRequest loginBodyRequest);
+
+        @GET(Api.version + "/users/logout")
+        Observable<Response<LogoutResponse>> logout();
+
+        @GET(Api.version + "/users/protected")
+        Observable<Response<Object>> requestProtected();
+
+        @POST(Api.version + "/users/register")
+        Observable<Response<RegistrationResponse>> register(@Body RegistrationRequest registrationBodyRequest);
+
+    }
 
     private UsersApi service = ServiceFactory.createService(UsersApi.class);
 
