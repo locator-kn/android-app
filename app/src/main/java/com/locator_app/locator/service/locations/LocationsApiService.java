@@ -3,16 +3,37 @@ package com.locator_app.locator.service.locations;
 import android.util.Log;
 
 import com.locator_app.locator.model.LocatorLocation;
+import com.locator_app.locator.service.Api;
 import com.locator_app.locator.service.ServiceFactory;
 
 import java.net.UnknownHostException;
 
 import retrofit.Response;
+import retrofit.http.Body;
+import retrofit.http.GET;
+import retrofit.http.POST;
+import retrofit.http.Path;
+import retrofit.http.Query;
 import rx.Observable;
 import rx.functions.Action1;
 import rx.functions.Func1;
 
 public class LocationsApiService {
+
+    public interface LocationsApi {
+
+        @POST(Api.version + "/locations")
+        Observable<Response<PostLocationResponse>> postLocation(@Body PostLocationRequest request);
+
+        @GET(Api.version + "/locations/{locationId}")
+        Observable<Response<LocatorLocation>> locationById(@Path("locationId") String locationId);
+
+        @GET(Api.version + "/locations/nearby")
+        Observable<Response<LocationsNearbyResponse>> locationsNearby(@Query("long") double lon,
+                                                                      @Query("lat") double lat,
+                                                                      @Query("maxDistance") double maxDistance,
+                                                                      @Query("limit") int limit);
+    }
 
     LocationsApi service = ServiceFactory.createService(LocationsApi.class);
 
