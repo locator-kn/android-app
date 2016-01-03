@@ -16,7 +16,8 @@
         android:layout_height="fill_parent"
         custom:fillColor="#ffffff"
         custom:strokeColor="#ffffff"
-        custom:shadowWidth="10" />
+        custom:shadowWidth="10"
+        custom:strokeWidth="0"/>
 
     <com.locator_app.locator.view.BubbleView
         android:id="@+id/userProfileBubble"
@@ -24,6 +25,7 @@
         android:layout_height="fill_parent"
         custom:fillColor="#ffffff"
         custom:strokeColor="#ffffff"
-        custom:shadowWidth="10" />
+        custom:shadowWidth="10"
+        custom:strokeWidth="0"/>
 
 </RelativeLayout>
