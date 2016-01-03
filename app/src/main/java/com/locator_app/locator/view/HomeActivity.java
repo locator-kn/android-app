@@ -10,8 +10,14 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.locator_app.locator.R;
+import com.locator_app.locator.controller.MyController;
 import com.locator_app.locator.controller.UserController;
+import com.locator_app.locator.model.LocatorLocation;
+import com.locator_app.locator.model.Message;
+import com.locator_app.locator.service.my.BubbleScreenResponse;
 import com.locator_app.locator.service.users.LogoutResponse;
+
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -67,13 +73,13 @@ public class HomeActivity extends AppCompatActivity {
     private void initUserProfileBubble() {
         userProfileBubble.loadImage("drawable://" + R.drawable.profile);
         setBubbleRadius(userProfileBubble, 75);
-        setBubbleCenter(userProfileBubble, 0.5, 0.87);
+        setBubbleCenter(userProfileBubble, 0.5, 0.89);
     }
 
     private void initSchoenHierBubble() {
         schoenHierBubble.loadImage("drawable://" + R.drawable.schoenhier);
         setBubbleRadius(schoenHierBubble, 140);
-        setBubbleCenter(schoenHierBubble, 0.62, 0.38);
+        setBubbleCenter(schoenHierBubble, 0.5, 0.38);
     }
 
     void setBubbleRadius(BubbleView bubble, int radius) {
@@ -123,5 +129,49 @@ public class HomeActivity extends AppCompatActivity {
         super.onWindowFocusChanged(hasFocus);
         initUserProfileBubble();
         initSchoenHierBubble();
+        updateDashboard();
+    }
+
+    private void updateDashboard() {
+        MyController controller = MyController.getInstance();
+        controller.getBubbleScreen()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        (response) -> handleBubbleScreenResponse(response),
+                        (error) -> handleBubbleScreenError(error)
+                );
+    }
+
+    private void handleBubbleScreenResponse(BubbleScreenResponse response) {
+        createMessageBubbles(response.messages);
+        createLocationBubbles(response.locations);
+        calculateBubblePositions();
+        showBubbles();
+    }
+
+    private void createMessageBubbles(List<Message> messages) {
+        for (Message message: messages) {
+            Toast.makeText(getApplicationContext(), "m: " + message.message, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void createLocationBubbles(List<BubbleScreenResponse.LocationResult> locations) {
+        for (BubbleScreenResponse.LocationResult locationResult: locations) {
+            String locationTitle = locationResult.location.title;
+            Toast.makeText(getApplicationContext(), "l: " + locationTitle, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void showBubbles() {
+
+    }
+
+    private void calculateBubblePositions() {
+
+    }
+
+    private void handleBubbleScreenError(Throwable error) {
+        Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
     }
 }
