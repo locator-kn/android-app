@@ -1,5 +1,6 @@
 package com.locator_app.locator.view;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
@@ -9,10 +10,14 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.locator_app.locator.R;
+import com.locator_app.locator.controller.UserController;
+import com.locator_app.locator.service.users.LogoutResponse;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -34,7 +39,24 @@ public class HomeActivity extends AppCompatActivity {
 
     @OnClick(R.id.userProfileBubble)
     void onUserProfileClick() {
-        Toast.makeText(getApplicationContext(), "user", Toast.LENGTH_SHORT).show();
+        UserController controller = UserController.getInstance();
+        controller.logout()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        (logoutResponse) -> onLogout(logoutResponse),
+                        (error) -> onLogoutError(error)
+                );
+    }
+
+    private void onLogout(LogoutResponse logoutResponse) {
+        Intent intent = new Intent(getApplicationContext(), LoginRegisterStartActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+    }
+
+    private void onLogoutError(Throwable t) {
+        Toast.makeText(getApplicationContext(), "could not log out", Toast.LENGTH_LONG).show();
     }
 
     @OnClick(R.id.schoenHierBubble)
@@ -43,17 +65,15 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void initUserProfileBubble() {
+        userProfileBubble.loadImage("drawable://" + R.drawable.profile);
         setBubbleRadius(userProfileBubble, 75);
         setBubbleCenter(userProfileBubble, 0.5, 0.87);
-        userProfileBubble.loadImage("drawable://" + R.drawable.no);
-        userProfileBubble.setFillColor(Color.GREEN);
     }
 
     private void initSchoenHierBubble() {
+        schoenHierBubble.loadImage("drawable://" + R.drawable.schoenhier);
         setBubbleRadius(schoenHierBubble, 140);
         setBubbleCenter(schoenHierBubble, 0.62, 0.38);
-        schoenHierBubble.loadImage("drawable://" + R.drawable.yes);
-        schoenHierBubble.setFillColor(Color.RED);
     }
 
     void setBubbleRadius(BubbleView bubble, int radius) {
