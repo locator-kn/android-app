@@ -16,7 +16,7 @@ public class BitmapHelper {
                 size, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(output);
 
-        final Paint paint = new Paint();
+        final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
         canvas.drawCircle(size / 2, size / 2, size / 2, paint);
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
