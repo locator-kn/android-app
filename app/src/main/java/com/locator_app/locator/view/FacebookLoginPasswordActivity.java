@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.locator_app.locator.R;
 import com.locator_app.locator.controller.UserController;
 import com.locator_app.locator.service.users.LoginRequest;
+import com.locator_app.locator.util.CacheImageLoader;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 
 import butterknife.Bind;
@@ -84,19 +85,13 @@ public class FacebookLoginPasswordActivity extends AppCompatActivity {
     }
 
     private void loadImages() {
-        //initialize components
-        UniversalImageLoader universalImageLoader = new UniversalImageLoader(getApplicationContext());
-
-        //set display image options
-        DisplayImageOptions options = new DisplayImageOptions.Builder().cacheInMemory(true)
-                .cacheOnDisc(true).resetViewBeforeLoading(true)
-                .build();
-
         //set images url's
         String urlFacebookLogo = "drawable://" + R.drawable.facebook_logo;
-
-        //display images
-        universalImageLoader.displayImage(urlFacebookLogo, facebookLogo, options);
+        CacheImageLoader.getInstance().loadAsync(urlFacebookLogo)
+                .subscribe(
+                        (bitmap -> facebookLogo.setImageBitmap(bitmap)),
+                        (error -> {})
+                );
     }
 }
 

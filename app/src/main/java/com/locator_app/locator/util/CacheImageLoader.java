@@ -2,6 +2,7 @@ package com.locator_app.locator.util;
 
 import android.graphics.Bitmap;
 import android.util.Log;
+import android.widget.ImageView;
 
 import com.locator_app.locator.LocatorApplication;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -53,6 +54,7 @@ public class CacheImageLoader {
                 }
 
                 if (bitmap == null) {
+                    Log.e("CacheImageLoader", "could not load image " + imageUri);
                     subscriber.onError(new Exception("could not load image " + imageUri));
                 } else {
                     subscriber.onNext(bitmap);
@@ -78,6 +80,13 @@ public class CacheImageLoader {
         return loadSync(imageUri)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public void setImage(final String imageUri, ImageView view) {
+        loadAsync(imageUri).subscribe(
+                (bitmap -> view.setImageBitmap(bitmap)),
+                (error -> {})
+        );
     }
 
     static CacheImageLoader instance;

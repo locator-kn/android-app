@@ -167,7 +167,7 @@ public class BubbleView extends View {
         CacheImageLoader.getInstance().loadAsync(imageUri)
                 .subscribe(
                     (bitmap) -> roundAndSetIcon(bitmap),
-                    (error) -> Log.e("BubbleView", "could not load image: " + imageUri)
+                    (error) -> {}
         );
     }
 }

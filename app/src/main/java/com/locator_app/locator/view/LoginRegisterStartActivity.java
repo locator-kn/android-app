@@ -13,7 +13,10 @@ import com.locator_app.locator.R;
 import com.locator_app.locator.controller.UserController;
 import com.locator_app.locator.model.User;
 import com.locator_app.locator.db.Couch;
+import com.locator_app.locator.util.CacheImageLoader;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
+
+import javax.security.auth.callback.CallbackHandler;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -85,22 +88,14 @@ public class LoginRegisterStartActivity extends AppCompatActivity {
     }
 
     void loadImages() {
-        //initialize components
-        UniversalImageLoader universalImageLoader = new UniversalImageLoader(getApplicationContext());
-
-        //set display image options
-        DisplayImageOptions options = new DisplayImageOptions.Builder().cacheInMemory(true)
-                .cacheOnDisc(true).resetViewBeforeLoading(true)
-                .build();
 
         //set images url's
         String urlLocator = "drawable://" + R.drawable.locator_logo;
         String urlYes = "drawable://" + R.drawable.yes;
         String urlNo = "drawable://" + R.drawable.no;
 
-        //display images
-        universalImageLoader.displayImage(urlLocator, locatorLogo, options);
-        universalImageLoader.displayImage(urlYes, loginYes, options);
-        universalImageLoader.displayImage(urlNo, loginNo, options);
+        CacheImageLoader.getInstance().setImage(urlLocator, locatorLogo);
+        CacheImageLoader.getInstance().setImage(urlYes, loginYes);
+        CacheImageLoader.getInstance().setImage(urlNo, loginNo);
     }
 }

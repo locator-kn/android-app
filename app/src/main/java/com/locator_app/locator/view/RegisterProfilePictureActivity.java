@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.locator_app.locator.R;
 import com.locator_app.locator.controller.UserController;
 import com.locator_app.locator.service.users.RegistrationRequest;
+import com.locator_app.locator.util.CacheImageLoader;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 
 import java.io.ByteArrayOutputStream;
@@ -184,21 +185,12 @@ public class RegisterProfilePictureActivity extends AppCompatActivity {
     }
 
     private void loadImages() {
-        //initialize components
-        UniversalImageLoader universalImageLoader = new UniversalImageLoader(getApplicationContext());
-
-        //set display image options
-        DisplayImageOptions options = new DisplayImageOptions.Builder().cacheInMemory(true)
-                .cacheOnDisc(true).resetViewBeforeLoading(true)
-                .build();
-
         //set images url's
         String urlProfile = "drawable://" + R.drawable.profile;
         String urlNo = "drawable://" + R.drawable.no;
 
-        //display images
-        universalImageLoader.displayImage(urlProfile, profilePicture, options);
-        universalImageLoader.displayImage(urlNo, profileNo, options);
+        CacheImageLoader.getInstance().setImage(urlProfile, profilePicture);
+        CacheImageLoader.getInstance().setImage(urlNo, profileNo);
     }
 }
 

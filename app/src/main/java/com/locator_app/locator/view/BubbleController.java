@@ -151,6 +151,6 @@ public class BubbleController {
     }
 
     private void handleBubbleUpdate(BubbleScreenResponse response) {
-        
+
     }
 }
