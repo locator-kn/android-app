@@ -12,8 +12,8 @@
         custom:shadowWidth="5"
         custom:fillColor="@color/innerRed"
         custom:strokeColor="@color/borderRed"
-        custom:strokeWidth="10"
-
+        custom:strokeWidth="16"
+        custom:img="@drawable/yes"
         />
 
     <LinearLayout

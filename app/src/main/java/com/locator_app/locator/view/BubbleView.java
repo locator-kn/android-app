@@ -9,23 +9,23 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 import com.locator_app.locator.R;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.nostra13.universalimageloader.core.assist.FailReason;
-import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
+import com.locator_app.locator.util.CacheImageLoader;
 
 public class BubbleView extends View {
 
     private Point center;
     private int radius;
+
     private Paint painter;
+    private Paint bitmapPainter;
 
     private int fillColor;
     public void setFillColor(int fillColor) {
-        if (fillColor != this.fillColor) {
+        if (this.fillColor != fillColor) {
             this.fillColor = fillColor;
             invalidate();
         }
@@ -33,7 +33,7 @@ public class BubbleView extends View {
 
     private int strokeWidth;
     public void setStrokeWidth(int strokeWidth) {
-        if (strokeWidth != this.strokeWidth) {
+        if (this.strokeWidth != strokeWidth) {
             this.strokeWidth = strokeWidth;
             roundAndSetIcon(originalIcon);
             invalidate();
@@ -42,7 +42,7 @@ public class BubbleView extends View {
 
     private int strokeColor;
     public void setStrokeColor(int strokeColor) {
-        if (strokeColor != this.strokeColor) {
+        if (this.strokeColor != strokeColor) {
             this.strokeColor = strokeColor;
             invalidate();
         }
@@ -50,7 +50,7 @@ public class BubbleView extends View {
 
     private int shadowWidth;
     public void setShadowWidth(int shadowWidth) {
-        if (shadowWidth != this.shadowWidth) {
+        if (this.shadowWidth != shadowWidth) {
             this.shadowWidth = shadowWidth;
             invalidate();
         }
@@ -61,7 +61,7 @@ public class BubbleView extends View {
     private void roundAndSetIcon(Bitmap icon) {
         if (icon != null) {
             this.originalIcon = icon;
-            int iconSize = (radius - strokeWidth - shadowWidth) * 2;
+            int iconSize = (radius-strokeWidth-shadowWidth) * 2;
             this.icon = BitmapHelper.getRoundBitmap(icon, iconSize);
             invalidate();
         }
@@ -86,12 +86,15 @@ public class BubbleView extends View {
         setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         Resources.Theme resourceTheme = context.getTheme();
         TypedArray a = resourceTheme.obtainStyledAttributes(attrs, R.styleable.BubbleView, 0, 0);
+
+        bitmapPainter = new Paint(Paint.ANTI_ALIAS_FLAG);
+
         painter = new Paint(Paint.ANTI_ALIAS_FLAG);
-        painter.setStyle(Paint.Style.FILL);
-        fillColor = a.getColor(R.styleable.BubbleView_fillColor, Color.TRANSPARENT);
-        strokeColor = a.getColor(R.styleable.BubbleView_strokeColor, Color.MAGENTA);
-        strokeWidth = a.getInteger(R.styleable.BubbleView_strokeWidth, 0);
-        shadowWidth = a.getInteger(R.styleable.BubbleView_shadowWidth, 0);
+        setFillColor(a.getColor(R.styleable.BubbleView_fillColor, Color.TRANSPARENT));
+        setStrokeColor(a.getColor(R.styleable.BubbleView_strokeColor, Color.TRANSPARENT));
+        setStrokeWidth(a.getInteger(R.styleable.BubbleView_strokeWidth, 0));
+        setShadowWidth(a.getInteger(R.styleable.BubbleView_shadowWidth, 0));
+
         center = new Point();
         a.recycle();
     }
@@ -101,22 +104,22 @@ public class BubbleView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        final int x = center.x;
-        final int y = center.y;
-
         final int shadowColor = 0x80000000;
         painter.setShadowLayer(shadowWidth, 0, 0, shadowColor);
         painter.setStrokeWidth(strokeWidth);
         painter.setColor(strokeColor);
         painter.setStyle(Paint.Style.STROKE);
-        canvas.drawCircle(x, y, radius - shadowWidth - strokeWidth, painter);
+        canvas.drawCircle(center.x, center.y, radius - shadowWidth - strokeWidth, painter);
 
         painter.setStyle(Paint.Style.FILL);
-        if (icon == null) {
+        if (fillColor != Color.TRANSPARENT) {
             painter.setColor(fillColor);
-            canvas.drawCircle(x, y, radius - shadowWidth - strokeWidth, painter);
-        } else {
-            canvas.drawBitmap(icon, strokeWidth + shadowWidth, strokeWidth + shadowWidth, painter);
+            canvas.drawCircle(center.x, center.y, radius - shadowWidth - strokeWidth, painter);
+        }
+
+        if (icon != null) {
+            int distance = strokeWidth + shadowWidth;
+            canvas.drawBitmap(icon, distance, distance, bitmapPainter);
         }
     }
 
@@ -129,8 +132,6 @@ public class BubbleView extends View {
         int contentHeight = 200;
         width = getMeasurement(widthMeasureSpec, contentWidth);
         height = getMeasurement(heightMeasureSpec, contentHeight);
-
-        roundAndSetIcon(originalIcon);
 
         setMeasuredDimension(width, height);
     }
@@ -157,33 +158,16 @@ public class BubbleView extends View {
             center.x = w / 2;
             center.y = h / 2;
             radius = Math.min(center.x, center.y);
+
+            roundAndSetIcon(originalIcon);
         }
     }
 
-
     public void loadImage(String imageUri) {
-        if (!ImageLoader.getInstance().isInited()) {
-            ImageLoaderConfiguration configuration =
-                    new ImageLoaderConfiguration.Builder(getContext()).build();
-            ImageLoader.getInstance().init(configuration);
-        }
-        ImageLoader.getInstance().loadImage(imageUri, new ImageLoadingListener() {
-            @Override
-            public void onLoadingStarted(String imageUri, View view) {
-            }
-
-            @Override
-            public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
-            }
-
-            @Override
-            public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-                roundAndSetIcon(loadedImage);
-            }
-
-            @Override
-            public void onLoadingCancelled(String imageUri, View view) {
-            }
-        });
+        CacheImageLoader.getInstance().loadAsync(imageUri)
+                .subscribe(
+                    (bitmap) -> roundAndSetIcon(bitmap),
+                    (error) -> Log.e("BubbleView", "could not load image: " + imageUri)
+        );
     }
 }
