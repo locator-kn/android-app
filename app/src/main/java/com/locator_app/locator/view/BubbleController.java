@@ -109,10 +109,9 @@ public class BubbleController {
         for (int i = 0; i < bubblesToPosition.size(); i++) {
             Bubble bubbleToPosition = bubblesToPosition.get(i);
             BubbleView bubbleView = bubbleToPosition.bubbleView;
-            quadrant = (quadrant) % 5;
             Point bubbleCenter = getBubbleCenter(quadrant);
             bubbleLayout.setBubbleCenter(bubbleView, bubbleCenter.x, bubbleCenter.y);
-            quadrant++;
+            quadrant = ((quadrant) % 4) + 1;
         }
         return quadrant;
     }
@@ -152,6 +151,6 @@ public class BubbleController {
     }
 
     private void handleBubbleUpdate(BubbleScreenResponse response) {
-
+        
     }
 }
