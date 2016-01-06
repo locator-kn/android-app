@@ -18,6 +18,19 @@ import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
+/*
+    usage:
+
+        // image loading
+        CacheImageLoader.getInstance().loadAsync("drawable://" + R.drawable.myImage)
+                .subscribe(
+                    (bitmap) -> roundAndSetIcon(bitmap),
+                    (error) -> {  handle error if you want }
+        );
+
+        // load image and set bitmap to ImageView
+        CacheImageLoader.getInstance().setImage("http://trulala.de/img.png", myImageView);
+ */
 public class CacheImageLoader {
     Map<String, Bitmap> cache = new HashMap<>();
     final List<String> loading = new LinkedList<>();
