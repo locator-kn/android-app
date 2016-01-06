@@ -9,9 +9,12 @@ import com.locator_app.locator.R;
 import com.locator_app.locator.model.LocatorLocation;
 import com.locator_app.locator.model.Message;
 import com.locator_app.locator.service.my.BubbleScreenResponse;
+import com.locator_app.locator.util.CacheImageLoader;
 
 import java.util.LinkedList;
 import java.util.List;
+
+import javax.security.auth.callback.CallbackHandler;
 
 
 public class BubbleController {
@@ -73,6 +76,7 @@ public class BubbleController {
             bubble.data = locationResult.location;
             bubbles.add(bubble);
             bubble.bubbleView.setOnClickListener(listener -> handleOnLocationBubbleClicked(bubble));
+            bubble.bubbleView.loadImage(locationResult.location.images.getSmall());
         }
         for (Message msg : response.messages) {
             final int priority = response.messages.indexOf(msg);
