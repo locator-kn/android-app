@@ -24,4 +24,9 @@ public class Message {
 
     @SerializedName("message_type")
     public String messageType;
+
+    @Override
+    public boolean equals(Object other) {
+        return other == this || other instanceof Message && id.equals(((Message) other).id);
+    }
 }

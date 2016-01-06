@@ -43,4 +43,8 @@ public class LocatorLocation {
     @SerializedName("images")
     public Images images;
 
+    @Override
+    public boolean equals(Object other) {
+        return other == this || other instanceof LocatorLocation && id.equals(((LocatorLocation)other).id);
+    }
 }
