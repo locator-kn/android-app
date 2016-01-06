@@ -39,4 +39,8 @@ public class LocatorLocation {
 
     @SerializedName("delete")
     public boolean deleted;
+
+    @SerializedName("images")
+    public Images images;
+
 }
