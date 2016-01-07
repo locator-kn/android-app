@@ -22,7 +22,6 @@ public class BubbleController {
         BubbleView view;
         LocatorObject data;
         int priority;
-        boolean positionFixed = false;
     }
 
     private List<Bubble> bubbles = new LinkedList<>();
