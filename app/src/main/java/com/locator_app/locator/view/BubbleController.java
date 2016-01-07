@@ -1,7 +1,6 @@
 package com.locator_app.locator.view;
 
 import android.graphics.Point;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.locator_app.locator.R;
@@ -13,7 +12,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import rx.Observable;
-import rx.observables.BlockingObservable;
 
 
 public class BubbleController {
@@ -120,14 +118,14 @@ public class BubbleController {
 
         int quadrant = startQuadrant;
         for (Bubble bubble: bubblesToPosition) {
-            Point bubbleCenter = getBubbleCenter(quadrant);
+            Point bubbleCenter = getInitialBubbleCenter(quadrant);
             bubbleLayout.setBubbleCenter(bubble.bubbleView, bubbleCenter.x, bubbleCenter.y);
             quadrant = ((quadrant) % 4) + 1;
         }
         return quadrant;
     }
 
-    private Point getBubbleCenter(int quadrant) {
+    private Point getInitialBubbleCenter(int quadrant) {
         final double distanceFromBorder = 0.2;
         double distanceFromLeftInPercent;
         double distanceFromTopInPercent;
