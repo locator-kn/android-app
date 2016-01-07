@@ -1,4 +1,4 @@
-package com.locator_app.locator.view;
+package com.locator_app.locator.view.bubble;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -9,10 +9,10 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 
 import com.locator_app.locator.R;
+import com.locator_app.locator.util.BitmapHelper;
 import com.locator_app.locator.util.CacheImageLoader;
 
 public class BubbleView extends View {

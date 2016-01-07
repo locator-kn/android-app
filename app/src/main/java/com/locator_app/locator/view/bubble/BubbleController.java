@@ -1,4 +1,4 @@
-package com.locator_app.locator.view;
+package com.locator_app.locator.view.bubble;
 
 import android.graphics.Point;
 import android.support.v4.content.ContextCompat;
@@ -58,7 +58,7 @@ public class BubbleController {
         userProfileBubble.view.loadImage("drawable://" + R.drawable.profile);
     }
 
-    void onBubbleScreenUpdate(BubbleScreenResponse response) {
+    public void onBubbleScreenUpdate(BubbleScreenResponse response) {
         if (bubbles.isEmpty()) {
             handleFirstScreenUpdate(response);
         } else {

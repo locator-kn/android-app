@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.locator_app.locator.view.RelativeBubbleLayout
+<com.locator_app.locator.view.bubble.RelativeBubbleLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:custom="http://schemas.android.com/apk/res-auto"
@@ -9,18 +9,18 @@
     android:background="@drawable/background"
     tools:context=".MainActivity">
 
-    <com.locator_app.locator.view.BubbleView
+    <com.locator_app.locator.view.bubble.BubbleView
         android:id="@+id/schoenHierBubble"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         custom:shadowWidth="10"
         custom:strokeWidth="0" />
 
-    <com.locator_app.locator.view.BubbleView
+    <com.locator_app.locator.view.bubble.BubbleView
         android:id="@+id/userProfileBubble"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         custom:shadowWidth="10"
         custom:strokeWidth="0" />
 
-</com.locator_app.locator.view.RelativeBubbleLayout>
+</com.locator_app.locator.view.bubble.RelativeBubbleLayout>

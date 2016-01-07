@@ -1,4 +1,4 @@
-package com.locator_app.locator.view;
+package com.locator_app.locator.util;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;

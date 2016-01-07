@@ -17,8 +17,8 @@ import android.widget.Toast;
 import com.locator_app.locator.R;
 import com.locator_app.locator.controller.UserController;
 import com.locator_app.locator.service.users.RegistrationRequest;
+import com.locator_app.locator.util.BitmapHelper;
 import com.locator_app.locator.util.CacheImageLoader;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
