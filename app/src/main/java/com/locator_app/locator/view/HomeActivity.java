@@ -15,6 +15,7 @@ import com.locator_app.locator.service.users.LogoutResponse;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnLongClick;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
@@ -38,11 +39,17 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
         ButterKnife.bind(this);
         bubbleController = new BubbleController(bubbleLayout);
+    }
 
-        schoenHierBubble.setOnLongClickListener(click -> {
-            updateDashboard();
-            return true;
-        });
+    @OnClick(R.id.schoenHierBubble)
+    void onSchoenHierBubbleClick() {
+        Toast.makeText(getApplicationContext(), "schoenhier", Toast.LENGTH_SHORT).show();
+    }
+
+    @OnLongClick(R.id.schoenHierBubble)
+    boolean onSchoenHierBubbleLongClick() {
+        updateDashboard();
+        return true;
     }
 
     @OnClick(R.id.userProfileBubble)
@@ -66,11 +73,6 @@ public class HomeActivity extends AppCompatActivity {
 
     private void onLogoutError(Throwable t) {
         Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_LONG).show();
-    }
-
-    @OnClick(R.id.schoenHierBubble)
-    void onSchoenHierBubbleClick() {
-        Toast.makeText(getApplicationContext(), "schoenhier", Toast.LENGTH_SHORT).show();
     }
 
     @Override
