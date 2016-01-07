@@ -67,18 +67,18 @@ public class BubbleController {
     }
 
     private void handleFirstScreenUpdate(final BubbleScreenResponse response) {
-        Observable.from(response.locations)
-                .forEach(locationResult -> {
+        Observable<Bubble> locations = Observable.from(response.locations)
+                .map(locationResult -> {
                     final int priority = getPriority(locationResult, response.locations);
-                    Bubble bubble = makeBubble(locationResult.location, priority);
-                    bubbles.add(bubble);
+                    return makeBubble(locationResult.location, priority);
                 });
-        Observable.from(response.messages)
-                .forEach(message -> {
+        Observable<Bubble> messages = Observable.from(response.messages)
+                .map(message -> {
                     final int priority = getPriority(message, response.messages);
-                    Bubble bubble = makeBubble(message, priority);
-                    bubbles.add(bubble);
+                    return makeBubble(message, priority);
                 });
+        Observable.merge(locations, messages)
+            .subscribe(bubble -> bubbles.add(bubble));
         positionBubblesInDifferentQuadrants();
     }
 
