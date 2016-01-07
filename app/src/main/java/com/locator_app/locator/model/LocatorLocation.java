@@ -1,11 +1,12 @@
 package com.locator_app.locator.model;
 
 import com.google.gson.annotations.SerializedName;
+import com.locator_app.locator.R;
 
 import java.util.LinkedList;
 import java.util.List;
 
-public class LocatorLocation {
+public class LocatorLocation implements LocatorObject {
 
     @SerializedName("_id")
     public String id;
@@ -51,5 +52,13 @@ public class LocatorLocation {
     @Override
     public String toString() {
         return title;
+    }
+
+    @Override
+    public String thumbnailUri() {
+        if (images == null || images.small == null) {
+            return "drawable://" + R.drawable.facebook_logo;
+        }
+        return images.getSmall();
     }
 }
