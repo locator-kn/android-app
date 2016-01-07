@@ -1,6 +1,7 @@
 package com.locator_app.locator.view;
 
 import android.graphics.Point;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.locator_app.locator.R;
@@ -115,7 +116,6 @@ public class BubbleController {
                                                 .filter(bubble -> bubble.priority == priority)
                                                 .toBlocking()
                                                 .toIterable();
-
         int quadrant = startQuadrant;
         for (Bubble bubble: bubblesToPosition) {
             Point bubbleCenter = getInitialBubbleCenter(quadrant);
@@ -158,9 +158,14 @@ public class BubbleController {
             newBubbles.add(bubble);
         }
 
-        // test, delete me!
+        // location with priority=1 changes to lowest priority
         response.locations.add(response.locations.remove(1));
-        // test, delete me!
+
+        // one totally new location
+        response.locations.get(1).location.id = "567a96f3990007900125f513";
+        response.locations.get(1).location.title = "Sonnenuntergang am See";
+        response.locations.get(1).location.images.small = "/api/v2/file/567a96e5990007900125f138/sonnenuntergang_am_seerhein.jpeg";
+
 
         for (BubbleScreenResponse.LocationResult locationResult: response.locations) {
             Bubble bubble = new Bubble();
@@ -168,24 +173,61 @@ public class BubbleController {
             bubble.priority = response.locations.indexOf(locationResult);
             newBubbles.add(bubble);
         }
-        Observable.from(newBubbles).forEach(newBubble -> merge(newBubble));
+        Observable.from(newBubbles).forEach(newBubble -> merge(newBubble, newBubbles));
     }
 
-    private void merge(Bubble newBubble) {
+    private void merge(Bubble newBubble, List<Bubble> newBubbles) {
+
+        // this implementation works but looks really messy - cleanup!
+
         Bubble correspondingBubble = Observable.from(bubbles)
                                         .filter(bubble -> bubble.data.equals(newBubble.data))
                                         .toBlocking()
                                         .firstOrDefault(null);
+
         if (correspondingBubble != null) {
-            if (correspondingBubble.priority != newBubble.priority) {
-                // bubble will stay on home screen, but priority has changed
-                correspondingBubble.priority = newBubble.priority;
-                correspondingBubble.data = newBubble.data;
-                int newRadius = BubbleViewHelper.getRadiusForPriority(newBubble.priority, bubbleLayout);
-                bubbleLayout.setBubbleRadius(correspondingBubble.bubbleView, newRadius);
-            }
+            merge(correspondingBubble, newBubble);
         } else {
-            // this is a new bubble, we have to replace another bubble
+            // find a bubble from which can be replaced
+            Iterable<Bubble> candidates = Observable.from(bubbles)
+                    .filter(bubble -> bubble.data.getClass().equals(newBubble.data.getClass()))
+                    .toBlocking()
+                    .toIterable();
+            Iterable<Bubble> newBubblesWithTheSameType = Observable.from(newBubbles)
+                    .filter(bubble -> bubble.data.getClass().equals(newBubble.data.getClass()))
+                    .toBlocking()
+                    .toIterable();
+
+            for (Bubble candidate: candidates) {
+                boolean mayBeReplaced = true;
+                for (Bubble b: newBubblesWithTheSameType) {
+                    if (candidate.data.equals(b.data)) {
+                        mayBeReplaced = false;
+                        break;
+                    }
+                }
+                if (mayBeReplaced) {
+                    merge(candidate, newBubble);
+                    break;
+                }
+            }
+        }
+    }
+
+    private void merge(Bubble onScreen, Bubble newBubble) {
+        // priority may have changed
+        if (onScreen.priority != newBubble.priority) {
+            onScreen.priority = newBubble.priority;
+            int radius = BubbleViewHelper.getRadiusForPriority(onScreen.priority, bubbleLayout);
+            bubbleLayout.setBubbleRadius(onScreen.bubbleView, radius);
+        }
+        // data may have changed
+        if (!onScreen.data.equals(newBubble.data)) {
+            onScreen.data = newBubble.data;
+            if (onScreen.data instanceof LocatorLocation) {
+                LocatorLocation location = (LocatorLocation) onScreen.data;
+                onScreen.bubbleView.loadImage(location.images.getSmall());
+            }
         }
     }
 }
