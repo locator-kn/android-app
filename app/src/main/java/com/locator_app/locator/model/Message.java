@@ -1,8 +1,9 @@
 package com.locator_app.locator.model;
 
 import com.google.gson.annotations.SerializedName;
+import com.locator_app.locator.R;
 
-public class Message {
+public class Message implements LocatorObject {
 
     @SerializedName("_id")
     public String id;
@@ -33,5 +34,10 @@ public class Message {
     @Override
     public String toString() {
         return message;
+    }
+
+    @Override
+    public String thumbnailUri() {
+        return "drawable://" + R.drawable.message;
     }
 }
