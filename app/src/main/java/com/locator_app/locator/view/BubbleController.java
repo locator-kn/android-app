@@ -1,6 +1,5 @@
 package com.locator_app.locator.view;
 
-import android.graphics.Color;
 import android.graphics.Point;
 import android.util.Log;
 import android.widget.Toast;
@@ -9,12 +8,12 @@ import com.locator_app.locator.R;
 import com.locator_app.locator.model.LocatorLocation;
 import com.locator_app.locator.model.Message;
 import com.locator_app.locator.service.my.BubbleScreenResponse;
-import com.locator_app.locator.util.CacheImageLoader;
 
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.security.auth.callback.CallbackHandler;
+import rx.Observable;
+import rx.observables.BlockingObservable;
 
 
 public class BubbleController {
@@ -46,14 +45,15 @@ public class BubbleController {
     }
 
     public void initSchoenHierBubble() {
-        int radius = (int) (0.2 * bubbleLayout.getWidth());
+        int radius = BubbleViewHelper.getRadiusForPriority(schoenHierBubble.priority, bubbleLayout);
         bubbleLayout.setBubbleRadius(schoenHierBubble.bubbleView, radius);
         bubbleLayout.setBubbleCenter(schoenHierBubble.bubbleView, 0.5, 0.38);
         schoenHierBubble.bubbleView.loadImage("drawable://" + R.drawable.schoenhier);
     }
 
     public void initUserProfileBubble() {
-        int radius = BubbleViewHelper.getRadiusForPriority(1, bubbleLayout);
+        final int prioritySize = 2; // this will create a small bubble
+        int radius = BubbleViewHelper.getRadiusForPriority(prioritySize, bubbleLayout);
         bubbleLayout.setBubbleRadius(userProfileBubble.bubbleView, radius);
         bubbleLayout.setBubbleCenter(userProfileBubble.bubbleView, 0.5, 0.89);
         userProfileBubble.bubbleView.loadImage("drawable://" + R.drawable.profile);
@@ -68,25 +68,30 @@ public class BubbleController {
     }
 
     private void handleFirstScreenUpdate(BubbleScreenResponse response) {
-        for (BubbleScreenResponse.LocationResult locationResult : response.locations) {
-            final int priority = response.locations.indexOf(locationResult);
-            Bubble bubble = new Bubble();
-            bubble.priority = priority;
-            bubble.bubbleView = BubbleViewHelper.createLocationBubbleView(bubbleLayout, priority);
-            bubble.data = locationResult.location;
-            bubbles.add(bubble);
-            bubble.bubbleView.setOnClickListener(listener -> handleOnLocationBubbleClicked(bubble));
-            bubble.bubbleView.loadImage(locationResult.location.images.getSmall());
-        }
-        for (Message msg : response.messages) {
-            final int priority = response.messages.indexOf(msg);
-            Bubble bubble = new Bubble();
-            bubble.priority = priority;
-            bubble.bubbleView = BubbleViewHelper.createMessageBubbleView(bubbleLayout, priority);
-            bubble.data = msg;
-            bubbles.add(bubble);
-            bubble.bubbleView.setOnClickListener(listener -> handleOnMessageBubbleClicked(bubble));
-        }
+
+        Observable.from(response.locations)
+                .forEach(locationResult -> {
+                    final int priority = response.locations.indexOf(locationResult);
+                    Bubble bubble = new Bubble();
+                    bubble.priority = priority;
+                    bubble.bubbleView = BubbleViewHelper.createLocationBubbleView(bubbleLayout, priority);
+                    bubble.data = locationResult.location;
+                    bubble.bubbleView.setOnClickListener(listener -> handleOnLocationBubbleClicked(bubble));
+                    bubble.bubbleView.loadImage(locationResult.location.images.getSmall());
+                    bubbles.add(bubble);
+                });
+
+        Observable.from(response.messages)
+                .forEach(message -> {
+                    final int priority = response.messages.indexOf(message);
+                    Bubble bubble = new Bubble();
+                    bubble.priority = priority;
+                    bubble.bubbleView = BubbleViewHelper.createMessageBubbleView(bubbleLayout, priority);
+                    bubble.data = message;
+                    bubble.bubbleView.setOnClickListener(listener -> handleOnMessageBubbleClicked(bubble));
+                    bubbles.add(bubble);
+                });
+
         positionBubblesInDifferentQuadrants();
     }
 
@@ -108,13 +113,15 @@ public class BubbleController {
     }
 
     private int positionBubbles(int priority, int startQuadrant) {
+        Iterable<Bubble> bubblesToPosition = Observable.from(bubbles)
+                                                .filter(bubble -> bubble.priority == priority)
+                                                .toBlocking()
+                                                .toIterable();
+
         int quadrant = startQuadrant;
-        List<Bubble> bubblesToPosition = getBubblesByPriority(priority);
-        for (int i = 0; i < bubblesToPosition.size(); i++) {
-            Bubble bubbleToPosition = bubblesToPosition.get(i);
-            BubbleView bubbleView = bubbleToPosition.bubbleView;
+        for (Bubble bubble: bubblesToPosition) {
             Point bubbleCenter = getBubbleCenter(quadrant);
-            bubbleLayout.setBubbleCenter(bubbleView, bubbleCenter.x, bubbleCenter.y);
+            bubbleLayout.setBubbleCenter(bubble.bubbleView, bubbleCenter.x, bubbleCenter.y);
             quadrant = ((quadrant) % 4) + 1;
         }
         return quadrant;
@@ -144,17 +151,43 @@ public class BubbleController {
         return new Point(x, y);
     }
 
-    private List<Bubble> getBubblesByPriority(int priority) {
-        List<Bubble> bubbles = new LinkedList<>();
-        for (Bubble bubble: this.bubbles) {
-            if (bubble.priority == priority) {
-                bubbles.add(bubble);
-            }
+    private void handleBubbleUpdate(BubbleScreenResponse response) {
+        List<Bubble> newBubbles = new LinkedList<>();
+        for (Message msg: response.messages) {
+            Bubble bubble = new Bubble();
+            bubble.data = msg;
+            bubble.priority = response.messages.indexOf(msg);
+            newBubbles.add(bubble);
         }
-        return bubbles;
+
+        // test, delete me!
+        response.locations.add(response.locations.remove(1));
+        // test, delete me!
+
+        for (BubbleScreenResponse.LocationResult locationResult: response.locations) {
+            Bubble bubble = new Bubble();
+            bubble.data = locationResult.location;
+            bubble.priority = response.locations.indexOf(locationResult);
+            newBubbles.add(bubble);
+        }
+        Observable.from(newBubbles).forEach(newBubble -> merge(newBubble));
     }
 
-    private void handleBubbleUpdate(BubbleScreenResponse response) {
-
+    private void merge(Bubble newBubble) {
+        Bubble correspondingBubble = Observable.from(bubbles)
+                                        .filter(bubble -> bubble.data.equals(newBubble.data))
+                                        .toBlocking()
+                                        .firstOrDefault(null);
+        if (correspondingBubble != null) {
+            if (correspondingBubble.priority != newBubble.priority) {
+                // bubble will stay on home screen, but priority has changed
+                correspondingBubble.priority = newBubble.priority;
+                correspondingBubble.data = newBubble.data;
+                int newRadius = BubbleViewHelper.getRadiusForPriority(newBubble.priority, bubbleLayout);
+                bubbleLayout.setBubbleRadius(correspondingBubble.bubbleView, newRadius);
+            }
+        } else {
+            // this is a new bubble, we have to replace another bubble
+        }
     }
 }

@@ -42,6 +42,9 @@ public class BubbleViewHelper {
 
     public static int getRadiusForPriority(int priority, RelativeBubbleLayout layout) {
         double widthFactor = 0;
+        if (priority == -1) {
+            widthFactor = 0.2;
+        }
         if (priority == 0) {
             widthFactor = 0.13;
         }
