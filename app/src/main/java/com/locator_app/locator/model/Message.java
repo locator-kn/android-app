@@ -29,4 +29,9 @@ public class Message {
     public boolean equals(Object other) {
         return other == this || other instanceof Message && id.equals(((Message) other).id);
     }
+
+    @Override
+    public String toString() {
+        return message;
+    }
 }
