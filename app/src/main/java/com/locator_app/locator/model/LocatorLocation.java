@@ -47,4 +47,9 @@ public class LocatorLocation {
     public boolean equals(Object other) {
         return other == this || other instanceof LocatorLocation && id.equals(((LocatorLocation)other).id);
     }
+
+    @Override
+    public String toString() {
+        return title;
+    }
 }
