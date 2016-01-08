@@ -1,14 +1,12 @@
 package com.locator_app.locator.view.bubble;
 
 
-import java.util.Collection;
-
 public class GravitySimulator {
 
     private int width;
     private int height;
     private double worldGravity;
-    Collection<GravityObject> gravityObjects;
+    Iterable<GravityObject> gravityObjects;
 
     public GravitySimulator(double worldGravity, int width, int height) {
         this.worldGravity = worldGravity;
@@ -16,7 +14,7 @@ public class GravitySimulator {
         this.height = height;
     }
 
-    public void simulateGravity(Collection<GravityObject> gravityObjects, int times) {
+    public void simulateGravity(Iterable<GravityObject> gravityObjects, int times) {
         this.gravityObjects = gravityObjects;
         for (int i = 0; i < times; i++) {
             for (GravityObject gravityObject: gravityObjects) {

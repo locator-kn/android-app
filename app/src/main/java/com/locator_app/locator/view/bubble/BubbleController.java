@@ -2,6 +2,8 @@ package com.locator_app.locator.view.bubble;
 
 import android.graphics.Point;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
+import android.widget.GridLayout;
 import android.widget.Toast;
 
 import com.locator_app.locator.R;
@@ -22,6 +24,7 @@ public class BubbleController {
         BubbleView view;
         LocatorObject data;
         int priority;
+        boolean positionFixed = false;
     }
 
     private List<Bubble> bubbles = new LinkedList<>();
@@ -34,13 +37,13 @@ public class BubbleController {
 
         schoenHierBubble = new Bubble();
         schoenHierBubble.priority = -1;
-        schoenHierBubble.view = (BubbleView)layout.findViewById(R.id.schoenHierBubble);
         schoenHierBubble.positionFixed = true;
+        schoenHierBubble.view = (BubbleView)layout.findViewById(R.id.schoenHierBubble);
 
         userProfileBubble = new Bubble();
         userProfileBubble.priority = -1;
-        userProfileBubble.view = (BubbleView)layout.findViewById(R.id.userProfileBubble);
         userProfileBubble.positionFixed = true;
+        userProfileBubble.view = (BubbleView)layout.findViewById(R.id.userProfileBubble);
     }
 
     public void initSchoenHierBubble() {
@@ -63,25 +66,56 @@ public class BubbleController {
         } else {
             handleBubbleUpdate(response);
         }
+        simulateGravity();
+    }
+
+    private void simulateGravity() {
+        List<GravityObject> gravityObjects = new LinkedList<>();
+        for (Bubble bubble: bubbles) {
+            GravityObject gravityObject = toGravityObject(bubble);
+            gravityObjects.add(gravityObject);
+        }
+        gravityObjects.add(toGravityObject(schoenHierBubble));
+        gravityObjects.add(toGravityObject(userProfileBubble));
+        GravitySimulator simulator = new GravitySimulator(1.0, layout.getWidth(), layout.getHeight());
+        simulator.simulateGravity(gravityObjects, 500);
+        for (GravityObject gravityObject: gravityObjects) {
+            Bubble bubble = (Bubble)gravityObject.payload;
+            if (!bubble.positionFixed) {
+                int posX = (int) gravityObject.x;
+                int posY = (int) gravityObject.y;
+                layout.setBubbleCenter(bubble.view, posX, posY);
+            }
+        }
+    }
+
+    private GravityObject toGravityObject(Bubble bubble) {
+        GravityObject gravityObject = new GravityObject(bubble.positionFixed);
+        gravityObject.payload = bubble;
+        gravityObject.radius = layout.getBubbleRadius(bubble.view);
+        gravityObject.mass = gravityObject.radius * 2;
+        gravityObject.x = layout.getBubbleCenter(bubble.view).x;
+        gravityObject.y = layout.getBubbleCenter(bubble.view).y;
+        return gravityObject;
     }
 
     private void handleFirstScreenUpdate(final BubbleScreenResponse response) {
         Observable<Bubble> locations = Observable.from(response.locations)
                 .map(locationResult -> {
                     final int priority = getPriority(locationResult, response.locations);
-                    return makeBubble(locationResult.location, priority);
+                    return makeLocationBubble(locationResult.location, priority);
                 });
         Observable<Bubble> messages = Observable.from(response.messages)
                 .map(message -> {
                     final int priority = getPriority(message, response.messages);
-                    return makeBubble(message, priority);
+                    return makeMessageBubble(message, priority);
                 });
         Observable.merge(locations, messages)
             .subscribe(bubble -> bubbles.add(bubble));
         positionBubblesInDifferentQuadrants();
     }
 
-    private Bubble makeBubble(Message message, int priority) {
+    private Bubble makeMessageBubble(Message message, int priority) {
         BubbleView view = new BubbleView(layout.getContext());
         layout.addView(view);
         layout.setBubbleRadius(view, getRadiusByPriority(priority));
@@ -91,14 +125,14 @@ public class BubbleController {
         view.loadImage(message.thumbnailUri());
 
         Bubble bubble = new Bubble();
-        bubble.priority = priority;
         bubble.data = message;
+        bubble.priority = priority;
         bubble.view = view;
         view.setOnClickListener(listener -> handleOnMessageBubbleClicked(bubble));
         return bubble;
     }
 
-    private Bubble makeBubble(LocatorLocation location, int priority) {
+    private Bubble makeLocationBubble(LocatorLocation location, int priority) {
         BubbleView view = new BubbleView(layout.getContext());
         layout.addView(view);
         layout.setBubbleRadius(view, getRadiusByPriority(priority));
@@ -108,8 +142,8 @@ public class BubbleController {
         view.loadImage(location.thumbnailUri());
 
         Bubble bubble = new Bubble();
-        bubble.priority = priority;
         bubble.data = location;
+        bubble.priority = priority;
         bubble.view = view;
         view.setOnClickListener(listener -> handleOnLocationBubbleClicked(bubble));
         return bubble;
