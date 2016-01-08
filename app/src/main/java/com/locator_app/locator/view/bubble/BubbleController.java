@@ -2,8 +2,6 @@ package com.locator_app.locator.view.bubble;
 
 import android.graphics.Point;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
-import android.widget.GridLayout;
 import android.widget.Toast;
 
 import com.locator_app.locator.R;
@@ -31,6 +29,7 @@ public class BubbleController {
     private RelativeBubbleLayout layout;
     private Bubble schoenHierBubble;
     private Bubble userProfileBubble;
+    private boolean needGravityUpdate = false;
 
     public BubbleController(RelativeBubbleLayout layout) {
         this.layout = layout;
@@ -61,12 +60,16 @@ public class BubbleController {
     }
 
     public void onBubbleScreenUpdate(BubbleScreenResponse response) {
+        needGravityUpdate = true;
         if (bubbles.isEmpty()) {
             handleFirstScreenUpdate(response);
+            needGravityUpdate = true;
         } else {
             handleBubbleUpdate(response);
         }
-        simulateGravity();
+        if (needGravityUpdate) {
+            simulateGravity();
+        }
     }
 
     private void simulateGravity() {
@@ -75,10 +78,16 @@ public class BubbleController {
             GravityObject gravityObject = toGravityObject(bubble);
             gravityObjects.add(gravityObject);
         }
-        gravityObjects.add(toGravityObject(schoenHierBubble));
-        gravityObjects.add(toGravityObject(userProfileBubble));
-        GravitySimulator simulator = new GravitySimulator(1.0, layout.getWidth(), layout.getHeight());
-        simulator.simulateGravity(gravityObjects, 500);
+        GravityObject userProfileGravityObject = toGravityObject(userProfileBubble);
+        userProfileGravityObject.mass = -100;
+        gravityObjects.add(userProfileGravityObject);
+
+        GravityObject schoenHierGravityObject = toGravityObject(schoenHierBubble);
+        schoenHierGravityObject.mass = 400;
+        gravityObjects.add(schoenHierGravityObject);
+
+        GravitySimulator simulator = new GravitySimulator(10.0, layout.getWidth(), layout.getHeight());
+        simulator.simulateGravity(gravityObjects, 200);
         for (GravityObject gravityObject: gravityObjects) {
             Bubble bubble = (Bubble)gravityObject.payload;
             if (!bubble.positionFixed) {
@@ -278,6 +287,7 @@ public class BubbleController {
     private void merge(Bubble onScreen, Bubble newBubble) {
         // priority may have changed
         if (onScreen.priority != newBubble.priority) {
+            needGravityUpdate = true;
             onScreen.priority = newBubble.priority;
             int radius = getRadiusByPriority(onScreen.priority);
             layout.setBubbleRadius(onScreen.view, radius);
