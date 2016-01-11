@@ -60,8 +60,7 @@ public class BubbleController {
     }
 
     public void onBubbleScreenUpdate(BubbleScreenResponse response) {
-        // todo: set this to false (this is only set to true for test reasons)
-        needGravityUpdate = true;
+        needGravityUpdate = false;
         if (bubbles.isEmpty()) {
             handleFirstScreenUpdate(response);
             needGravityUpdate = true;
