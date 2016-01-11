@@ -7,7 +7,7 @@ native android application
 2. open android studio / project
 3. connect your mobile phone to your computer
 4. type into android studio terminal:
-    `adb connect 5555`
+    `adb tcpip 5555`
 5. disconnect your mobile phone from your computer
 6. type into android studio terminal:
     `abd connect x.x.x.x`,
