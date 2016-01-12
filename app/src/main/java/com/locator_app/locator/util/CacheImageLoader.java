@@ -5,6 +5,7 @@ import android.util.Log;
 import android.widget.ImageView;
 
 import com.locator_app.locator.LocatorApplication;
+import com.locator_app.locator.db.Couch;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
@@ -35,7 +36,7 @@ public class CacheImageLoader {
     Map<String, Bitmap> cache = new HashMap<>();
     final List<String> loading = new LinkedList<>();
 
-    private Observable<Bitmap> loadSync(final String imageUri) {
+    public Observable<Bitmap> loadSync(final String imageUri) {
         return Observable.create(new Observable.OnSubscribe<Bitmap>() {
             @Override
             public void call(Subscriber<? super Bitmap> subscriber) {
@@ -46,9 +47,12 @@ public class CacheImageLoader {
                     boolean loadImage = false;
                     synchronized (loading) {
                         if (!loading.contains(imageUri)) {
-                            // this thread will load the image
-                            loadImage = true;
-                            loading.add(imageUri);
+                            bitmap = Couch.get().image(imageUri);
+                            if (bitmap == null) {
+                                // this thread will load the image
+                                loadImage = true;
+                                loading.add(imageUri);
+                            }
                         } else {
                             bitmap = sleepForBitmapInCache(imageUri);
                         }
@@ -58,6 +62,7 @@ public class CacheImageLoader {
                         bitmap = ImageLoader.getInstance().loadImageSync(imageUri);
                         if (bitmap != null) {
                             cache.put(imageUri, bitmap);
+                            Couch.get().storeImage(imageUri, bitmap);
                         }
                         synchronized (loading) {
                             loading.remove(imageUri);
@@ -105,6 +110,7 @@ public class CacheImageLoader {
     static CacheImageLoader instance;
     synchronized public static CacheImageLoader getInstance() {
         if (instance == null) {
+            Couch.get().deleteAllImages();
             instance = new CacheImageLoader();
             if (!ImageLoader.getInstance().isInited()) {
                 ImageLoaderConfiguration configuration =
