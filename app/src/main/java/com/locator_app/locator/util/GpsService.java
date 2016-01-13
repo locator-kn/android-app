@@ -17,11 +17,18 @@ import java.util.List;
 import java.util.Locale;
 
 public class GpsService {
-
     private Context context;
     private LocationManager locationManager;
 
-    public GpsService() {
+    private static GpsService instance;
+    public static GpsService getInstance() {
+        if (instance == null) {
+            instance = new GpsService();
+        }
+        return instance;
+    }
+
+    private GpsService() {
         context = LocatorApplication.getAppContext();
         locationManager = (LocationManager) context.getSystemService(context.LOCATION_SERVICE);
     }

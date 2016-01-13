@@ -47,7 +47,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 (error -> {})
         );
 
-        gpsService = new GpsService();
+        gpsService = GpsService.getInstance();
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -100,7 +100,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void addHeatMap(double lon, double lat) {
         heatPoints = new LinkedList<>();
 
-        SchoenHierController.getInstance().schoenHiersNearby(lon, lat, 10, 20)
+        SchoenHierController.getInstance().schoenHiersNearby(lon, lat, 10, 100)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .flatMapIterable(response -> response.results)
