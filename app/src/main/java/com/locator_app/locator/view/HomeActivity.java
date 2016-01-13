@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
+import com.locator_app.locator.LocatorApplication;
 import com.locator_app.locator.R;
 import com.locator_app.locator.controller.MyController;
 import com.locator_app.locator.controller.UserController;
@@ -12,6 +13,7 @@ import com.locator_app.locator.apiservice.users.LogoutResponse;
 import com.locator_app.locator.view.bubble.BubbleController;
 import com.locator_app.locator.view.bubble.BubbleView;
 import com.locator_app.locator.view.bubble.RelativeBubbleLayout;
+import com.locator_app.locator.view.profile.ProfileActivity;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -48,7 +50,8 @@ public class HomeActivity extends AppCompatActivity {
 
     @OnLongClick(R.id.schoenHierBubble)
     boolean onSchoenHierBubbleLongClick() {
-        updateDashboard();
+        Intent intent = new Intent(LocatorApplication.getAppContext(), ProfileActivity.class);
+        startActivity(intent);
         return true;
     }
 
