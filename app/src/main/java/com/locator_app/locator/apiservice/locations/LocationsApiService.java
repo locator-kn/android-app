@@ -42,7 +42,6 @@ public class LocationsApiService {
                     return Observable.error(new Exception("uuuuups, sorry :-/"));
                 })
                 .flatMap(this::parseLocatorLocationResponse);
-
     }
 
     private Observable<LocatorLocation> parseLocatorLocationResponse(Response response) {
@@ -61,7 +60,6 @@ public class LocationsApiService {
             Log.d("LocationApiService", "Internet aus oder schläft der Locator-Server?");
         }
     }
-
 
     public Observable<LocationsNearbyResponse> getLocationsNearby(double lon, double lat,
                                                                   double maxRadius, int limit) {
