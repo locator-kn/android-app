@@ -18,4 +18,5 @@
     <string name="cancel">Abbrechen</string>
     <string name="select_file">Datei auswählen</string>
     <string name="your_profile_picture">Dein neues Profilbild</string>
+    <string name="title_activity_maps">Map</string>
 </resources>

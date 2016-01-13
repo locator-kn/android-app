@@ -63,6 +63,9 @@ captures/
 *.ipr
 *.iws
 
+# Google Maps API key
+app/src/res/layout/activity_maps.xml
+
 ## Plugin-specific files:
 
 # IntelliJ
