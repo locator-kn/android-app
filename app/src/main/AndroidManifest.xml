@@ -3,15 +3,18 @@
     package="com.locator_app.locator" >
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-feature android:name="android.hardware.camera" android:required="true" />
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
 
     <application
+        android:name=".LocatorApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/WelcomeActionBarTheme"
-        android:name="com.locator_app.locator.LocatorApplication">
+        android:theme="@style/WelcomeActionBarTheme" >
         <activity
             android:name=".view.LoginRegisterStartActivity"
             android:screenOrientation="portrait" >
@@ -54,6 +57,8 @@
         <activity
             android:name=".view.FacebookLoginPasswordActivity"
             android:screenOrientation="portrait" />
+        <activity android:name=".view.profile.ProfileActivity" >
+        </activity>
     </application>
 
 </manifest>
