@@ -1,8 +1,7 @@
-package com.locator_app.locator.service.my;
+package com.locator_app.locator.apiservice.my;
 
-import com.locator_app.locator.model.SchoenHier;
-import com.locator_app.locator.service.Api;
-import com.locator_app.locator.service.ServiceFactory;
+import com.locator_app.locator.apiservice.Api;
+import com.locator_app.locator.apiservice.ServiceFactory;
 
 import retrofit.Response;
 import retrofit.http.GET;

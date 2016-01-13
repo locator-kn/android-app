@@ -1,4 +1,4 @@
-package com.locator_app.locator.service.schoenhier;
+package com.locator_app.locator.apiservice.schoenhier;
 
 import com.google.gson.annotations.SerializedName;
 

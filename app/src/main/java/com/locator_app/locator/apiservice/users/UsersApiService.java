@@ -1,9 +1,9 @@
-package com.locator_app.locator.service.users;
+package com.locator_app.locator.apiservice.users;
 
 
 import com.google.gson.JsonSyntaxException;
-import com.locator_app.locator.service.Api;
-import com.locator_app.locator.service.ServiceFactory;
+import com.locator_app.locator.apiservice.Api;
+import com.locator_app.locator.apiservice.ServiceFactory;
 
 import java.net.UnknownHostException;
 

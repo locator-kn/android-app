@@ -1,4 +1,4 @@
-package com.locator_app.locator.service.my;
+package com.locator_app.locator.apiservice.my;
 
 import com.google.gson.annotations.SerializedName;
 import com.locator_app.locator.model.LocatorLocation;

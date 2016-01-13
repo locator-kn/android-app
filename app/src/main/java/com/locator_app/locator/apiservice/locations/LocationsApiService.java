@@ -1,10 +1,10 @@
-package com.locator_app.locator.service.locations;
+package com.locator_app.locator.apiservice.locations;
 
 import android.util.Log;
 
 import com.locator_app.locator.model.LocatorLocation;
-import com.locator_app.locator.service.Api;
-import com.locator_app.locator.service.ServiceFactory;
+import com.locator_app.locator.apiservice.Api;
+import com.locator_app.locator.apiservice.ServiceFactory;
 
 import java.net.UnknownHostException;
 
@@ -15,8 +15,6 @@ import retrofit.http.POST;
 import retrofit.http.Path;
 import retrofit.http.Query;
 import rx.Observable;
-import rx.functions.Action1;
-import rx.functions.Func1;
 
 public class LocationsApiService {
 

@@ -1,4 +1,4 @@
-package com.locator_app.locator.service;
+package com.locator_app.locator.apiservice;
 
 
 public interface Api {
