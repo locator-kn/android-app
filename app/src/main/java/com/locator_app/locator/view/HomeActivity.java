@@ -8,7 +8,7 @@ import android.widget.Toast;
 import com.locator_app.locator.R;
 import com.locator_app.locator.controller.MyController;
 import com.locator_app.locator.controller.UserController;
-import com.locator_app.locator.service.users.LogoutResponse;
+import com.locator_app.locator.apiservice.users.LogoutResponse;
 import com.locator_app.locator.view.bubble.BubbleController;
 import com.locator_app.locator.view.bubble.BubbleView;
 import com.locator_app.locator.view.bubble.RelativeBubbleLayout;

@@ -3,17 +3,15 @@ package com.locator_app.locator.view;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
-import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.locator_app.locator.R;
 import com.locator_app.locator.controller.UserController;
-import com.locator_app.locator.service.users.LoginRequest;
+import com.locator_app.locator.apiservice.users.LoginRequest;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;

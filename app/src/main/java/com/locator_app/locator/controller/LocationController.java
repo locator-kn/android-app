@@ -2,14 +2,9 @@ package com.locator_app.locator.controller;
 
 
 import com.locator_app.locator.model.LocatorLocation;
-import com.locator_app.locator.service.locations.LocationsApiService;
-import com.locator_app.locator.service.locations.LocationsNearbyResponse;
-import com.locator_app.locator.service.schoenhier.SchoenHierApiService;
-
-import java.util.List;
+import com.locator_app.locator.apiservice.locations.LocationsApiService;
 
 import rx.Observable;
-import rx.functions.Func1;
 
 public class LocationController {
 

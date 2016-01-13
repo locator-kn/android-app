@@ -68,9 +68,11 @@ public class BubbleView extends View {
     }
 
     public void setIcon(Bitmap icon) {
-        this.originalIcon = icon;
-        this.icon = icon;
-        invalidate();
+        if (icon != originalIcon && this.icon != icon) {
+            this.originalIcon = icon;
+            this.icon = icon;
+            invalidate();
+        }
     }
 
     public BubbleView(Context context) {

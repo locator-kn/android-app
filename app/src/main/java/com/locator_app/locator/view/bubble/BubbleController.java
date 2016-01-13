@@ -8,7 +8,7 @@ import com.locator_app.locator.R;
 import com.locator_app.locator.model.LocatorLocation;
 import com.locator_app.locator.model.LocatorObject;
 import com.locator_app.locator.model.Message;
-import com.locator_app.locator.service.my.BubbleScreenResponse;
+import com.locator_app.locator.apiservice.my.BubbleScreenResponse;
 
 import java.util.LinkedList;
 import java.util.List;

@@ -1,10 +1,8 @@
 package com.locator_app.locator.controller;
 
 
-import com.locator_app.locator.model.User;
-import com.locator_app.locator.service.my.BubbleScreenResponse;
-import com.locator_app.locator.service.my.MyApiService;
-import com.locator_app.locator.service.users.UsersApiService;
+import com.locator_app.locator.apiservice.my.BubbleScreenResponse;
+import com.locator_app.locator.apiservice.my.MyApiService;
 
 import rx.Observable;
 

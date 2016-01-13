@@ -2,7 +2,7 @@ package com.locator_app.locator.model;
 
 
 import com.google.gson.annotations.SerializedName;
-import com.locator_app.locator.service.Api;
+import com.locator_app.locator.apiservice.Api;
 
 public class Images {
 
