@@ -43,7 +43,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         String urlCurrentPos = "drawable://" + R.drawable.profile;
         CacheImageLoader.getInstance().loadAsync(urlCurrentPos).subscribe(
-                (bitmap -> currentPos = bitmap),
+                (bitmap -> {
+                    currentPos = Bitmap.createScaledBitmap(bitmap, 60, 60, false);
+                }),
                 (error -> {})
         );
 
@@ -66,10 +68,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         LatLng locationPos = new LatLng(location.getLatitude(), location.getLongitude());
 
-//        BitmapDescriptor currentPosDesc = BitmapDescriptorFactory.fromBitmap(currentPos);
-//        googleMap.addMarker(new MarkerOptions().position(locationPos)
-//                .icon(currentPosDesc)
-//                .anchor((float) 0.5, (float) 0.5));
+        BitmapDescriptor currentPosDesc = BitmapDescriptorFactory.fromBitmap(currentPos);
+        googleMap.addMarker(new MarkerOptions().position(locationPos)
+                .icon(currentPosDesc)
+                .anchor((float) 0.5, (float) 0.5));
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(locationPos, 15));
         addHeatMap(location.getLongitude(), location.getLatitude());
     }
