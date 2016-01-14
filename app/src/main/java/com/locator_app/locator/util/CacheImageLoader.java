@@ -47,14 +47,14 @@ public class CacheImageLoader {
                     boolean loadImage = false;
                     synchronized (loading) {
                         if (!loading.contains(imageUri)) {
-                            bitmap = Couch.get().image(imageUri);
+                            //bitmap = Couch.get().image(imageUri);
                             if (bitmap == null) {
                                 // this thread will load the image
                                 loadImage = true;
                                 loading.add(imageUri);
                             }
                         } else {
-                            bitmap = sleepForBitmapInCache(imageUri);
+                            //bitmap = sleepForBitmapInCache(imageUri);
                         }
                     }
 
@@ -62,7 +62,7 @@ public class CacheImageLoader {
                         bitmap = ImageLoader.getInstance().loadImageSync(imageUri);
                         if (bitmap != null) {
                             cache.put(imageUri, bitmap);
-                            Couch.get().storeImage(imageUri, bitmap);
+                            //Couch.get().storeImage(imageUri, bitmap);
                         }
                         synchronized (loading) {
                             loading.remove(imageUri);
@@ -110,7 +110,6 @@ public class CacheImageLoader {
     static CacheImageLoader instance;
     synchronized public static CacheImageLoader getInstance() {
         if (instance == null) {
-            Couch.get().deleteAllImages();
             instance = new CacheImageLoader();
             if (!ImageLoader.getInstance().isInited()) {
                 ImageLoaderConfiguration configuration =
