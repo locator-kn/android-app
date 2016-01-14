@@ -23,10 +23,14 @@ import com.locator_app.locator.apiservice.schoenhier.SchoenHiersNearbyResponse;
 import com.locator_app.locator.controller.SchoenHierController;
 import com.locator_app.locator.util.CacheImageLoader;
 import com.locator_app.locator.util.GpsService;
+import com.locator_app.locator.view.bubble.BubbleView;
 
 import java.util.LinkedList;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -36,24 +40,36 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GpsService gpsService;
     private Bitmap currentPos;
 
+    @Bind(R.id.schoenHierButton)
+    BubbleView schoenHierButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+        ButterKnife.bind(this);
 
         String urlCurrentPos = "drawable://" + R.drawable.profile;
         CacheImageLoader.getInstance().loadAsync(urlCurrentPos).subscribe(
                 (bitmap -> {
                     currentPos = Bitmap.createScaledBitmap(bitmap, 60, 60, false);
                 }),
-                (error -> {})
+                (error -> {
+                })
         );
 
         gpsService = GpsService.getInstance();
 
+        schoenHierButton.loadImage("drawable://" + R.drawable.schoenhier);
+
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+    }
+
+    @OnClick(R.id.schoenHierButton)
+    void onschoenHierButtonClick() {
+        SchoenHierController.getInstance().markCurPosAsSchoenHier();
     }
 
     @Override

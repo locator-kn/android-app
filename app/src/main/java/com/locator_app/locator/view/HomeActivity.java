@@ -51,30 +51,10 @@ public class HomeActivity extends AppCompatActivity {
 
     @OnClick(R.id.schoenHierBubble)
     void onSchoenHierBubbleClick() {
-        markAsSchoenHier();
+        SchoenHierController.getInstance().markCurPosAsSchoenHier();
 
         Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
         startActivity(intent);
-    }
-
-    void markAsSchoenHier() {
-        GpsService gpsService = GpsService.getInstance();
-        if (!gpsService.isGpsEnabled()) {
-            Toast.makeText(getApplicationContext(), "Gps is not Enabled", Toast.LENGTH_LONG).show();
-            return;
-        }
-
-        android.location.Location location = gpsService.getGpsLocation();
-        if (location == null) {
-            return;
-        }
-
-        SchoenHierRequest request = new SchoenHierRequest();
-        request.lon = location.getLongitude();
-        request.lat = location.getLatitude();
-
-        SchoenHierController.getInstance().markAsSchoenHier(request);
-        Toast.makeText(getApplicationContext(), "geschönhiert", Toast.LENGTH_LONG).show();
     }
 
     @OnLongClick(R.id.schoenHierBubble)
