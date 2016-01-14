@@ -22,6 +22,7 @@ android {
     }
 
     dexOptions {
+        incremental true
         javaMaxHeapSize "4g"
     }
 
@@ -42,7 +43,7 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.1.1'
 
     compile 'com.google.code.gson:gson:2.4'
-    compile 'com.google.android.gms:play-services:8.4.0'
+    compile 'com.google.android.gms:play-services-maps:8.4.0'
     compile 'com.google.maps.android:android-maps-utils:0.4'
 
     compile 'com.squareup.retrofit:adapter-rxjava:2.0.0-beta2'
