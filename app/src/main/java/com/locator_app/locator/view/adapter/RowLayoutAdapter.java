@@ -28,7 +28,7 @@ public class RowLayoutAdapter extends BaseAdapter {
         public BubbleView bubbleView;
     }
 
-    public class RowLayoutItem {
+    public static class RowLayoutItem {
         public String text;
         public String description;
         public String imageUri;
