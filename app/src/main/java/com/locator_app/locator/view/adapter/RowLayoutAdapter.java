@@ -17,6 +17,7 @@ import com.locator_app.locator.util.CacheImageLoader;
 import com.locator_app.locator.view.bubble.BubbleView;
 
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 public class RowLayoutAdapter extends BaseAdapter {
@@ -34,8 +35,8 @@ public class RowLayoutAdapter extends BaseAdapter {
         public String fallbackImageUri;
     }
 
-    List<RowLayoutItem> rowLayoutItems;
-    List<Bitmap> thumbnails;
+    List<RowLayoutItem> rowLayoutItems = new LinkedList<>();
+    List<Bitmap> thumbnails = new LinkedList<>();
 
     public void setRowLayoutItems(List<RowLayoutItem> rowLayoutItems) {
         this.thumbnails = Arrays.asList(new Bitmap[rowLayoutItems.size()]);
