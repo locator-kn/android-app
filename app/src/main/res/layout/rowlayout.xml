@@ -15,12 +15,13 @@
         custom:strokeColor="@color/borderRed"
         custom:strokeWidth="16"
         custom:img="@drawable/yes"
-        />
+        android:layout_weight="1" />
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_weight="1">
 
         <TextView
             android:layout_width="wrap_content"
