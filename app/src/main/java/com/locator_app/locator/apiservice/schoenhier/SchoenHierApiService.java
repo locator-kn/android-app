@@ -19,7 +19,7 @@ public class SchoenHierApiService {
     public interface SchoenHierApi {
 
         @GET(Api.version + "/schoenhiers/nearby")
-        Observable<Response> schoenHiersNearby(@Query("long") double lon,
+        Observable<SchoenHiersNearbyResponse> schoenHiersNearby(@Query("long") double lon,
                                                @Query("lat") double lat,
                                                @Query("maxDistance") double distance,
                                                @Query("limit") int limit);
@@ -33,9 +33,9 @@ public class SchoenHierApiService {
     public Observable<SchoenHiersNearbyResponse> schoenHiersNearby(double lon, double lat,
                                                                 double distance,
                                                                 int limit) {
-        return service.schoenHiersNearby(lon, lat, distance, limit)
-                .doOnError(this::handleError)
-                .flatMap(this::parseSchoenHiersNearbyResponse);
+        return service.schoenHiersNearby(lon, lat, distance, limit);
+//                .doOnError(this::handleError)
+//                .flatMap(this::parseSchoenHiersNearbyResponse);
     }
 
     private Observable<SchoenHiersNearbyResponse> parseSchoenHiersNearbyResponse(Response response) {

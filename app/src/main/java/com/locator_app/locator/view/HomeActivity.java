@@ -46,6 +46,9 @@ public class HomeActivity extends AppCompatActivity {
     @OnClick(R.id.schoenHierBubble)
     void onSchoenHierBubbleClick() {
         Toast.makeText(getApplicationContext(), "schoenhier", Toast.LENGTH_SHORT).show();
+
+        Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
+        startActivity(intent);
     }
 
     @OnLongClick(R.id.schoenHierBubble)

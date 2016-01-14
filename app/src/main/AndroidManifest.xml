@@ -57,8 +57,10 @@
         <activity
             android:name=".view.FacebookLoginPasswordActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".view.profile.ProfileActivity" >
-        </activity>
+        <activity android:name=".view.profile.ProfileActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".view.MapsActivity"
+            android:screenOrientation="portrait" />
     </application>
-
 </manifest>
