@@ -10,6 +10,7 @@ import com.locator_app.locator.R;
 import com.locator_app.locator.controller.MyController;
 import com.locator_app.locator.controller.UserController;
 import com.locator_app.locator.apiservice.users.LogoutResponse;
+import com.locator_app.locator.model.User;
 import com.locator_app.locator.view.bubble.BubbleController;
 import com.locator_app.locator.view.bubble.BubbleView;
 import com.locator_app.locator.view.bubble.RelativeBubbleLayout;
@@ -46,32 +47,41 @@ public class HomeActivity extends AppCompatActivity {
     @OnClick(R.id.schoenHierBubble)
     void onSchoenHierBubbleClick() {
         Toast.makeText(getApplicationContext(), "schoenhier", Toast.LENGTH_SHORT).show();
-
         Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
         startActivity(intent);
     }
 
     @OnLongClick(R.id.schoenHierBubble)
     boolean onSchoenHierBubbleLongClick() {
-        Intent intent = new Intent(LocatorApplication.getAppContext(), ProfileActivity.class);
-        startActivity(intent);
         return true;
     }
 
     @OnClick(R.id.userProfileBubble)
-    void onUserProfileClick() {
+    void onUserProfileBubbleClick() {
         UserController controller = UserController.getInstance();
         controller.logout()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        (logoutResponse) -> onLogout(logoutResponse),
+                        (logoutResponse) -> jumpToLoginScreen(),
                         (error) -> onLogoutError(error)
                 );
     }
 
-    private void onLogout(LogoutResponse logoutResponse) {
-        Toast.makeText(getApplicationContext(), logoutResponse.message, Toast.LENGTH_SHORT).show();
+    @OnLongClick(R.id.userProfileBubble)
+    boolean onUserProfileBubbleLongClick() {
+        User me = UserController.getInstance().me();
+        if (me.loggedIn) {
+            Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
+            intent.putExtra("profile", me);
+            startActivity(intent);
+        } else {
+            jumpToLoginScreen();
+        }
+        return true;
+    }
+
+    private void jumpToLoginScreen() {
         Intent intent = new Intent(getApplicationContext(), LoginRegisterStartActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
