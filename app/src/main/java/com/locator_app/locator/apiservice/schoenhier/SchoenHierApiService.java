@@ -25,7 +25,7 @@ public class SchoenHierApiService {
                                                @Query("limit") int limit);
 
         @POST(Api.version + "/schoenhiers")
-        Observable<Response> markAsSchoenHier(@Body SchoenHierRequest schoenHierRequest);
+        Observable<SchoenHiersResponse> markAsSchoenHier(@Body SchoenHierRequest schoenHierRequest);
     }
 
     private SchoenHierApi service = ServiceFactory.createService(SchoenHierApi.class);
@@ -46,9 +46,9 @@ public class SchoenHierApiService {
     }
 
     public Observable<SchoenHiersResponse> markAsSchoenHier(SchoenHierRequest request) {
-        return service.markAsSchoenHier(request)
-                .doOnError(this::handleError)
-                .flatMap(this::parseSchoenHiersResponse);
+        return service.markAsSchoenHier(request);
+//                .doOnError(this::handleError)
+//                .flatMap(this::parseSchoenHiersResponse);
     }
 
     private Observable<SchoenHiersResponse> parseSchoenHiersResponse(Response response) {

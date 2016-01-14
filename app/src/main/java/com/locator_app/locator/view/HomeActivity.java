@@ -5,12 +5,22 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
+<<<<<<< HEAD
 import com.locator_app.locator.LocatorApplication;
+=======
+import com.google.android.gms.maps.model.LatLng;
+>>>>>>> 4acd6124f8b4bbe5421f13c3f1b78a4a939d7723
 import com.locator_app.locator.R;
+import com.locator_app.locator.apiservice.schoenhier.SchoenHierRequest;
 import com.locator_app.locator.controller.MyController;
+import com.locator_app.locator.controller.SchoenHierController;
 import com.locator_app.locator.controller.UserController;
 import com.locator_app.locator.apiservice.users.LogoutResponse;
+<<<<<<< HEAD
 import com.locator_app.locator.model.User;
+=======
+import com.locator_app.locator.util.GpsService;
+>>>>>>> 4acd6124f8b4bbe5421f13c3f1b78a4a939d7723
 import com.locator_app.locator.view.bubble.BubbleController;
 import com.locator_app.locator.view.bubble.BubbleView;
 import com.locator_app.locator.view.bubble.RelativeBubbleLayout;
@@ -46,9 +56,33 @@ public class HomeActivity extends AppCompatActivity {
 
     @OnClick(R.id.schoenHierBubble)
     void onSchoenHierBubbleClick() {
+<<<<<<< HEAD
         Toast.makeText(getApplicationContext(), "schoenhier", Toast.LENGTH_SHORT).show();
+=======
+        markAsSchoenHier();
+>>>>>>> 4acd6124f8b4bbe5421f13c3f1b78a4a939d7723
         Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
         startActivity(intent);
+    }
+
+    void markAsSchoenHier() {
+        GpsService gpsService = GpsService.getInstance();
+        if (!gpsService.isGpsEnabled()) {
+            Toast.makeText(getApplicationContext(), "Gps is not Enabled", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        android.location.Location location = gpsService.getGpsLocation();
+        if (location == null) {
+            return;
+        }
+
+        SchoenHierRequest request = new SchoenHierRequest();
+        request.lon = location.getLongitude();
+        request.lat = location.getLatitude();
+
+        SchoenHierController.getInstance().markAsSchoenHier(request);
+        Toast.makeText(getApplicationContext(), "geschönhiert", Toast.LENGTH_LONG).show();
     }
 
     @OnLongClick(R.id.schoenHierBubble)
