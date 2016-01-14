@@ -218,15 +218,6 @@ public class BubbleController {
     }
 
     private void handleBubbleUpdate(BubbleScreenResponse response) {
-
-        // location with priority=1 changes to lowest priority
-        response.locations.add(response.locations.remove(1));
-
-        // one totally new location
-        response.locations.get(0).location.id = "567a96f3990007900125f513";
-        response.locations.get(0).location.title = "Sonnenuntergang am See";
-        response.locations.get(0).location.images.small = "/api/v2/file/567a96e5990007900125f138/sonnenuntergang_am_seerhein.jpeg";
-
         Observable<Bubble> locations = Observable.from(response.locations)
                 .map(locationResult -> {
                     Bubble bubble = new Bubble();
