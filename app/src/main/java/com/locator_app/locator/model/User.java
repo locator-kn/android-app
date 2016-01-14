@@ -1,6 +1,8 @@
 package com.locator_app.locator.model;
 
-public class User {
+import java.io.Serializable;
+
+public class User implements Serializable {
     public String mail = "";
     public String residence = "";
     public String name = "";
