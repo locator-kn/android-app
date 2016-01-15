@@ -168,19 +168,33 @@ public class BubbleView extends View {
         }
     }
 
+    @Override
+    protected void	onLayout(boolean changed, int left, int top, int right, int bottom) {
+        roundAndSetIcon(this.originalIcon);
+    }
+
     public void loadImage(String imageUri) {
+        loadImage(imageUri, "");
+    }
+
+    public void loadImage(String imageUri, String fallbackImageUri) {
         if (!this.imageUri.equals(imageUri)) {
             this.imageUri = imageUri;
             CacheImageLoader.getInstance().loadAsync(imageUri)
                     .subscribe(
                             (bitmap) -> roundAndSetIcon(bitmap),
-                            (error) -> {}
+                            (error) -> loadFallbackImage(fallbackImageUri)
                     );
         }
     }
 
-    @Override
-    protected void	onLayout(boolean changed, int left, int top, int right, int bottom) {
-        roundAndSetIcon(this.originalIcon);
+    private void loadFallbackImage(String fallbackImageUri) {
+        if (!fallbackImageUri.isEmpty()) {
+            CacheImageLoader.getInstance().loadAsync(fallbackImageUri)
+                    .subscribe(
+                            (fallbackBitmap) -> roundAndSetIcon(fallbackBitmap),
+                            (error) -> {}
+                    );
+        }
     }
 }
