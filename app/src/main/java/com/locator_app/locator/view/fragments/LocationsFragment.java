@@ -10,6 +10,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.locator_app.locator.LocatorApplication;
+import com.locator_app.locator.R;
 import com.locator_app.locator.controller.LocationController;
 import com.locator_app.locator.model.LocatorLocation;
 import com.locator_app.locator.view.adapter.RowLayoutAdapter;
@@ -44,7 +45,7 @@ public class LocationsFragment extends Fragment {
                         (item) -> rowLayoutItems.add(item),
                         (error) -> Toast.makeText(LocatorApplication.getAppContext(),
                                 "something went wrong :-(", Toast.LENGTH_SHORT).show(),
-                        ()->adapter.setRowLayoutItems(rowLayoutItems)
+                        () -> adapter.setRowLayoutItems(rowLayoutItems)
                 );
     }
 
