@@ -2,21 +2,16 @@ package com.locator_app.locator.view.adapter;
 
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.locator_app.locator.LocatorApplication;
 import com.locator_app.locator.R;
-import com.locator_app.locator.util.BitmapHelper;
-import com.locator_app.locator.util.CacheImageLoader;
 import com.locator_app.locator.view.bubble.BubbleView;
 
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -32,21 +27,17 @@ public class RowLayoutAdapter extends BaseAdapter {
         public String text;
         public String description;
         public String imageUri;
-        public String fallbackImageUri;
     }
 
     List<RowLayoutItem> rowLayoutItems = new LinkedList<>();
-    List<Bitmap> thumbnails = new LinkedList<>();
 
     public void setRowLayoutItems(List<RowLayoutItem> rowLayoutItems) {
-        this.thumbnails = Arrays.asList(new Bitmap[rowLayoutItems.size()]);
         this.rowLayoutItems = rowLayoutItems;
         notifyDataSetChanged();
     }
 
     public void clear() {
         rowLayoutItems.clear();
-        thumbnails.clear();
         notifyDataSetChanged();
     }
 
@@ -84,44 +75,10 @@ public class RowLayoutAdapter extends BaseAdapter {
         final RowLayoutItem item = rowLayoutItems.get(position);
         viewHolder = (ViewHolder)convertView.getTag();
 
-        if (thumbnails.get(position) == null) {
-            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) viewHolder.bubbleView.getLayoutParams();
-            int width = params.width;
-            int height = params.height;
-            int size = Math.min(width, height);
-            loadImage(item.imageUri, item.fallbackImageUri, position, size);
-        }
-
         viewHolder.text.setText(item.text);
         viewHolder.description.setText(item.description);
-        viewHolder.bubbleView.setIcon(thumbnails.get(position));
+        viewHolder.bubbleView.loadImage(item.imageUri);
 
         return convertView;
-    }
-
-    private void loadImage(final String imageUri, final String fallbackImageUri,
-                           final int position, final int size) {
-
-        // load fallback synchronous
-        CacheImageLoader.getInstance().loadSync(fallbackImageUri)
-                .subscribe(
-                        (fallback) -> {
-                            Bitmap rounded = BitmapHelper.getRoundBitmap(fallback, size);
-                            this.thumbnails.set(position, rounded);
-                            notifyDataSetChanged();
-                        },
-                        (error) -> { }
-                );
-
-        // load real image asynchronous
-        CacheImageLoader.getInstance().loadAsync(imageUri)
-                .subscribe(
-                        (thumbnail) -> {
-                            Bitmap rounded = BitmapHelper.getRoundBitmap(thumbnail, size);
-                            this.thumbnails.set(position, rounded);
-                            notifyDataSetChanged();
-                        },
-                        (error) -> { }
-                );
     }
 }
