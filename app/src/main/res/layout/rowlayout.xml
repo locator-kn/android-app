@@ -4,75 +4,65 @@
     xmlns:custom="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="130dp"
+    android:layout_height="100dp"
     android:background="#ffffff">
 
     <LinearLayout
         android:orientation="vertical"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="2">
+        android:layout_weight="1">
 
         <TextView
             android:text="bubble info"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:id="@+id/bubbleInfoText"
-            android:layout_gravity="center_horizontal"
             android:textColor="@android:color/black"
-            android:layout_marginTop="10dp" />
+            android:layout_weight="1"
+            android:gravity="center_vertical|center_horizontal" />
 
         <com.locator_app.locator.view.bubble.BubbleView
             android:id="@+id/bubbleView"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            custom:shadowWidth="10"
+            android:layout_height="0dp"
+            custom:shadowWidth="6"
             custom:fillColor="@color/innerRed"
             custom:strokeColor="@color/borderRed"
             custom:strokeWidth="25"
-            android:layout_weight="1"
-            android:layout_gravity="center_horizontal" />
+            android:layout_weight="5" />
 
     </LinearLayout>
 
     <LinearLayout
         android:orientation="vertical"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1">
+        android:layout_weight="2">
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+        <TextView
+            android:id="@+id/text"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:textColor="@android:color/black"
+            android:text="TEXT"
+            android:textSize="20sp"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:layout_weight="1"
+            android:gravity="bottom" />
 
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical">
-
-                <TextView
-                    android:id="@+id/text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:textColor="@android:color/black"
-                    android:text="TEXT"
-                    android:ellipsize="end"
-                    android:singleLine="true" />
-
-                <TextView
-                    android:id="@+id/description"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="@android:color/black"
-                    android:text="description"
-                    android:ellipsize="end"
-                    android:maxLines = "2" />
-            </LinearLayout>
-        </FrameLayout>
+        <TextView
+            android:id="@+id/description"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:textColor="@android:color/black"
+            android:text="description"
+            android:textSize="14sp"
+            android:ellipsize="end"
+            android:maxLines = "2"
+            android:layout_weight="1" />
 
     </LinearLayout>
 
