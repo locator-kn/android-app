@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:context="com.locator_app.locator.view.profile.ProfileActivity"
     android:background="@mipmap/ic_launcher">
@@ -11,30 +11,90 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
-        <ImageView
-            android:id="@+id/profileImageView"
+        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="2"
-            android:scaleType="fitXY"/>
+            android:layout_height="0dp"
+            android:layout_weight="2">
 
-        <android.support.v4.view.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/pager"
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:id="@+id/goBack"
+                android:src="@drawable/go_back_icon_black"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/userName"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="User Name"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:editable="false"
+                android:enabled="false" />
+
+            <ImageView
+                android:id="@+id/showMap"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:src="@drawable/map_icon_black"
+                android:layout_weight="1" />
+        </LinearLayout>
+
+        <com.locator_app.locator.view.bubble.BubbleView
+            android:id="@+id/profileImageBubbleView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
+            custom:fillColor="@android:color/darker_gray"
+            custom:strokeWidth="0"
+            android:layout_weight="3" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
             android:layout_weight="1">
 
-            <android.support.v4.view.PagerTabStrip
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="top"
-                android:alpha="50" />
+            <TextView
+                android:id="@+id/residence"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:gravity="center"
+                android:text="Residence"
+                android:layout_weight="1"
+                android:singleLine="true"
+                android:ellipsize="end" />
 
-        </android.support.v4.view.ViewPager>
+            <ImageView
+                android:id="@+id/showMore"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:src="@drawable/three_dots_black"
+                android:layout_weight="1" />
+
+        </LinearLayout>
 
     </LinearLayout>
+
+    <android.support.v4.view.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2">
+
+        <android.support.v4.view.PagerTabStrip
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:alpha="50" />
+
+    </android.support.v4.view.ViewPager>
 
 
 </LinearLayout>
