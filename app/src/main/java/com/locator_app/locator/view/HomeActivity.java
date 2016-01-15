@@ -96,14 +96,28 @@ public class HomeActivity extends AppCompatActivity {
 
     @OnLongClick(R.id.userProfileBubble)
     boolean onUserProfileBubbleLongClick() {
-        User me = UserController.getInstance().me();
+        UserController.getInstance().getUser("56786fe35227864133663973")
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        (user) -> {
+                            Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
+                            user.thumb = "/api/v1/users/ec26fc9e9342d7df21a87ab2477d5cf7/profile.jpeg";
+                            intent.putExtra("profile", user);
+                            startActivity(intent);
+                        },
+                        (error) -> {
+                            Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                );
+        /*User me = UserController.getInstance().me();
         if (me.loggedIn) {
             Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
             intent.putExtra("profile", me);
             startActivity(intent);
         } else {
             jumpToLoginScreen();
-        }
+        }*/
         return true;
     }
 

@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import com.locator_app.locator.R;
 import com.locator_app.locator.model.User;
+import com.locator_app.locator.util.CacheImageLoader;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -37,7 +38,7 @@ public class ProfileActivity extends FragmentActivity {
     }
 
     private void displayUserInfo(User user) {
-
+        CacheImageLoader.getInstance().setImage(user.thumbnailUri(), profileImageView);
     }
 
     @OnClick(R.id.profileImageView)
