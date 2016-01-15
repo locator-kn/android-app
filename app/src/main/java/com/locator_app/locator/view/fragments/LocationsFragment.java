@@ -2,7 +2,6 @@ package com.locator_app.locator.view.fragments;
 
 
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -12,17 +11,11 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.locator_app.locator.LocatorApplication;
-import com.locator_app.locator.controller.LocationController;
 import com.locator_app.locator.model.LocatorLocation;
 import com.locator_app.locator.util.DateConverter;
 import com.locator_app.locator.view.adapter.RowLayoutAdapter;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 public class LocationsFragment extends Fragment {
 
