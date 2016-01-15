@@ -1,6 +1,8 @@
 package com.locator_app.locator.view.fragments;
 
 
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -30,11 +32,14 @@ public class LocationsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ListView listView = new ListView(LocatorApplication.getAppContext());
         listView.setAdapter(adapter);
+        listView.setDivider(new ColorDrawable(0xFF000000));
+        listView.setDividerHeight(1);
         return listView;
     }
 
     public void loadLocations(Observable<LocatorLocation> observable) {
-        observable.map(this::locationToRowLayoutItem).toList()
+        observable.map(this::locationToRowLayoutItem)
+                .toList()
                 .subscribe(
                         (list) -> adapter.setRowLayoutItems(list),
                         (error) -> Toast.makeText(LocatorApplication.getAppContext(),
