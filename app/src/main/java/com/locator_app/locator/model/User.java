@@ -2,6 +2,7 @@ package com.locator_app.locator.model;
 
 import com.google.gson.annotations.SerializedName;
 import com.locator_app.locator.R;
+import com.locator_app.locator.apiservice.Api;
 
 import java.io.Serializable;
 
@@ -41,6 +42,6 @@ public class User implements LocatorObject, Serializable {
         if (thumb.isEmpty()) {
             return "drawable://" + R.drawable.profile;
         }
-        return thumb;
+        return Api.serverUrl + thumb;
     }
 }
