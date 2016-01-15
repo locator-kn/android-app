@@ -10,7 +10,6 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.locator_app.locator.LocatorApplication;
-import com.locator_app.locator.R;
 import com.locator_app.locator.controller.LocationController;
 import com.locator_app.locator.model.LocatorLocation;
 import com.locator_app.locator.view.adapter.RowLayoutAdapter;
@@ -18,6 +17,7 @@ import com.locator_app.locator.view.adapter.RowLayoutAdapter;
 import java.util.LinkedList;
 import java.util.List;
 
+import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -27,25 +27,17 @@ public class LocationsFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        if (adapter.isEmpty()) {
-            loadAdapterItems();
-        }
         ListView listView = new ListView(LocatorApplication.getAppContext());
         listView.setAdapter(adapter);
         return listView;
     }
 
-    private void loadAdapterItems() {
-        List<RowLayoutAdapter.RowLayoutItem> rowLayoutItems = new LinkedList<>();
-        LocationController.getInstance().getLocationsNearby(9.169753789901733, 47.66868204997508, 2, 20)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .map(this::locationToRowLayoutItem)
+    public void loadLocations(Observable<LocatorLocation> observable) {
+        observable.map(this::locationToRowLayoutItem).toList()
                 .subscribe(
-                        (item) -> rowLayoutItems.add(item),
+                        (list) -> adapter.setRowLayoutItems(list),
                         (error) -> Toast.makeText(LocatorApplication.getAppContext(),
-                                "something went wrong :-(", Toast.LENGTH_SHORT).show(),
-                        () -> adapter.setRowLayoutItems(rowLayoutItems)
+                                "something went wrong :-(", Toast.LENGTH_SHORT).show()
                 );
     }
 
