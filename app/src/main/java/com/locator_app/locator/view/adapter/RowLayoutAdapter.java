@@ -20,6 +20,7 @@ public class RowLayoutAdapter extends BaseAdapter {
     public class ViewHolder {
         public TextView text;
         public TextView description;
+        public TextView bubbleInfo;
         public BubbleView bubbleView;
     }
 
@@ -27,6 +28,7 @@ public class RowLayoutAdapter extends BaseAdapter {
         public String text;
         public String description;
         public String imageUri;
+        public String creationDate;
     }
 
     List<RowLayoutItem> rowLayoutItems = new LinkedList<>();
@@ -69,6 +71,7 @@ public class RowLayoutAdapter extends BaseAdapter {
             viewHolder.text = (TextView)convertView.findViewById(R.id.text);
             viewHolder.description = (TextView)convertView.findViewById(R.id.description);
             viewHolder.bubbleView = (BubbleView)convertView.findViewById(R.id.bubbleView);
+            viewHolder.bubbleInfo = (TextView)convertView.findViewById(R.id.bubbleInfoText);
             convertView.setTag(viewHolder);
         }
 
@@ -78,6 +81,7 @@ public class RowLayoutAdapter extends BaseAdapter {
         viewHolder.text.setText(item.text);
         viewHolder.description.setText(item.description);
         viewHolder.bubbleView.loadImage(item.imageUri);
+        viewHolder.bubbleInfo.setText(item.creationDate);
 
         return convertView;
     }

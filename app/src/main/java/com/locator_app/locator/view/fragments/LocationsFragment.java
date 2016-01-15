@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.locator_app.locator.LocatorApplication;
 import com.locator_app.locator.controller.LocationController;
 import com.locator_app.locator.model.LocatorLocation;
+import com.locator_app.locator.util.DateConverter;
 import com.locator_app.locator.view.adapter.RowLayoutAdapter;
 
 import java.util.LinkedList;
@@ -46,6 +47,7 @@ public class LocationsFragment extends Fragment {
         item.imageUri = location.thumbnailUri();
         item.text = location.title;
         item.description = location.description;
+        item.creationDate = DateConverter.toddMMyyyy(location.createDate);
         return item;
     }
 }
