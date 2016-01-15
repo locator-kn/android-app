@@ -57,7 +57,7 @@ public class LocatorLocation implements LocatorObject {
     @Override
     public String thumbnailUri() {
         if (images == null || images.small == null) {
-            return "drawable://" + R.drawable.facebook_logo;
+            return "drawable://" + R.drawable.locator_app_icon;
         }
         return images.getSmall();
     }
