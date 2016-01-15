@@ -4,6 +4,7 @@ package com.locator_app.locator.apiservice.users;
 import com.google.gson.JsonSyntaxException;
 import com.locator_app.locator.apiservice.Api;
 import com.locator_app.locator.apiservice.ServiceFactory;
+import com.locator_app.locator.model.User;
 
 import java.net.UnknownHostException;
 
@@ -12,6 +13,7 @@ import retrofit.Response;
 import retrofit.http.Body;
 import retrofit.http.GET;
 import retrofit.http.POST;
+import retrofit.http.Path;
 import rx.Observable;
 
 public class UsersApiService {
@@ -30,6 +32,8 @@ public class UsersApiService {
         @POST(Api.version + "/users/register")
         Observable<Response<RegistrationResponse>> register(@Body RegistrationRequest registrationBodyRequest);
 
+        @GET(Api.version + "/users/{userId}")
+        Observable<Response<User>> getUser(@Path("userId") String userId);
     }
 
     private UsersApi service = ServiceFactory.createService(UsersApi.class);
@@ -90,5 +94,17 @@ public class UsersApiService {
         } else if (throwable instanceof JsonSyntaxException) {
             JsonSyntaxException ex = (JsonSyntaxException) throwable;
         }
+    }
+
+    public Observable<User> getUser(String userId) {
+        return service.getUser(userId)
+                .flatMap(this::parseUserResponse);
+    }
+
+    private Observable<User> parseUserResponse(Response<User> userResponse) {
+        if (userResponse.isSuccess()) {
+            return Observable.just(userResponse.body());
+        }
+        return Observable.error(new Exception("http-error: " + Integer.toString(userResponse.code())));
     }
 }
