@@ -1,6 +1,6 @@
 <resources>
     <style name="WelcomeActionBarTheme"
-        parent="@style/Theme.AppCompat.Light.DarkActionBar">
+        parent="@style/Base.Theme.AppCompat.Light.DarkActionBar">
         <item name="android:actionBarStyle">@style/WelcomeActionBar</item>
         <item name="actionBarStyle">@style/WelcomeActionBar</item>
     </style>
