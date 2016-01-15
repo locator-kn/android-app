@@ -54,7 +54,7 @@ public class CacheImageLoader {
                                 loading.add(imageUri);
                             }
                         } else {
-                            //bitmap = sleepForBitmapInCache(imageUri);
+                            bitmap = sleepForBitmapInCache(imageUri);
                         }
                     }
 
