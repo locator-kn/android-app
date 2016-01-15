@@ -75,6 +75,10 @@ public class UserController {
 
     }
 
+    public Observable<User> getUser(String userId) {
+        return userService.getUser(userId);
+    }
+
     private static UserController instance;
     public static UserController getInstance() {
         if (instance == null) {
