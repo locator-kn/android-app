@@ -6,6 +6,9 @@ import android.widget.ImageView;
 
 import com.locator_app.locator.LocatorApplication;
 import com.locator_app.locator.db.Couch;
+import com.nostra13.universalimageloader.cache.disc.DiskCache;
+import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiskCache;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
@@ -112,8 +115,13 @@ public class CacheImageLoader {
         if (instance == null) {
             instance = new CacheImageLoader();
             if (!ImageLoader.getInstance().isInited()) {
+                DisplayImageOptions displayImageOptions = new DisplayImageOptions.Builder()
+                        .cacheOnDisk(true)
+                        .build();
                 ImageLoaderConfiguration configuration =
-                        new ImageLoaderConfiguration.Builder(LocatorApplication.getAppContext()).build();
+                        new ImageLoaderConfiguration.Builder(LocatorApplication.getAppContext())
+                                .defaultDisplayImageOptions(displayImageOptions)
+                                .build();
                 ImageLoader.getInstance().init(configuration);
             }
         }
