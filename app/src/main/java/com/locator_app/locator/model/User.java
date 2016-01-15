@@ -44,4 +44,12 @@ public class User implements LocatorObject, Serializable {
         }
         return Api.serverUrl + thumb;
     }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other instanceof User) {
+            return ((User) other)._id.equals(_id);
+        }
+        return false;
+    }
 }
