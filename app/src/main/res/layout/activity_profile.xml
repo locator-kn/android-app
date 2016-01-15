@@ -6,7 +6,7 @@
     xmlns:custom="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:context="com.locator_app.locator.view.profile.ProfileActivity"
-    android:background="@mipmap/ic_launcher">
+    android:background="@drawable/profile_background">
 
     <LinearLayout
         android:orientation="vertical"
