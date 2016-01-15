@@ -12,7 +12,9 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_weight="3"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp">
 
         <LinearLayout
             android:orientation="horizontal"
@@ -34,9 +36,10 @@
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="User Name"
                 android:gravity="center"
-                android:layout_weight="1"
+                android:layout_weight="5"
                 android:editable="false"
-                android:enabled="false" />
+                android:enabled="false"
+                android:textColor="@android:color/black" />
 
             <ImageView
                 android:id="@+id/showMap"
@@ -52,7 +55,7 @@
             android:layout_height="0dp"
             custom:fillColor="@android:color/darker_gray"
             custom:strokeWidth="0"
-            android:layout_weight="3" />
+            android:layout_weight="5" />
 
         <LinearLayout
             android:orientation="horizontal"
@@ -65,11 +68,16 @@
                 android:layout_width="0dp"
                 android:layout_height="fill_parent"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:gravity="center"
                 android:text="Residence"
                 android:layout_weight="1"
                 android:singleLine="true"
-                android:ellipsize="end" />
+                android:ellipsize="end"
+                android:layout_marginLeft="20dp" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
 
             <ImageView
                 android:id="@+id/showMore"
@@ -86,7 +94,7 @@
         android:id="@+id/pager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="2">
+        android:layout_weight="5">
 
         <android.support.v4.view.PagerTabStrip
             android:layout_width="fill_parent"
