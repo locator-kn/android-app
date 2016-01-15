@@ -30,7 +30,7 @@
             custom:shadowWidth="10"
             custom:fillColor="@color/innerRed"
             custom:strokeColor="@color/borderRed"
-            custom:strokeWidth="16"
+            custom:strokeWidth="25"
             android:layout_weight="1"
             android:layout_gravity="center_horizontal" />
 
