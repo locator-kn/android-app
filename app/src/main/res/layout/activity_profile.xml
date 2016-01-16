@@ -111,6 +111,8 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 app:tabTextAppearance="@android:style/TextAppearance.Widget.TabWidget"
+                app:tabTextColor="@android:color/white"
+                app:tabSelectedTextColor="@android:color/white"
                 app:layout_scrollFlags="scroll|snap|enterAlways"/>
 
         </android.support.design.widget.AppBarLayout>
