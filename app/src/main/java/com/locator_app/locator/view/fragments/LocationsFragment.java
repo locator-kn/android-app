@@ -1,51 +1,31 @@
 package com.locator_app.locator.view.fragments;
 
 
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
-import android.widget.Toast;
 
-import com.locator_app.locator.LocatorApplication;
-import com.locator_app.locator.model.LocatorLocation;
-import com.locator_app.locator.util.DateConverter;
-import com.locator_app.locator.view.adapter.RowLayoutAdapter;
-
-import rx.Observable;
+import com.locator_app.locator.R;
+import com.locator_app.locator.view.DividerItemDecoration;
+import com.locator_app.locator.view.adapter.LocationRecyclerViewAdapter;
 
 public class LocationsFragment extends Fragment {
 
-    RowLayoutAdapter adapter = new RowLayoutAdapter();
+    public final LocationRecyclerViewAdapter adapter = new LocationRecyclerViewAdapter();
+    private RecyclerView view;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        ListView listView = new ListView(LocatorApplication.getAppContext());
-        listView.setAdapter(adapter);
-        listView.setDivider(new ColorDrawable(0xFF000000));
-        listView.setDividerHeight(1);
-        return listView;
-    }
-
-    public void loadLocations(Observable<LocatorLocation> observable) {
-        observable.map(this::locationToRowLayoutItem)
-                .toList()
-                .subscribe(
-                        (list) -> adapter.setRowLayoutItems(list),
-                        (error) -> Toast.makeText(LocatorApplication.getAppContext(),
-                                "something went wrong :-(", Toast.LENGTH_SHORT).show()
-                );
-    }
-
-    private RowLayoutAdapter.RowLayoutItem locationToRowLayoutItem(LocatorLocation location) {
-        RowLayoutAdapter.RowLayoutItem item = new RowLayoutAdapter.RowLayoutItem();
-        item.imageUri = location.thumbnailUri();
-        item.text = location.title;
-        item.description = location.description;
-        item.creationDate = DateConverter.toddMMyyyy(location.createDate);
-        return item;
+        if (view == null) {
+            view = (RecyclerView) inflater.inflate(R.layout.fragment_list, container, false);
+            view.setLayoutManager(new LinearLayoutManager(view.getContext()));
+            view.addItemDecoration(new DividerItemDecoration(getContext(), null));
+            view.setAdapter(adapter);
+        }
+        return view;
     }
 }
