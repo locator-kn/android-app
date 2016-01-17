@@ -10,11 +10,13 @@ import android.widget.TextView;
 
 import com.locator_app.locator.R;
 import com.locator_app.locator.controller.LocationController;
+import com.locator_app.locator.controller.UserController;
 import com.locator_app.locator.model.User;
 import com.locator_app.locator.view.MapsActivity;
 import com.locator_app.locator.view.bubble.BubbleView;
 import com.locator_app.locator.view.fragments.FragmentAdapter;
 import com.locator_app.locator.view.fragments.LocationsFragment;
+import com.locator_app.locator.view.fragments.UsersFragment;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -104,8 +106,18 @@ public class ProfileActivity extends FragmentActivity {
     }
 
     private void addFollowerAdapter(FragmentAdapter adapter) {
-        Fragment fragment = new Fragment();
+        UsersFragment fragment = new UsersFragment();
         adapter.addFragment(fragment, "Followers");
+
+        UserController.getInstance().getFollowers(user._id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .toList()
+                .subscribe(
+                        (fragment.adapter::setUsers),
+                        (error-> {
+                        })
+                );
     }
 
     private void addFollowsAdapter(FragmentAdapter adapter) {
