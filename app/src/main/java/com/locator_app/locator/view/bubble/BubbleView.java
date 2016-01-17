@@ -56,6 +56,7 @@ public class BubbleView extends View {
         }
     }
 
+    private String imageUri = "";
     private Bitmap originalIcon;
     private Bitmap icon;
     private void roundAndSetIcon(Bitmap icon) {
@@ -121,7 +122,9 @@ public class BubbleView extends View {
 
         if (icon != null) {
             int distance = strokeWidth + shadowWidth;
-            canvas.drawBitmap(icon, distance, distance, bitmapPainter);
+            int left = center.x - radius + distance;
+            int top = center.y - radius + distance;
+            canvas.drawBitmap(icon, left, top, bitmapPainter);
         }
     }
 
@@ -165,11 +168,33 @@ public class BubbleView extends View {
         }
     }
 
+    @Override
+    protected void	onLayout(boolean changed, int left, int top, int right, int bottom) {
+        roundAndSetIcon(this.originalIcon);
+    }
+
     public void loadImage(String imageUri) {
-        CacheImageLoader.getInstance().loadAsync(imageUri)
-                .subscribe(
-                    (bitmap) -> roundAndSetIcon(bitmap),
-                    (error) -> {}
-        );
+        loadImage(imageUri, "");
+    }
+
+    public void loadImage(String imageUri, String fallbackImageUri) {
+        if (!this.imageUri.equals(imageUri)) {
+            this.imageUri = imageUri;
+            CacheImageLoader.getInstance().loadAsync(imageUri)
+                    .subscribe(
+                            (bitmap) -> roundAndSetIcon(bitmap),
+                            (error) -> loadFallbackImage(fallbackImageUri)
+                    );
+        }
+    }
+
+    private void loadFallbackImage(String fallbackImageUri) {
+        if (!fallbackImageUri.isEmpty()) {
+            CacheImageLoader.getInstance().loadAsync(fallbackImageUri)
+                    .subscribe(
+                            (fallbackBitmap) -> roundAndSetIcon(fallbackBitmap),
+                            (error) -> {}
+                    );
+        }
     }
 }

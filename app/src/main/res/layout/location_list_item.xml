@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="100dp"
+    android:background="#ffffff">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+        <TextView
+            android:text="bubble info"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:id="@+id/creationDate"
+            android:textColor="@android:color/black"
+            android:layout_weight="1"
+            android:gravity="center_vertical|center_horizontal" />
+
+        <com.locator_app.locator.view.bubble.BubbleView
+            android:id="@+id/bubbleView"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            custom:shadowWidth="6"
+            custom:fillColor="@color/innerRed"
+            custom:strokeColor="@color/borderRed"
+            custom:strokeWidth="25"
+            android:layout_weight="5" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="2">
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:textColor="@android:color/black"
+            android:text="TEXT"
+            android:textSize="20sp"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:layout_weight="1"
+            android:gravity="bottom" />
+
+        <TextView
+            android:id="@+id/description"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:textColor="@android:color/black"
+            android:text="description"
+            android:textSize="14sp"
+            android:ellipsize="end"
+            android:maxLines = "2"
+            android:layout_weight="1" />
+
+    </LinearLayout>
+
+</LinearLayout>

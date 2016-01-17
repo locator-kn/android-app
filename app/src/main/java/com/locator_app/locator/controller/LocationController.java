@@ -23,6 +23,10 @@ public class LocationController {
                 .map(x -> x.location);
     }
 
+    public Observable<LocatorLocation> getLocationsByUserId(String userId) {
+        return locationService.getLocationsByUser(userId);
+    }
+
     private static LocationController instance;
     public static LocationController getInstance() {
         if (instance == null) {

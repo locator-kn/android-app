@@ -7,6 +7,7 @@ import com.locator_app.locator.apiservice.Api;
 import com.locator_app.locator.apiservice.ServiceFactory;
 
 import java.net.UnknownHostException;
+import java.util.List;
 
 import retrofit.Response;
 import retrofit.http.Body;
@@ -31,6 +32,9 @@ public class LocationsApiService {
                                                                       @Query("lat") double lat,
                                                                       @Query("maxDistance") double maxDistance,
                                                                       @Query("limit") int limit);
+
+        @GET(Api.version + "/locations/users/{userId}")
+        Observable<Response<List<LocatorLocation>>> getLocationsByUser(@Path("userId") String userId);
     }
 
     LocationsApi service = ServiceFactory.createService(LocationsApi.class);
@@ -70,6 +74,18 @@ public class LocationsApiService {
     private Observable<LocationsNearbyResponse> parseLocationsNearbyResponse(Response response) {
         if (response.isSuccess()) {
             return Observable.just((LocationsNearbyResponse)response.body());
+        }
+        return Observable.error(new Exception("http-code: " + Integer.toString(response.code())));
+    }
+
+    public Observable<LocatorLocation> getLocationsByUser(String userId) {
+        return service.getLocationsByUser(userId)
+                .flatMap(this::parseLocationsList);
+    }
+
+    private Observable<LocatorLocation> parseLocationsList(Response<List<LocatorLocation>> response) {
+        if (response.isSuccess()) {
+            return Observable.from(response.body());
         }
         return Observable.error(new Exception("http-code: " + Integer.toString(response.code())));
     }

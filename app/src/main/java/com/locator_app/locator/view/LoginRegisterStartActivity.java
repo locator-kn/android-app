@@ -14,6 +14,7 @@ import com.locator_app.locator.controller.UserController;
 import com.locator_app.locator.model.User;
 import com.locator_app.locator.db.Couch;
 import com.locator_app.locator.util.CacheImageLoader;
+import com.locator_app.locator.util.RxBus;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 
 import javax.security.auth.callback.CallbackHandler;
@@ -40,6 +41,8 @@ public class LoginRegisterStartActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         setCustomActionBar();
 
+        setupEventBus();
+
         loadImages();
 
         UserController userController = UserController.getInstance();
@@ -51,6 +54,14 @@ public class LoginRegisterStartActivity extends AppCompatActivity {
         }
 
         //TODO: getDeviceId
+    }
+
+    private void setupEventBus() {
+        // todo, configure event bus
+        // internet on off
+        // gps on off
+        // user logged in / out
+        // what else?
     }
 
     @OnClick(R.id.login_yes)

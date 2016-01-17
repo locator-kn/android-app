@@ -6,7 +6,7 @@
     android:id="@+id/bubbleLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background"
+    android:background="@drawable/homescreen_background"
     tools:context=".MainActivity">
 
     <com.locator_app.locator.view.bubble.BubbleView

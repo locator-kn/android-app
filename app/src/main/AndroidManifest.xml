@@ -53,11 +53,15 @@
             android:name=".view.RegisterProfilePictureActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".view.OnBoardingChoiceActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".view.FacebookLoginMailActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".view.FacebookLoginPasswordActivity"
             android:screenOrientation="portrait" />
+
         <activity android:name=".view.profile.ProfileActivity"
             android:screenOrientation="portrait"/>
         <activity

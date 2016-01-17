@@ -1,6 +1,7 @@
 package com.locator_app.locator.view;
 
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -164,6 +165,7 @@ public class RegisterProfilePictureActivity extends AppCompatActivity {
     }
 
     private void register(HashMap<String, String> regValues) {
+        final Context context = getApplicationContext();
         HashMap<String, String> registerValues = regValues;
         UserController controller = UserController.getInstance();
         RegistrationRequest request = new RegistrationRequest();
@@ -176,10 +178,14 @@ public class RegisterProfilePictureActivity extends AppCompatActivity {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 (loginResponse) -> {
-                    // du bist registriert und schon eingeloggt, toll
+                    Intent intent = new Intent(context, OnBoardingChoiceActivity.class);
+                    intent.putExtra("name", loginResponse.name);
+                    startActivity(intent);
                 },
                 (error) -> {
-                    // beim registrieren lief wohl was schief
+                    Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(context, RegisterNameActivity.class);
+                    startActivity(intent);
                 }
             );
     }
