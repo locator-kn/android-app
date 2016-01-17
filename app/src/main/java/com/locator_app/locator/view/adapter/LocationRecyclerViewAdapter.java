@@ -28,12 +28,12 @@ public class LocationRecyclerViewAdapter extends RecyclerView.Adapter<LocationRe
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.location_list_item, parent, false);
+                .inflate(R.layout.default_list_item, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
+    public void onBindViewHolder(final LocationRecyclerViewAdapter.ViewHolder holder, int position) {
         final LocatorLocation location = locations.get(position);
         holder.update(location);
         holder.view.setOnClickListener(v ->
@@ -58,9 +58,9 @@ public class LocationRecyclerViewAdapter extends RecyclerView.Adapter<LocationRe
         public ViewHolder(View view) {
             super(view);
             this.view = view;
-            title = (TextView) view.findViewById(R.id.title);
+            title = (TextView) view.findViewById(R.id.text);
             description = (TextView) view.findViewById(R.id.description);
-            creationDate = (TextView) view.findViewById(R.id.creationDate);
+            creationDate = (TextView) view.findViewById(R.id.bubble_info);
             bubbleView = (BubbleView) view.findViewById(R.id.bubbleView);
         }
 
