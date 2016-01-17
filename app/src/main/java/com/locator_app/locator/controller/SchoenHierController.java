@@ -20,24 +20,21 @@ public class SchoenHierController {
         return schoenHierService.schoenHiersNearby(lon, lat, dist, max);
     }
 
-    public void markCurPosAsSchoenHier() {
+    public Observable<SchoenHiersResponse> markCurPosAsSchoenHier() {
         GpsService gpsService = GpsService.getInstance();
         if (!gpsService.isGpsEnabled()) {
-            Toast.makeText(LocatorApplication.getAppContext(), "Gps is not Enabled", Toast.LENGTH_LONG).show();
-            return;
+            return Observable.error(new Exception("Gps is not enabled"));
         }
 
         android.location.Location location = gpsService.getGpsLocation();
         if (location == null) {
-            return;
+            return Observable.error(new Exception("could not determine your current gps position"));
         }
 
         SchoenHierRequest request = new SchoenHierRequest();
         request.lon = location.getLongitude();
         request.lat = location.getLatitude();
-
-        SchoenHierController.getInstance().markAsSchoenHier(request);
-        Toast.makeText(LocatorApplication.getAppContext(), "geschönhiert", Toast.LENGTH_LONG).show();
+        return markAsSchoenHier(request);
     }
 
     public Observable<SchoenHiersResponse> markAsSchoenHier(SchoenHierRequest request) {
