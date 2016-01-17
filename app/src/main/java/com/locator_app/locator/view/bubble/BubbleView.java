@@ -17,13 +17,13 @@ import com.locator_app.locator.util.CacheImageLoader;
 
 public class BubbleView extends View {
 
-    private Point center;
-    private int radius;
+    private Point center = new Point(0, 0);
+    private int radius = 80;
 
-    private Paint painter;
-    private Paint bitmapPainter;
+    private Paint painter = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private Paint bitmapPainter = new Paint(Paint.ANTI_ALIAS_FLAG);
 
-    private int fillColor;
+    private int fillColor = Color.TRANSPARENT;
     public void setFillColor(int fillColor) {
         if (this.fillColor != fillColor) {
             this.fillColor = fillColor;
@@ -31,7 +31,7 @@ public class BubbleView extends View {
         }
     }
 
-    private int strokeWidth;
+    private int strokeWidth = 0;
     public void setStrokeWidth(int strokeWidth) {
         if (this.strokeWidth != strokeWidth) {
             this.strokeWidth = strokeWidth;
@@ -40,7 +40,7 @@ public class BubbleView extends View {
         }
     }
 
-    private int strokeColor;
+    private int strokeColor = Color.TRANSPARENT;
     public void setStrokeColor(int strokeColor) {
         if (this.strokeColor != strokeColor) {
             this.strokeColor = strokeColor;
@@ -48,7 +48,7 @@ public class BubbleView extends View {
         }
     }
 
-    private int shadowWidth;
+    private int shadowWidth = 0;
     public void setShadowWidth(int shadowWidth) {
         if (this.shadowWidth != shadowWidth) {
             this.shadowWidth = shadowWidth;
@@ -86,19 +86,15 @@ public class BubbleView extends View {
 
     public BubbleView(final Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+
         setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+
         Resources.Theme resourceTheme = context.getTheme();
         TypedArray a = resourceTheme.obtainStyledAttributes(attrs, R.styleable.BubbleView, 0, 0);
-
-        bitmapPainter = new Paint(Paint.ANTI_ALIAS_FLAG);
-
-        painter = new Paint(Paint.ANTI_ALIAS_FLAG);
         setFillColor(a.getColor(R.styleable.BubbleView_fillColor, Color.TRANSPARENT));
         setStrokeColor(a.getColor(R.styleable.BubbleView_strokeColor, Color.TRANSPARENT));
         setStrokeWidth(a.getInteger(R.styleable.BubbleView_strokeWidth, 0));
         setShadowWidth(a.getInteger(R.styleable.BubbleView_shadowWidth, 0));
-
-        center = new Point();
         a.recycle();
     }
 
@@ -170,7 +166,9 @@ public class BubbleView extends View {
 
     @Override
     protected void	onLayout(boolean changed, int left, int top, int right, int bottom) {
-        roundAndSetIcon(this.originalIcon);
+        if (this.originalIcon != null) {
+            roundAndSetIcon(this.originalIcon);
+        }
     }
 
     public void loadImage(String imageUri) {
