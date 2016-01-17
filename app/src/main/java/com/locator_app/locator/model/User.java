@@ -5,6 +5,8 @@ import com.locator_app.locator.R;
 import com.locator_app.locator.apiservice.Api;
 
 import java.io.Serializable;
+import java.util.LinkedList;
+import java.util.List;
 
 public class User implements LocatorObject, Serializable {
 
@@ -35,6 +37,9 @@ public class User implements LocatorObject, Serializable {
     @SerializedName("thumb")
     public String thumb = "";
 
+    @SerializedName("following")
+    public List<String> following = new LinkedList<>();
+
     public boolean loggedIn = false;
 
     @Override
@@ -47,9 +52,6 @@ public class User implements LocatorObject, Serializable {
 
     @Override
     public boolean equals(Object other) {
-        if (other instanceof User) {
-            return ((User) other)._id.equals(_id);
-        }
-        return false;
+        return other instanceof User && ((User) other)._id.equals(_id);
     }
 }
