@@ -79,6 +79,10 @@ public class UserController {
         return userService.getUser(userId);
     }
 
+    public Observable<User> getFollowers(String userId) {
+        return userService.getFollowers(userId);
+    }
+
     private static UserController instance;
     public static UserController getInstance() {
         if (instance == null) {

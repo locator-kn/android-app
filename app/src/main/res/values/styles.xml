@@ -10,4 +10,13 @@
         <item name="android:background">@color/colorWelcome</item>
         <item name="background">@color/colorWelcome</item>
     </style>
+
+    <style name="TextAppearance.Tabs" parent="TextAppearance.Design.Tab">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="TextAppearance.Tabs.Selected">
+        <item name="android:textStyle">bold</item>
+    </style>
 </resources>
