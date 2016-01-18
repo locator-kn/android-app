@@ -1,6 +1,8 @@
 package com.locator_app.locator.view.adapter;
 
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,9 +10,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.locator_app.locator.LocatorApplication;
 import com.locator_app.locator.R;
 import com.locator_app.locator.model.User;
 import com.locator_app.locator.view.bubble.BubbleView;
+import com.locator_app.locator.view.profile.ProfileActivity;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -35,8 +39,12 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
     public void onBindViewHolder(UserRecyclerViewAdapter.ViewHolder holder, int position) {
         final User user = users.get(position);
         holder.update(user);
-        holder.view.setOnClickListener(v ->
-                        Toast.makeText(v.getContext(), user.surname, Toast.LENGTH_SHORT).show()
+        holder.view.setOnClickListener(v -> {
+                    Context context = v.getContext();
+                    Intent intent = new Intent(context, ProfileActivity.class);
+                    intent.putExtra("profile", user);
+                    context.startActivity(intent);
+                }
         );
     }
 
@@ -46,10 +54,10 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
     }
 
     static class ViewHolder extends LocationRecyclerViewAdapter.ViewHolder {
+
         public final View view;
         public final TextView name;
         public final TextView description;
-        public final TextView bubbleInfo;
         public final BubbleView bubbleView;
 
         public ViewHolder(View view) {
@@ -57,15 +65,16 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
             this.view = view;
             name = (TextView) view.findViewById(R.id.text);
             description = (TextView) view.findViewById(R.id.description);
-            bubbleInfo = (TextView) view.findViewById(R.id.bubble_info);
             bubbleView = (BubbleView) view.findViewById(R.id.bubbleView);
+
+            TextView bubbleInfo = (TextView) view.findViewById(R.id.bubble_info);
+            bubbleInfo.setVisibility(View.GONE);
         }
 
         public void update(User user) {
             title.setText(user.name);
             description.setText(user.description);
             bubbleView.loadImage(user.thumbnailUri());
-            bubbleInfo.setText("");
         }
     }
 }
