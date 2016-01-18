@@ -21,6 +21,7 @@ import com.locator_app.locator.view.fragments.UsersFragment;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -115,14 +116,25 @@ public class ProfileActivity extends FragmentActivity {
                 .toList()
                 .subscribe(
                         (fragment.adapter::setUsers),
-                        (error-> {
+                        (error -> {
                         })
                 );
     }
 
     private void addFollowsAdapter(FragmentAdapter adapter) {
-        Fragment fragment = new Fragment();
+        UsersFragment fragment = new UsersFragment();
         adapter.addFragment(fragment, user.name + " folgt");
+
+        Observable.from(user.following)
+                .flatMap(following -> UserController.getInstance().getUser(following))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .toList()
+                .subscribe(
+                        (fragment.adapter::setUsers),
+                        (error -> {
+                        })
+                );
     }
 
     @OnClick(R.id.goBack)
