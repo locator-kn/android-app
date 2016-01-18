@@ -77,21 +77,71 @@
                     android:layout_height="40dp"
                     >
 
-                    <TextView
-                        android:id="@+id/residence"
+                    <LinearLayout
+                        android:orientation="vertical"
                         android:layout_width="0dp"
-                        android:layout_height="fill_parent"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:text="Residence"
-                        android:layout_weight="1"
-                        android:singleLine="true"
-                        android:ellipsize="end"
-                        android:layout_marginLeft="20dp"
-                        />
+                        android:layout_height="match_parent"
+                        android:layout_weight="2">
+
+                        <TextView
+                            android:id="@+id/residence"
+                            android:layout_width="fill_parent"
+                            android:layout_height="0dp"
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            android:text="Residence"
+                            android:layout_weight="1"
+                            android:singleLine="true"
+                            android:ellipsize="end"
+                            android:layout_marginLeft="20dp"
+                            />
+
+                        <LinearLayout
+                            android:orientation="horizontal"
+                            android:layout_width="fill_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:layout_marginLeft="20dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="?android:attr/textAppearanceSmall"
+                                android:text="0"
+                                android:id="@+id/countLocations" />
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/imageView"
+                                android:src="@drawable/location_icon_small"
+                                android:adjustViewBounds="true" />
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/imageView2"
+                                android:src="@drawable/dot_icon"
+                                android:adjustViewBounds="true" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="?android:attr/textAppearanceSmall"
+                                android:text="0"
+                                android:id="@+id/countFollowers" />
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/imageView3"
+                                android:src="@drawable/friends_icon"
+                                android:adjustViewBounds="true" />
+                        </LinearLayout>
+                    </LinearLayout>
 
                     <Space
                         android:layout_width="0dp"
-                        android:layout_height="0dp"
+                        android:layout_height="fill_parent"
                         android:layout_weight="1"
                         />
 
@@ -102,6 +152,7 @@
                         android:src="@drawable/three_dots_black"
                         android:layout_weight="1"
                         />
+
                 </LinearLayout>
 
             </LinearLayout>

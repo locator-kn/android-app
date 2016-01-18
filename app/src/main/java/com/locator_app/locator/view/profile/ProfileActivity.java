@@ -43,6 +43,12 @@ public class ProfileActivity extends FragmentActivity {
     @Bind(R.id.viewPager)
     ViewPager viewPager;
 
+    @Bind(R.id.countLocations)
+    TextView countLocations;
+
+    @Bind(R.id.countFollowers)
+    TextView countFollowers;
+
     User user;
 
     @Override
@@ -95,7 +101,10 @@ public class ProfileActivity extends FragmentActivity {
                 .observeOn(AndroidSchedulers.mainThread())
                 .toList()
                 .subscribe(
-                        (fragment.adapter::setLocations),
+                        (locations -> {
+                            fragment.adapter.setLocations(locations);
+                            countLocations.setText(Integer.toString(locations.size()));
+                        }),
                         (error -> {
                         })
                 );
@@ -115,7 +124,10 @@ public class ProfileActivity extends FragmentActivity {
                 .observeOn(AndroidSchedulers.mainThread())
                 .toList()
                 .subscribe(
-                        (fragment.adapter::setUsers),
+                        (followers-> {
+                            fragment.adapter.setUsers(followers);
+                            countFollowers.setText(Integer.toString(followers.size()));
+                        }),
                         (error -> {
                         })
                 );
