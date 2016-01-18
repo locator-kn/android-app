@@ -24,6 +24,7 @@ public class LocationsFragment extends Fragment {
             view = (RecyclerView) inflater.inflate(R.layout.fragment_list, container, false);
             view.setLayoutManager(new LinearLayoutManager(view.getContext()));
             view.addItemDecoration(new DividerItemDecoration(getContext(), null));
+            view.setHasFixedSize(true);
             view.setAdapter(adapter);
         }
         return view;
