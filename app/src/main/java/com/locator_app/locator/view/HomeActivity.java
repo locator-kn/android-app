@@ -76,7 +76,7 @@ public class HomeActivity extends AppCompatActivity {
 
     @OnLongClick(R.id.userProfileBubble)
     boolean onUserProfileBubbleLongClick() {
-        UserController.getInstance().getUser("56786fe35227864133663973")
+        UserController.getInstance().getUser("569e4a83a6e5bb503b838301")
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
