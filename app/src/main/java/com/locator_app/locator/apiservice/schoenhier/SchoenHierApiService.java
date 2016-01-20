@@ -12,6 +12,7 @@ import retrofit.http.GET;
 import retrofit.http.POST;
 import retrofit.http.Query;
 import rx.Observable;
+import rx.functions.Func1;
 
 public class SchoenHierApiService {
 
@@ -25,7 +26,7 @@ public class SchoenHierApiService {
                                                @Query("limit") int limit);
 
         @POST(Api.version + "/schoenhiers")
-        Observable<SchoenHiersResponse> markAsSchoenHier(@Body SchoenHierRequest schoenHierRequest);
+        Observable<Response<SchoenHiersResponse>> markAsSchoenHier(@Body SchoenHierRequest schoenHierRequest);
     }
 
     private SchoenHierApi service = ServiceFactory.createService(SchoenHierApi.class);
@@ -46,16 +47,18 @@ public class SchoenHierApiService {
     }
 
     public Observable<SchoenHiersResponse> markAsSchoenHier(SchoenHierRequest request) {
-        return service.markAsSchoenHier(request);
-//                .doOnError(this::handleError)
-//                .flatMap(this::parseSchoenHiersResponse);
+        return service.markAsSchoenHier(request)
+                .onErrorResumeNext(throwable -> {
+                    return Observable.error(new Exception(throwable.getMessage()));
+                })
+                .flatMap(this::parseMarkAsSchoenHierResponse);
     }
 
-    private Observable<SchoenHiersResponse> parseSchoenHiersResponse(Response response) {
+    private Observable<SchoenHiersResponse> parseMarkAsSchoenHierResponse(Response<SchoenHiersResponse> response) {
         if (response.isSuccess()) {
-            return Observable.just((SchoenHiersResponse)response.body());
+            return Observable.just(response.body());
         }
-        return Observable.error(new Exception("http-error: " + Integer.toString(response.code())));
+        return Observable.error(new Exception("http-error" + Integer.toString(response.code())));
     }
 
     private void handleError(Throwable throwable) {
