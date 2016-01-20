@@ -1,4 +1,4 @@
-package com.locator_app.locator.view;
+package com.locator_app.locator.view.map;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -44,6 +44,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GpsService gpsService;
     private Bitmap currentPos;
     private Bitmap locationIcon;
+    private MapsController mapsController = new MapsController(this);
 
     @Bind(R.id.schoenHierButton)
     BubbleView schoenHierButton;
@@ -83,14 +84,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SchoenHierController.getInstance().markCurPosAsSchoenHier();
     }
 
-    private final static int MIN_CALL_DELAY_MS = 2000;
-    private long lastCall;
-    public boolean calledRecently() {
-        long delay = System.currentTimeMillis() - lastCall;
-        lastCall = System.currentTimeMillis();
-        return delay < MIN_CALL_DELAY_MS;
-    }
-
     @Override
     public void onMapReady(GoogleMap gMap) {
         googleMap = gMap;
@@ -101,10 +94,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             return;
         }
         googleMap.setOnCameraChangeListener( cameraPosition -> {
-            if (!calledRecently()) {
-//                drawHeatMapAt(cameraPosition.target);
-                drawLocationsAt(cameraPosition.target);
-            }
+            mapsController.drawLocationsAt(cameraPosition.target);
         });
 
         LatLng locationPos = new LatLng(location.getLatitude(), location.getLongitude());
@@ -114,39 +104,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .icon(currentPosDesc)
                 .anchor((float) 0.5, (float) 0.5));
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(locationPos, 15));
-        addHeatMap(location.getLongitude(), location.getLatitude());
+
+        mapsController.addHeatMap(location.getLongitude(), location.getLatitude());
         //drawLocationsAt(locationPos);
-    }
-
-    private void drawHeatMapAt(LatLng position) {
-
-    }
-    
-    HashSet<LocatorLocation> drawnlocations = new HashSet<>();
-    Queue<LocatorLocation> newLocations = new LinkedList<>();
-    
-    private void drawLocationsAt(LatLng position) {
-        LocationController.getInstance().getLocationsNearby(position.longitude, position.latitude, 1, 100)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        (item) -> newLocations.add(item),
-                        (error) -> Toast.makeText(getApplicationContext(),
-                                "Fehler beim Laden von Locations",
-                                Toast.LENGTH_SHORT),
-                        this::drawNewLocations
-                );
-    }
-
-    public void drawNewLocations() {
-        while (!newLocations.isEmpty()) {
-            LocatorLocation location = newLocations.poll();
-            if (drawnlocations.contains(location)) {
-                continue;
-            }
-            drawLocation(location.geoTag.getLongitude(), location.geoTag.getLatitude());
-            drawnlocations.add(location);
-        }
     }
 
     public void drawLocation(double lon, double lat) {
@@ -158,28 +118,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private HeatmapTileProvider heatmapTileProvider;
     private TileOverlay tileOverlay;
-    private List<LatLng> heatPoints;
-
-    public void addHeatMap(double lon, double lat) {
-        heatPoints = new LinkedList<>();
-
-        SchoenHierController.getInstance().schoenHiersNearby(lon, lat, 10, 100)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .flatMapIterable(response -> response.results)
-                .subscribe(
-                        (item) -> {
-                            double shLon = item.schoenHier.geoTag.getLongitude();
-                            double shLat = item.schoenHier.geoTag.getLatitude();
-
-                            heatPoints.add(new LatLng(shLat, shLon));
-                        },
-                        (error) -> Toast.makeText(getApplicationContext(),
-                                "Schön hier nicht bekommen",
-                                Toast.LENGTH_SHORT),
-                        this::drawHeatMap
-                );
-    }
 
     static private int[] colors = {
             Color.rgb(0, 255, 0),
@@ -191,7 +129,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             (float) 0.8
     };
 
-    private void drawHeatMap() {
+    public void drawHeatMap(List<LatLng> heatPoints) {
         if (heatPoints.isEmpty()) {
             return;
         }

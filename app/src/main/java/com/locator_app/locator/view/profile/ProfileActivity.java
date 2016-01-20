@@ -12,7 +12,7 @@ import com.locator_app.locator.R;
 import com.locator_app.locator.controller.LocationController;
 import com.locator_app.locator.controller.UserController;
 import com.locator_app.locator.model.User;
-import com.locator_app.locator.view.MapsActivity;
+import com.locator_app.locator.view.map.MapsActivity;
 import com.locator_app.locator.view.bubble.BubbleView;
 import com.locator_app.locator.view.fragments.FragmentAdapter;
 import com.locator_app.locator.view.fragments.LocationsFragment;
