@@ -65,7 +65,7 @@
             android:name=".view.profile.ProfileActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".view.MapsActivity"
+            android:name=".view.map.MapsActivity"
             android:screenOrientation="portrait" />
 
         <meta-data
