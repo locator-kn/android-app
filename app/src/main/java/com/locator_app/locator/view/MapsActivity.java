@@ -69,7 +69,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @OnClick(R.id.schoenHierButton)
     void onschoenHierButtonClick() {
-        SchoenHierController.getInstance().markCurPosAsSchoenHier();
+        SchoenHierController.getInstance().markCurPosAsSchoenHier()
+                .subscribe(
+                        (val) -> {
+                            Toast.makeText(getApplicationContext(), "geschoenhiert", Toast.LENGTH_SHORT).show();
+                        },
+                        (err) -> {
+                            Toast.makeText(getApplicationContext(), err.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                );
     }
 
     @Override
