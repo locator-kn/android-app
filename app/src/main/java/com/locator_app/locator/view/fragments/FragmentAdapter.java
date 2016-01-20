@@ -4,11 +4,12 @@ package com.locator_app.locator.view.fragments;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 
 import java.util.LinkedList;
 import java.util.List;
 
-public class FragmentAdapter extends FragmentPagerAdapter {
+public class FragmentAdapter extends FragmentStatePagerAdapter {
 
     private final List<Fragment> fragments = new LinkedList<>();
     private final List<String> fragmentTitles = new LinkedList<>();
