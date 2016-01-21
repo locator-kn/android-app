@@ -11,11 +11,11 @@ import android.view.ViewGroup;
 
 import com.locator_app.locator.R;
 import com.locator_app.locator.view.DividerItemDecoration;
-import com.locator_app.locator.view.adapter.LocationRecyclerViewAdapter;
+import com.locator_app.locator.view.adapter.UserRecyclerViewAdapter;
 
-public class LocationsFragment extends Fragment {
+public class UsersFragment extends Fragment {
 
-    public final LocationRecyclerViewAdapter adapter = new LocationRecyclerViewAdapter();
+    public final UserRecyclerViewAdapter adapter = new UserRecyclerViewAdapter();
     private RecyclerView view;
 
     @Override
@@ -24,7 +24,6 @@ public class LocationsFragment extends Fragment {
             view = (RecyclerView) inflater.inflate(R.layout.fragment_list, container, false);
             view.setLayoutManager(new LinearLayoutManager(view.getContext()));
             view.addItemDecoration(new DividerItemDecoration(getContext(), null));
-            view.setHasFixedSize(true);
             view.setAdapter(adapter);
         }
         return view;

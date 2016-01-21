@@ -18,7 +18,7 @@
             android:layout_width="fill_parent"
             android:layout_height="0dp"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:id="@+id/bubbleInfoText"
+            android:id="@+id/bubble_info"
             android:textColor="@android:color/black"
             android:layout_weight="1"
             android:gravity="center_vertical|center_horizontal" />

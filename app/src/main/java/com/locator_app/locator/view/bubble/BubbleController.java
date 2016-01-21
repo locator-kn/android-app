@@ -1,14 +1,18 @@
 package com.locator_app.locator.view.bubble;
 
+import android.content.Intent;
 import android.graphics.Point;
 import android.support.v4.content.ContextCompat;
 import android.widget.Toast;
 
+import com.locator_app.locator.LocatorApplication;
 import com.locator_app.locator.R;
 import com.locator_app.locator.model.LocatorLocation;
 import com.locator_app.locator.model.LocatorObject;
 import com.locator_app.locator.model.Message;
 import com.locator_app.locator.apiservice.my.BubbleScreenResponse;
+import com.locator_app.locator.view.LocationDetailActivity;
+import com.locator_app.locator.view.profile.ProfileActivity;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -164,7 +168,10 @@ public class BubbleController {
 
     private void handleOnLocationBubbleClicked(Bubble bubble) {
         LocatorLocation location = (LocatorLocation) bubble.data;
-        Toast.makeText(layout.getContext(), location.title, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(layout.getContext(), location.title, Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(layout.getContext(), LocationDetailActivity.class);
+        intent.putExtra("location", location);
+        layout.getContext().startActivity(intent);
     }
 
     private void handleOnMessageBubbleClicked(Bubble bubble) {

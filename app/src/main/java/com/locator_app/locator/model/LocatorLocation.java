@@ -3,10 +3,11 @@ package com.locator_app.locator.model;
 import com.google.gson.annotations.SerializedName;
 import com.locator_app.locator.R;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
-public class LocatorLocation implements LocatorObject {
+public class LocatorLocation implements LocatorObject, Serializable {
 
     @SerializedName("_id")
     public String id;
@@ -47,6 +48,11 @@ public class LocatorLocation implements LocatorObject {
     @Override
     public boolean equals(Object other) {
         return other == this || other instanceof LocatorLocation && id.equals(((LocatorLocation)other).id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
     }
 
     @Override

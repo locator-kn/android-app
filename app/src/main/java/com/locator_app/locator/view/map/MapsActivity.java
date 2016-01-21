@@ -1,4 +1,4 @@
-package com.locator_app.locator.view;
+package com.locator_app.locator.view.map;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -12,6 +12,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.TileOverlay;
@@ -19,14 +20,21 @@ import com.google.android.gms.maps.model.TileOverlayOptions;
 import com.google.maps.android.heatmaps.Gradient;
 import com.google.maps.android.heatmaps.HeatmapTileProvider;
 import com.locator_app.locator.R;
-import com.locator_app.locator.apiservice.schoenhier.SchoenHiersNearbyResponse;
+import com.locator_app.locator.controller.LocationController;
 import com.locator_app.locator.controller.SchoenHierController;
+import com.locator_app.locator.model.LocatorLocation;
 import com.locator_app.locator.util.CacheImageLoader;
 import com.locator_app.locator.util.GpsService;
+import com.locator_app.locator.view.bubble.BubbleView;
 
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -35,25 +43,53 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleMap googleMap;
     private GpsService gpsService;
     private Bitmap currentPos;
+    private Bitmap locationIcon;
+    private MapsController mapsController = new MapsController(this);
+
+    @Bind(R.id.schoenHierButton)
+    BubbleView schoenHierButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+        ButterKnife.bind(this);
 
         String urlCurrentPos = "drawable://" + R.drawable.profile;
+        String urlLocation   = "drawable://" + R.drawable.white_location_icon_small;
         CacheImageLoader.getInstance().loadAsync(urlCurrentPos).subscribe(
                 (bitmap -> {
                     currentPos = Bitmap.createScaledBitmap(bitmap, 60, 60, false);
                 }),
                 (error -> {})
         );
+        CacheImageLoader.getInstance().loadAsync(urlLocation).subscribe(
+                (bitmap -> {
+                    locationIcon = Bitmap.createScaledBitmap(bitmap, 60, 60, false);
+                }),
+                (error -> {})
+        );
 
         gpsService = GpsService.getInstance();
+
+        schoenHierButton.loadImage("drawable://" + R.drawable.schoenhier);
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+    }
+
+    @OnClick(R.id.schoenHierButton)
+    void onschoenHierButtonClick() {
+        SchoenHierController.getInstance().markCurPosAsSchoenHier()
+                .subscribe(
+                        (val) -> {
+                            Toast.makeText(getApplicationContext(), "geschoenhiert", Toast.LENGTH_SHORT).show();
+                        },
+                        (err) -> {
+                            Toast.makeText(getApplicationContext(), err.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                );
     }
 
     @Override
@@ -65,6 +101,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (location == null) {
             return;
         }
+        googleMap.setOnCameraChangeListener( cameraPosition -> {
+            mapsController.drawLocationsAt(cameraPosition.target);
+        });
 
         LatLng locationPos = new LatLng(location.getLatitude(), location.getLongitude());
 
@@ -73,52 +112,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .icon(currentPosDesc)
                 .anchor((float) 0.5, (float) 0.5));
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(locationPos, 15));
-        addHeatMap(location.getLongitude(), location.getLatitude());
+
+        mapsController.addHeatMap(location.getLongitude(), location.getLatitude());
+        //drawLocationsAt(locationPos);
     }
 
-//    public void drawLocations() {
-//        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.location);
-//        bitmap = getRoundBitmap(bitmap, 100);
-//
-//        Location location = gpsService.getGpsLocation();
-//        LatLng locationPos = new LatLng(location.getLatitude()  + 0.002,
-//                location.getLongitude() + 0.002);
-//
-//        drawLocation(locationPos, bitmap);
-//    }
-
-//    public void drawLocation(LatLng latLong, Bitmap bitmap) {
-//        Log.d(LOGTAG, "drawLocation: called");
-//        googleMap.addMarker(new MarkerOptions()
-//                .icon(BitmapDescriptorFactory.fromBitmap(bitmap))
-//                .anchor(0.5f, 0.5f)
-//                .position(latLong));
-//    }
+    public void drawLocation(double lon, double lat) {
+        googleMap.addMarker(new MarkerOptions()
+                .icon(BitmapDescriptorFactory.fromBitmap(locationIcon))
+                .anchor(0.5f, 0.5f)
+                .position(new LatLng(lat, lon)));
+    }
 
     private HeatmapTileProvider heatmapTileProvider;
     private TileOverlay tileOverlay;
-    private List<LatLng> heatPoints;
-
-    public void addHeatMap(double lon, double lat) {
-        heatPoints = new LinkedList<>();
-
-        SchoenHierController.getInstance().schoenHiersNearby(lon, lat, 10, 100)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .flatMapIterable(response -> response.results)
-                .subscribe(
-                        (item) -> {
-                            double shLon = item.schoenHier.geoTag.getLongitude();
-                            double shLat = item.schoenHier.geoTag.getLatitude();
-
-                            heatPoints.add(new LatLng(shLat, shLon));
-                        },
-                        (error) -> Toast.makeText(getApplicationContext(),
-                                "Schön hier nicht bekommen",
-                                Toast.LENGTH_SHORT),
-                        this::drawHeatMap
-                );
-    }
 
     static private int[] colors = {
             Color.rgb(0, 255, 0),
@@ -130,7 +137,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             (float) 0.8
     };
 
-    private void drawHeatMap() {
+    public void drawHeatMap(List<LatLng> heatPoints) {
         if (heatPoints.isEmpty()) {
             return;
         }
@@ -144,7 +151,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 //                .opacity(0.6)
 //                .gradient(gradient)
                 .build();
-
-        tileOverlay = googleMap.addTileOverlay(new TileOverlayOptions().tileProvider(heatmapTileProvider));
+        try {
+            tileOverlay = googleMap.addTileOverlay(new TileOverlayOptions().tileProvider(heatmapTileProvider));
+        } catch(OutOfMemoryError e) {
+        }
     }
 }

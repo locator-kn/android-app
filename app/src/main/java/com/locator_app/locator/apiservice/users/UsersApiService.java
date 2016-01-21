@@ -7,6 +7,7 @@ import com.locator_app.locator.apiservice.ServiceFactory;
 import com.locator_app.locator.model.User;
 
 import java.net.UnknownHostException;
+import java.util.List;
 
 import retrofit.HttpException;
 import retrofit.Response;
@@ -34,6 +35,9 @@ public class UsersApiService {
 
         @GET(Api.version + "/users/{userId}")
         Observable<Response<User>> getUser(@Path("userId") String userId);
+
+        @GET(Api.version + "/users/{userId}/follower")
+        Observable<Response<List<User>>> getFollowers(@Path("userId") String userId);
     }
 
     private UsersApi service = ServiceFactory.createService(UsersApi.class);
@@ -106,5 +110,17 @@ public class UsersApiService {
             return Observable.just(userResponse.body());
         }
         return Observable.error(new Exception("http-error: " + Integer.toString(userResponse.code())));
+    }
+
+    public Observable<User> getFollowers(String userId) {
+        return service.getFollowers(userId)
+                .flatMap(this::parseFollowersResponse);
+    }
+
+    private Observable<User> parseFollowersResponse(Response<List<User>> response) {
+        if (response.isSuccess()) {
+            return Observable.from(response.body());
+        }
+        return Observable.error(new Exception("http-error: " + Integer.toString(response.code())));
     }
 }

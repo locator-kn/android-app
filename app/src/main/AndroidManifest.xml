@@ -64,11 +64,11 @@
         <activity
             android:name=".view.FacebookLoginPasswordActivity"
             android:screenOrientation="portrait" />
-
-        <activity android:name=".view.profile.ProfileActivity"
-            android:screenOrientation="portrait"/>
         <activity
-            android:name=".view.MapsActivity"
+            android:name=".view.profile.ProfileActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.map.MapsActivity"
             android:screenOrientation="portrait" />
         <activity android:name="com.facebook.FacebookActivity"
             android:configChanges=
@@ -80,5 +80,8 @@
             android:value="@string/google_maps_key" />
         <meta-data android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id"/>
+        <activity android:name=".view.LocationDetailActivity" >
+        </activity>
     </application>
+
 </manifest>
