@@ -2,7 +2,9 @@ package com.locator_app.locator.model;
 
 import com.google.gson.annotations.SerializedName;
 
-public class City {
+import java.io.Serializable;
+
+public class City implements Serializable {
     @SerializedName("title")
     public String title;
 

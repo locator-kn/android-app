@@ -2,10 +2,11 @@ package com.locator_app.locator.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 
-public class GeoTag {
+public class GeoTag implements Serializable {
 
     @SerializedName("coordinates")
     public List<Double> coordinates = Arrays.asList(0., 0.);
