@@ -56,7 +56,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         ButterKnife.bind(this);
 
         String urlCurrentPos = "drawable://" + R.drawable.profile;
-        String urlLocation   = "drawable://" + R.drawable.white_location_icon_small;
+        String urlLocation   = "drawable://" + R.drawable.location_auf_map;
         CacheImageLoader.getInstance().loadAsync(urlCurrentPos).subscribe(
                 (bitmap -> {
                     currentPos = Bitmap.createScaledBitmap(bitmap, 60, 60, false);
@@ -65,7 +65,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         );
         CacheImageLoader.getInstance().loadAsync(urlLocation).subscribe(
                 (bitmap -> {
-                    locationIcon = Bitmap.createScaledBitmap(bitmap, 60, 60, false);
+                    locationIcon = Bitmap.createScaledBitmap(bitmap, 70, 70, false);
                 }),
                 (error -> {})
         );
@@ -119,8 +119,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onResume();
         continuousLocation = gpsService.getContinuousCurLocation()
                                             .subscribeOn(Schedulers.io())
-                                            .observeOn(AndroidSchedulers.mainThread())
-                                            .subscribe(this::setPersonPosition);
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::setPersonPosition);
     }
 
     @Override
