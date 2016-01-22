@@ -11,6 +11,7 @@ import com.locator_app.locator.controller.MyController;
 import com.locator_app.locator.controller.SchoenHierController;
 import com.locator_app.locator.controller.UserController;
 import com.locator_app.locator.model.User;
+import com.locator_app.locator.util.GpsService;
 import com.locator_app.locator.view.bubble.BubbleController;
 import com.locator_app.locator.view.bubble.BubbleView;
 import com.locator_app.locator.view.bubble.RelativeBubbleLayout;
@@ -37,17 +38,22 @@ public class HomeActivity extends AppCompatActivity {
 
     BubbleController bubbleController;
 
+    GpsService gpsService;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         ButterKnife.bind(this);
         bubbleController = new BubbleController(bubbleLayout);
+
+        gpsService = (GpsService) getSupportFragmentManager()
+                .findFragmentById(R.id.gpsService);
     }
 
     @OnClick(R.id.schoenHierBubble)
     void onSchoenHierBubbleClick() {
-        SchoenHierController.getInstance().markCurPosAsSchoenHier();
+        SchoenHierController.getInstance().markCurPosAsSchoenHier(gpsService);
 
         Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
         startActivity(intent);
