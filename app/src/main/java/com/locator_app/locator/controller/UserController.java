@@ -1,6 +1,9 @@
 package com.locator_app.locator.controller;
 
 
+import android.content.SharedPreferences;
+
+import com.locator_app.locator.LocatorApplication;
 import com.locator_app.locator.db.Couch;
 import com.locator_app.locator.model.User;
 import com.locator_app.locator.apiservice.users.LoginRequest;
@@ -14,9 +17,10 @@ import rx.Observable;
 
 public class UserController {
 
+    private final String lastLoggedInUserEmailKey = "lastLoggedInUser";
     private UsersApiService userService;
     private User me;
-
+    private boolean loggedIn;
     public User me() {
         return this.me;
     }
@@ -26,7 +30,7 @@ public class UserController {
                 .doOnError(this::handleRegistrationError)
                 .doOnNext(this::handleRegistration)
                 .map(registrationResponse -> LoginRequest.fromRegistrationRequest(registrationRequest))
-                .flatMap(loginRequest -> login(loginRequest));
+                .flatMap(this::login);
     }
 
     private void handleRegistrationError(Throwable throwable) {
@@ -43,13 +47,32 @@ public class UserController {
                 .doOnNext(this::handleLogin);
     }
 
+    public Observable<Boolean> logInLastLoggedInUser() {
+        SharedPreferences preferences = LocatorApplication.getSharedPreferences();
+        String lastLoggedInUserEmail = preferences.getString(lastLoggedInUserEmailKey, "");
+        if (lastLoggedInUserEmail.isEmpty()) {
+            return Observable.error(new Exception("no user was logged in"));
+        } else {
+            Couch.get().switchToDatabase(lastLoggedInUserEmail);
+            Couch.get().restore(me);
+            return userService.checkProtected();
+        }
+    }
+
+    public boolean loggedIn() {
+        return loggedIn;
+    }
+
     private void handleLogin(LoginResponse loginResponse) {
+        SharedPreferences preferences = LocatorApplication.getSharedPreferences();
+        preferences.edit().putString(lastLoggedInUserEmailKey, loginResponse.mail).apply();
         me._id = loginResponse._id;
         me.name = loginResponse.name;
         me.mail = loginResponse.mail;
         me.residence = loginResponse.residence;
-        me.loggedIn = true;
-        Couch.get().onLogin(me);
+        loggedIn = true;
+        Couch.get().switchToDatabase(me.mail);
+        Couch.get().restore(me);
     }
 
     private void handleLoginError(Throwable throwable) {
@@ -63,12 +86,14 @@ public class UserController {
     }
 
     private void handleLogout(LogoutResponse logoutResponse) {
+        loggedIn = false;
+        SharedPreferences preferences = LocatorApplication.getSharedPreferences();
+        preferences.edit().remove(lastLoggedInUserEmailKey).apply();
         me._id = "";
         me.name = "";
         me.mail = "";
         me.residence = "";
-        me.loggedIn = false;
-        Couch.get().onLogout();
+        Couch.get().switchToDefaultDatabase();
     }
 
     private void handleLogoutError(Throwable throwable) {

@@ -1,27 +1,23 @@
 package com.locator_app.locator.view;
 
 import android.content.Intent;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.locator_app.locator.R;
 import com.locator_app.locator.controller.UserController;
-import com.locator_app.locator.model.User;
 import com.locator_app.locator.db.Couch;
+import com.locator_app.locator.model.User;
 import com.locator_app.locator.util.CacheImageLoader;
-import com.locator_app.locator.util.RxBus;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-
-import javax.security.auth.callback.CallbackHandler;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class LoginRegisterStartActivity extends AppCompatActivity {
 
@@ -45,13 +41,18 @@ public class LoginRegisterStartActivity extends AppCompatActivity {
 
         loadImages();
 
-        UserController userController = UserController.getInstance();
-        Couch.get().onAppStart(userController.me());
-        if (userController.me().loggedIn)  {
-            Toast.makeText(getApplicationContext(), "Welcome back " + userController.me().name,
-                    Toast.LENGTH_LONG).show();
-            jumpToHomeScreen();
-        }
+        UserController.getInstance().logInLastLoggedInUser()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                    (loggedIn) -> {
+                        if (loggedIn) {
+                            jumpToHomeScreen();
+                        }
+                    },
+                    (err) -> {
+                    }
+            );
 
         //TODO: getDeviceId
     }
