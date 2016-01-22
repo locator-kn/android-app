@@ -1,6 +1,8 @@
 package com.locator_app.locator.apiservice.users;
 
 
+import android.util.Log;
+
 import com.google.gson.JsonSyntaxException;
 import com.locator_app.locator.apiservice.Api;
 import com.locator_app.locator.apiservice.ServiceFactory;
@@ -16,6 +18,8 @@ import retrofit.http.GET;
 import retrofit.http.POST;
 import retrofit.http.Path;
 import rx.Observable;
+import rx.functions.Action1;
+import rx.functions.Func1;
 
 public class UsersApiService {
 
@@ -122,5 +126,21 @@ public class UsersApiService {
             return Observable.from(response.body());
         }
         return Observable.error(new Exception("http-error: " + Integer.toString(response.code())));
+    }
+
+    public Observable<Boolean> checkProtected() {
+        return service.requestProtected()
+                .onErrorReturn(throwable -> Response.success(new Object()))
+                .map(response -> response.code() == 200);
+    }
+
+    private Observable<Boolean> parseProtectedResponse(Response<Object> response) {
+        if (response.code() == 200) {
+            return Observable.just(true);
+        }
+        if (response.code() == 401) {
+            return Observable.just(false);
+        }
+        return Observable.just(false);
     }
 }
