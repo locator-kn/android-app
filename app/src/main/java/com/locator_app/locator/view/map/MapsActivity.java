@@ -2,8 +2,10 @@ package com.locator_app.locator.view.map;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -12,11 +14,13 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.TileOverlay;
 import com.google.android.gms.maps.model.TileOverlayOptions;
 import com.google.maps.android.heatmaps.Gradient;
 import com.google.maps.android.heatmaps.HeatmapTileProvider;
+import com.locator_app.locator.LocatorApplication;
 import com.locator_app.locator.R;
 import com.locator_app.locator.controller.SchoenHierController;
 import com.locator_app.locator.util.CacheImageLoader;
@@ -28,6 +32,10 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import rx.Observable;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -83,6 +91,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         gpsService.getCurLocationOnGUIThread(this::initiateMap);
     }
 
+    Marker personMarker;
+
     private void initiateMap(android.location.Location location) {
         googleMap.setOnCameraChangeListener( cameraPosition -> {
             mapsController.drawLocationsAt(cameraPosition.target);
@@ -91,13 +101,34 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         LatLng locationPos = new LatLng(location.getLatitude(), location.getLongitude());
 
         BitmapDescriptor currentPosDesc = BitmapDescriptorFactory.fromBitmap(currentPos);
-        googleMap.addMarker(new MarkerOptions().position(locationPos)
+        personMarker = googleMap.addMarker(new MarkerOptions().position(locationPos)
                 .icon(currentPosDesc)
                 .anchor((float) 0.5, (float) 0.5));
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(locationPos, 15));
-
         mapsController.addHeatMap(location.getLongitude(), location.getLatitude());
     }
+
+    private void setPersonPosition(android.location.Location location) {
+        personMarker.setPosition(new LatLng(location.getLatitude(), location.getLongitude()));
+    }
+
+    Subscription continuousLocation;
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        continuousLocation = gpsService.getContinuousCurLocation()
+                                            .subscribeOn(Schedulers.io())
+                                            .observeOn(AndroidSchedulers.mainThread())
+                                            .subscribe(this::setPersonPosition);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        continuousLocation.unsubscribe();
+    }
+
 
     public void drawLocation(double lon, double lat) {
         googleMap.addMarker(new MarkerOptions()

@@ -12,6 +12,8 @@ import android.view.ViewGroup;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.ErrorDialogFragment;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.locator_app.locator.LocatorApplication;
 
@@ -24,7 +26,9 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
-public class GpsService extends Fragment implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class GpsService extends Fragment implements GoogleApiClient.ConnectionCallbacks,
+                                                    GoogleApiClient.OnConnectionFailedListener,
+                                                    LocationListener {
     private GoogleApiClient googleApiClient;
 
     boolean connected = false;
@@ -37,6 +41,27 @@ public class GpsService extends Fragment implements GoogleApiClient.ConnectionCa
                 .build();
 
         googleApiClient.connect();
+    }
+
+    int nrSubscribedToContinuousLocation;
+    List<Observer> continuousCurLocationSubscribers = new LinkedList<>();
+    Observable<Location> continuousCurLocation = Observable.create(continuousCurLocationSubscribers::add);
+
+    public Observable<android.location.Location> getContinuousCurLocation() {
+        ++nrSubscribedToContinuousLocation;
+        return continuousCurLocation.doOnUnsubscribe(() -> {
+            --nrSubscribedToContinuousLocation;
+            if (nrSubscribedToContinuousLocation == 0) {
+                continuousCurLocationSubscribers.clear();
+            }
+        });
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        for (Observer subscriber : continuousCurLocationSubscribers) {
+            subscriber.onNext(location);
+        }
     }
 
     List<Observer> firstCurLocationSubscribers = new LinkedList<>();
@@ -83,6 +108,15 @@ public class GpsService extends Fragment implements GoogleApiClient.ConnectionCa
                 subscriber.onCompleted(); //TODO: convert to onError
             }
         }
+        firstCurLocationSubscribers.clear();
+
+        LocationRequest locationRequest = new LocationRequest();
+        locationRequest.setInterval(10000);
+        locationRequest.setFastestInterval(5000);
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+        LocationServices.FusedLocationApi.requestLocationUpdates(
+                googleApiClient, locationRequest, this);
     }
 
     private android.location.Location googlePlayCurLocation() {
@@ -127,10 +161,6 @@ public class GpsService extends Fragment implements GoogleApiClient.ConnectionCa
         dialogFragment.setArguments(args);
         dialogFragment.show(getActivity().getFragmentManager(), "errordialog");
     }
-
-//    public Observable<android.location.Location> getContinuousCurLocation() {
-//TODO: implement continuous Location updates
-//    }
 
     //TODO: Dialog when GPS is off
 
