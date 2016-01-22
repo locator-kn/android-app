@@ -22,6 +22,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.CookieStore;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -61,44 +62,6 @@ public class Couch {
         user.mail = get(properties, "mail", "");
         user.residence = get(properties, "residence", "");
         user._id = get(properties, "id", "");
-        user.loggedIn = get(properties, "loggedIn", false);
-    }
-
-    public void onLogin(User user) {
-        String dbName = user.mail.replace("@", "");
-        switchToDatabase(dbName);
-        save(user);
-    }
-
-    public void onAppStart(User user) {
-        for (String db: manager.getAllDatabaseNames()) {
-            if (isUserLoggedIn(db)) {
-                restore(user);
-                break;
-            }
-        }
-    }
-
-    private boolean isUserLoggedIn(String db) {
-        User user = new User();
-        switchToDatabase(db);
-        restore(user);
-        return user.loggedIn;
-    }
-
-    public void onLogout() {
-        Document doc = database.getDocument("user");
-        Map<String, Object> properties = new HashMap<>();
-        if (doc.getProperties() != null) {
-            properties.putAll(doc.getProperties());
-        }
-        properties.put("loggedIn", false);
-        try {
-            doc.putProperties(properties);
-        } catch (CouchbaseLiteException e) {
-            e.printStackTrace();
-        }
-        switchToDefaultDatabase();
     }
 
     private boolean isLocalImage(String imageUri) {
@@ -167,12 +130,13 @@ public class Couch {
         return (T) obj;
     }
 
-    private void switchToDefaultDatabase() {
+    public void switchToDefaultDatabase() {
         switchToDatabase("default");
     }
 
-    private void switchToDatabase(String databaseName) {
+    public void switchToDatabase(String databaseName) {
         try {
+            databaseName = databaseName.replace("@", "_at_");
             if (database == null || !database.getName().equals(databaseName)) {
                 database = manager.getDatabase(databaseName);
             }
