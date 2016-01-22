@@ -23,6 +23,9 @@ public class Message implements LocatorObject {
     @SerializedName("modified_date")
     public String modifiedDate;
 
+    @SerializedName("create_date")
+    public String createDate;
+
     @SerializedName("message_type")
     public String messageType;
 

@@ -2,17 +2,26 @@ package com.locator_app.locator.view;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.Toast;
 
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
 import com.locator_app.locator.R;
 import com.locator_app.locator.util.CacheImageLoader;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.facebook.FacebookSdk;
 
-import javax.security.auth.callback.CallbackHandler;
+import org.json.JSONObject;
+
+import java.util.Arrays;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -29,17 +38,18 @@ public class LoginRegisterActivity extends AppCompatActivity {
     @Bind(R.id.register)
     ImageView register;
 
+    private static CallbackManager callbackmanager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_register);
         ButterKnife.bind(this);
-
-        //set custom action bar
         setCustomActionBar();
-
-        //load all images of the activity
         loadImages();
+
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        FacebookSdk.setApplicationId(getResources().getString(R.string.facebook_app_id));
     }
 
     @OnClick(R.id.login)
@@ -50,8 +60,7 @@ public class LoginRegisterActivity extends AppCompatActivity {
 
     @OnClick(R.id.login_facebook)
     public void onLoginFacebookClick() {
-        Intent intent = new Intent(getApplicationContext(), FacebookLoginMailActivity.class);
-        startActivity(intent);
+        facebookLogin();
     }
 
     @OnClick(R.id.register)
@@ -78,5 +87,55 @@ public class LoginRegisterActivity extends AppCompatActivity {
         CacheImageLoader.getInstance().setImage(urlLogin, login);
         CacheImageLoader.getInstance().setImage(urlLoginFacebook, loginFacebook);
         CacheImageLoader.getInstance().setImage(urlRegister, register);
+    }
+
+    private void facebookLogin() {
+        callbackmanager = CallbackManager.Factory.create();
+        LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("email"));
+        LoginManager.getInstance().registerCallback(callbackmanager,
+                new FacebookCallback<LoginResult>() {
+                    @Override
+                    public void onSuccess(LoginResult loginResult) {
+                        //TODO: send token to server
+                        GraphRequest request = GraphRequest.newMeRequest(
+                                loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
+                                    @Override
+                                    public void onCompleted(JSONObject json, GraphResponse response) {
+                                        if (response.getError() != null) {
+                                            Toast.makeText(getApplicationContext(), R.string.something_went_wrong, Toast.LENGTH_SHORT);
+                                        } else {
+//                                            String jsonresult = String.valueOf(json);
+                                            String firstName = json.optString("first_name");
+                                            Toast.makeText(getApplicationContext(), "Hallo " + firstName, Toast.LENGTH_LONG);
+                                            //TODO: go to next activity
+                                        }
+                                    }
+
+                                });
+
+                        Bundle parameters = new Bundle();
+                        parameters.putString("fields", "id,first_name, last_name,email");
+                        request.setParameters(parameters);
+                        request.executeAsync();
+                    }
+
+                    @Override
+                    public void onCancel() {
+                        //user clicked on cancel button before login
+                        finish();
+                    }
+
+                    @Override
+                    public void onError(FacebookException error) {
+                        Toast.makeText(getApplicationContext(), R.string.something_went_wrong, Toast.LENGTH_SHORT);
+                        Log.d("Facebook Login", error.toString());
+                    }
+                });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        callbackmanager.onActivityResult(requestCode, resultCode, data);
     }
 }

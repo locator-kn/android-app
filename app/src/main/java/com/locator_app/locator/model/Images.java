@@ -4,7 +4,9 @@ package com.locator_app.locator.model;
 import com.google.gson.annotations.SerializedName;
 import com.locator_app.locator.apiservice.Api;
 
-public class Images {
+import java.io.Serializable;
+
+public class Images implements Serializable {
 
     @SerializedName("googlemap")
     public String googlemap;

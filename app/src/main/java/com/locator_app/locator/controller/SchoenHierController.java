@@ -1,10 +1,7 @@
 package com.locator_app.locator.controller;
 
-import android.location.Location;
-import android.util.Log;
 import android.widget.Toast;
 
-import com.github.oxo42.stateless4j.delegates.Action2;
 import com.locator_app.locator.LocatorApplication;
 import com.locator_app.locator.apiservice.schoenhier.SchoenHierApiService;
 import com.locator_app.locator.apiservice.schoenhier.SchoenHierRequest;
