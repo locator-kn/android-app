@@ -8,8 +8,6 @@ import com.locator_app.locator.controller.LocationController;
 import com.locator_app.locator.controller.SchoenHierController;
 import com.locator_app.locator.model.LocatorLocation;
 
-import org.xml.sax.Locator;
-
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;

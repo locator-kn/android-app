@@ -23,4 +23,11 @@
         custom:shadowWidth="10"
         custom:strokeWidth="0" />
 
+    <fragment
+        android:id="@+id/gpsService"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:name="com.locator_app.locator.util.GpsService"
+        tools:context="com.locator_app.locator.view.HomeActivity"/>
+
 </com.locator_app.locator.view.bubble.RelativeBubbleLayout>

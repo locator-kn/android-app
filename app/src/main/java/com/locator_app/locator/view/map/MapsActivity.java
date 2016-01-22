@@ -4,7 +4,6 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -12,7 +11,6 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.TileOverlay;
@@ -20,34 +18,28 @@ import com.google.android.gms.maps.model.TileOverlayOptions;
 import com.google.maps.android.heatmaps.Gradient;
 import com.google.maps.android.heatmaps.HeatmapTileProvider;
 import com.locator_app.locator.R;
-import com.locator_app.locator.controller.LocationController;
 import com.locator_app.locator.controller.SchoenHierController;
-import com.locator_app.locator.model.LocatorLocation;
 import com.locator_app.locator.util.CacheImageLoader;
 import com.locator_app.locator.util.GpsService;
 import com.locator_app.locator.view.bubble.BubbleView;
 
-import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap googleMap;
-    private GpsService gpsService;
     private Bitmap currentPos;
     private Bitmap locationIcon;
     private MapsController mapsController = new MapsController(this);
 
     @Bind(R.id.schoenHierButton)
     BubbleView schoenHierButton;
+
+    GpsService gpsService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,9 +62,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 (error -> {})
         );
 
-        gpsService = GpsService.getInstance();
-
         schoenHierButton.loadImage("drawable://" + R.drawable.schoenhier);
+
+        gpsService = (GpsService) getSupportFragmentManager()
+                .findFragmentById(R.id.gpsService);
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -81,26 +74,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @OnClick(R.id.schoenHierButton)
     void onschoenHierButtonClick() {
-        SchoenHierController.getInstance().markCurPosAsSchoenHier()
-                .subscribe(
-                        (val) -> {
-                            Toast.makeText(getApplicationContext(), "geschoenhiert", Toast.LENGTH_SHORT).show();
-                        },
-                        (err) -> {
-                            Toast.makeText(getApplicationContext(), err.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                );
+        SchoenHierController.getInstance().markCurPosAsSchoenHier(gpsService);
     }
 
     @Override
     public void onMapReady(GoogleMap gMap) {
         googleMap = gMap;
+        gpsService.getCurLocationOnGUIThread(this::initiateMap);
+    }
 
-        android.location.Location location = gpsService.getGpsLocation();
-
-        if (location == null) {
-            return;
-        }
+    private void initiateMap(android.location.Location location) {
         googleMap.setOnCameraChangeListener( cameraPosition -> {
             mapsController.drawLocationsAt(cameraPosition.target);
         });
@@ -114,7 +97,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(locationPos, 15));
 
         mapsController.addHeatMap(location.getLongitude(), location.getLatitude());
-        //drawLocationsAt(locationPos);
     }
 
     public void drawLocation(double lon, double lat) {

@@ -1,5 +1,8 @@
 package com.locator_app.locator.controller;
 
+import android.widget.Toast;
+
+import com.locator_app.locator.LocatorApplication;
 import com.locator_app.locator.apiservice.schoenhier.SchoenHierApiService;
 import com.locator_app.locator.apiservice.schoenhier.SchoenHierRequest;
 import com.locator_app.locator.apiservice.schoenhier.SchoenHiersNearbyResponse;
@@ -19,27 +22,27 @@ public class SchoenHierController {
         return schoenHierService.schoenHiersNearby(lon, lat, dist, max);
     }
 
-    public Observable<SchoenHiersResponse> markCurPosAsSchoenHier() {
-        GpsService gpsService = GpsService.getInstance();
-        if (!gpsService.isGpsEnabled()) {
-            return Observable.error(new Exception("Gps is not enabled"));
-        }
+    public void markCurPosAsSchoenHier(GpsService gpsService) {
+        gpsService.getCurLocationOnIOThread(this::markAsSchoenHier);
+    }
 
-        android.location.Location location = gpsService.getGpsLocation();
-        if (location == null) {
-            return Observable.error(new Exception("could not determine your current gps position"));
-        }
-
+    private void markAsSchoenHier(android.location.Location location) {
         SchoenHierRequest request = new SchoenHierRequest();
         request.lon = location.getLongitude();
         request.lat = location.getLatitude();
-        return markAsSchoenHier(request);
+        markAsSchoenHier(request);
     }
 
     public Observable<SchoenHiersResponse> markAsSchoenHier(SchoenHierRequest request) {
         return schoenHierService.markAsSchoenHier(request)
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnError((exception) -> Toast.makeText(LocatorApplication.getAppContext(),
+                                                         "Could not mark as Schön Hier",
+                                                         Toast.LENGTH_LONG).show())
+                .doOnCompleted(() -> Toast.makeText(LocatorApplication.getAppContext(),
+                                                    "geschönhiert",
+                                                    Toast.LENGTH_SHORT).show());
     }
 
     private static SchoenHierController instance;
