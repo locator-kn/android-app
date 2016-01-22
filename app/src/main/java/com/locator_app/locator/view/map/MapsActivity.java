@@ -88,23 +88,27 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap gMap) {
         googleMap = gMap;
+
+        googleMap.setOnCameraChangeListener( cameraPosition -> {
+            mapsController.drawLocationsAt(cameraPosition.target);
+        });
+
         gpsService.getCurLocationOnGUIThread(this::initiateMap);
     }
 
     Marker personMarker;
 
     private void initiateMap(android.location.Location location) {
-        googleMap.setOnCameraChangeListener( cameraPosition -> {
-            mapsController.drawLocationsAt(cameraPosition.target);
-        });
-
         LatLng locationPos = new LatLng(location.getLatitude(), location.getLongitude());
 
-        BitmapDescriptor currentPosDesc = BitmapDescriptorFactory.fromBitmap(currentPos);
-        personMarker = googleMap.addMarker(new MarkerOptions().position(locationPos)
-                .icon(currentPosDesc)
-                .anchor((float) 0.5, (float) 0.5));
+        // ---------- Manual Continuous Location Update ----------
+//        BitmapDescriptor currentPosDesc = BitmapDescriptorFactory.fromBitmap(currentPos);
+//        personMarker = googleMap.addMarker(new MarkerOptions().position(locationPos)
+//                .icon(currentPosDesc)
+//                .anchor((float) 0.5, (float) 0.5));
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(locationPos, 15));
+        googleMap.setMyLocationEnabled(true);
+        googleMap.getUiSettings().setMyLocationButtonEnabled(false);
         mapsController.addHeatMap(location.getLongitude(), location.getLatitude());
     }
 
@@ -117,16 +121,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onResume() {
         super.onResume();
-        continuousLocation = gpsService.getContinuousCurLocation()
-                                            .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::setPersonPosition);
+        // ---------- Manual Continuous Location Update ----------
+//        continuousLocation = gpsService.getContinuousCurLocation()
+//                                            .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(this::setPersonPosition);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        continuousLocation.unsubscribe();
+        // ---------- Manual Continuous Location Update ----------
+//        continuousLocation.unsubscribe();
     }
 
 
