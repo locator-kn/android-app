@@ -40,8 +40,6 @@ public class User implements LocatorObject, Serializable {
     @SerializedName("following")
     public List<String> following = new LinkedList<>();
 
-    public boolean loggedIn = false;
-
     @Override
     public String thumbnailUri() {
         if (thumb.isEmpty()) {
