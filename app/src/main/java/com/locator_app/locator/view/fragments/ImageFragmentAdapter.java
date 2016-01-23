@@ -16,9 +16,6 @@ public class ImageFragmentAdapter extends FragmentStatePagerAdapter {
 
     public ImageFragmentAdapter(FragmentManager fm) {
         super(fm);
-        imageUris.add("drawable://" + R.drawable.locator_app_icon);
-        imageUris.add("drawable://" + R.drawable.facebook_logo);
-        imageUris.add("drawable://" + R.drawable.schoenhier);
     }
 
     public void setImages(final List<String> imageUris) {

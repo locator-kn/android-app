@@ -7,15 +7,25 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.locator_app.locator.R;
+import com.locator_app.locator.controller.LocationController;
 import com.locator_app.locator.model.LocatorLocation;
+import com.locator_app.locator.model.impressions.AbstractImpression;
+import com.locator_app.locator.model.impressions.ImageImpression;
 import com.locator_app.locator.view.fragments.ImageFragmentAdapter;
 import com.locator_app.locator.view.map.MapsActivity;
+
+import java.util.LinkedList;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class LocationDetailActivity extends FragmentActivity {
 
@@ -32,9 +42,12 @@ public class LocationDetailActivity extends FragmentActivity {
     ViewPager viewPager;
 
     @Bind(R.id.impressions)
-    RecyclerView impressions;
+    RecyclerView impressionsRecyclerView;
+
+    ImageFragmentAdapter imageFragmentAdapter;
 
     LocatorLocation location;
+    List<AbstractImpression> impressions = new LinkedList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,9 +57,41 @@ public class LocationDetailActivity extends FragmentActivity {
 
         location = (LocatorLocation) getIntent().getSerializableExtra("location");
 
-        viewPager.setAdapter(new ImageFragmentAdapter(getSupportFragmentManager()));
-
+        loadImpressions();
         setupLocationInformation();
+    }
+
+    private void loadImpressions() {
+        LocationController.getInstance().getImpressionsByLocationId(location.id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .toList()
+                .subscribe(
+                        this::handleImpressions,
+                        (error) -> {
+                            Toast.makeText(getApplicationContext(), "could not load impressions :-(",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                );
+    }
+
+    private void handleImpressions(List<AbstractImpression> impressions) {
+        this.impressions = impressions;
+        Observable.from(impressions)
+                .filter(impression -> impression.type() == AbstractImpression.ImpressionType.IMAGE)
+                .map(impression -> (ImageImpression)impression)
+                .map(ImageImpression::getImageUri)
+                .toList()
+                .subscribe(
+                        (imageImpressions) -> {
+                            imageFragmentAdapter = new ImageFragmentAdapter(getSupportFragmentManager());
+                            List<String> images = new LinkedList<>();
+                            images.add(location.images.getNormal());
+                            images.addAll(imageImpressions);
+                            imageFragmentAdapter.setImages(images);
+                            viewPager.setAdapter(imageFragmentAdapter);
+                        }
+                );
     }
 
     @OnClick(R.id.goBack)
