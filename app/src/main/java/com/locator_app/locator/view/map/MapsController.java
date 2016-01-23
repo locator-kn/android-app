@@ -36,10 +36,10 @@ public class MapsController {
     }
 
     public void drawLocationsAt(LatLng position) {
-        if (!calledRecently()) {
+//        if (!calledRecently()) {
 //                drawHeatMapAt(cameraPosition.target);
             drawLocationsAtP(position);
-        }
+//        }
     }
 
     private void drawLocationsAtP(LatLng position) {

@@ -5,6 +5,9 @@ import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -49,6 +52,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     GpsService gpsService;
 
+    MapFragment mapFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,13 +66,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 (bitmap -> {
                     currentPos = Bitmap.createScaledBitmap(bitmap, 60, 60, false);
                 }),
-                (error -> {})
+                (error -> {
+                })
         );
         CacheImageLoader.getInstance().loadAsync(urlLocation).subscribe(
                 (bitmap -> {
                     locationIcon = Bitmap.createScaledBitmap(bitmap, 70, 70, false);
                 }),
-                (error -> {})
+                (error -> {
+                })
         );
 
         schoenHierButton.loadImage("drawable://" + R.drawable.schoenhier);
@@ -75,7 +82,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         gpsService = (GpsService) getSupportFragmentManager()
                 .findFragmentById(R.id.gpsService);
 
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+        mapFragment = (MapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
     }
@@ -89,9 +96,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap gMap) {
         googleMap = gMap;
 
-        googleMap.setOnCameraChangeListener( cameraPosition -> {
-            mapsController.drawLocationsAt(cameraPosition.target);
-        });
+//        googleMap.setOnCameraChangeListener( cameraPosition -> {
+//            mapsController.drawLocationsAt(cameraPosition.target);
+//        });
+
+        mapFragment.init(mapsController, googleMap);
 
         gpsService.getCurLocationOnGUIThread(this::initiateMap);
     }
@@ -110,6 +119,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         googleMap.setMyLocationEnabled(true);
         googleMap.getUiSettings().setMyLocationButtonEnabled(false);
         mapsController.addHeatMap(location.getLongitude(), location.getLatitude());
+        mapsController.drawLocationsAt(locationPos);
     }
 
     private void setPersonPosition(android.location.Location location) {
