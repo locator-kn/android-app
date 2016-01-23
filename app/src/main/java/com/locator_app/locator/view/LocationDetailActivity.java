@@ -1,21 +1,28 @@
 package com.locator_app.locator.view;
 
-import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
-import android.widget.TextView;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.ViewPager;
+import android.support.v7.widget.RecyclerView;
 
 import com.locator_app.locator.R;
 import com.locator_app.locator.model.LocatorLocation;
-import com.locator_app.locator.model.User;
+import com.locator_app.locator.view.fragments.ImageFragmentAdapter;
+import com.locator_app.locator.view.map.MapsActivity;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
-public class LocationDetailActivity extends Activity {
+public class LocationDetailActivity extends FragmentActivity {
 
 
-    @Bind(R.id.locationTitle)
-    TextView locationTitle;
+    @Bind(R.id.viewPager)
+    ViewPager viewPager;
+
+    @Bind(R.id.impressions)
+    RecyclerView impressions;
 
     LocatorLocation location;
 
@@ -27,10 +34,18 @@ public class LocationDetailActivity extends Activity {
 
         location = (LocatorLocation) getIntent().getSerializableExtra("location");
 
+        viewPager.setAdapter(new ImageFragmentAdapter(getSupportFragmentManager()));
+
         setupLocationInformation();
     }
 
+    /*@OnClick(R.id.showMap)
+    void onShowMapClicked() {
+        Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
+        startActivity(intent);
+    }*/
+
     private void setupLocationInformation() {
-        locationTitle.setText(location.title);
+        //locationTitle.setText(location.title);
     }
 }
