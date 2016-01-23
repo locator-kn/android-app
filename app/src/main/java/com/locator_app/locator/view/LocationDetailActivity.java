@@ -25,6 +25,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func2;
 import rx.schedulers.Schedulers;
 
 public class LocationDetailActivity extends FragmentActivity {
@@ -57,6 +58,9 @@ public class LocationDetailActivity extends FragmentActivity {
 
         location = (LocatorLocation) getIntent().getSerializableExtra("location");
 
+        imageFragmentAdapter = new ImageFragmentAdapter(getSupportFragmentManager());
+        viewPager.setAdapter(imageFragmentAdapter);
+
         loadImpressions();
         setupLocationInformation();
     }
@@ -77,21 +81,19 @@ public class LocationDetailActivity extends FragmentActivity {
 
     private void handleImpressions(List<AbstractImpression> impressions) {
         this.impressions = impressions;
-        Observable.from(impressions)
-                .filter(impression -> impression.type() == AbstractImpression.ImpressionType.IMAGE)
-                .map(impression -> (ImageImpression)impression)
-                .map(ImageImpression::getImageUri)
+        loadImageImpressionsToImageFragmentAdapter();
+    }
+
+    private void loadImageImpressionsToImageFragmentAdapter() {
+        Observable<String> imageImpressionUris =
+                Observable.from(impressions)
+                        .filter(impression -> impression.type() == AbstractImpression.ImpressionType.IMAGE)
+                        .map(impression -> (ImageImpression) impression)
+                        .map(ImageImpression::getImageUri);
+        Observable.just(location.images.getNormal())
+                .mergeWith(imageImpressionUris)
                 .toList()
-                .subscribe(
-                        (imageImpressions) -> {
-                            imageFragmentAdapter = new ImageFragmentAdapter(getSupportFragmentManager());
-                            List<String> images = new LinkedList<>();
-                            images.add(location.images.getNormal());
-                            images.addAll(imageImpressions);
-                            imageFragmentAdapter.setImages(images);
-                            viewPager.setAdapter(imageFragmentAdapter);
-                        }
-                );
+                .subscribe(imageFragmentAdapter::setImages);
     }
 
     @OnClick(R.id.goBack)
