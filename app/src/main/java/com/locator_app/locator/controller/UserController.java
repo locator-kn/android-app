@@ -73,7 +73,7 @@ public class UserController {
         me.residence = loginResponse.residence;
         loggedIn = true;
         Couch.get().switchToDatabase(me.mail);
-        Couch.get().restore(me);
+        Couch.get().save(me);
     }
 
     private void handleLoginError(Throwable throwable) {
