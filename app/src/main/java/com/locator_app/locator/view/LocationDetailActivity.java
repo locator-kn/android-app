@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.locator_app.locator.R;
 import com.locator_app.locator.model.LocatorLocation;
@@ -17,6 +19,14 @@ import butterknife.OnClick;
 
 public class LocationDetailActivity extends FragmentActivity {
 
+    @Bind(R.id.goBack)
+    ImageView goBack;
+
+    @Bind(R.id.locationTitle)
+    TextView locationTitle;
+
+    @Bind(R.id.showMap)
+    ImageView showMap;
 
     @Bind(R.id.viewPager)
     ViewPager viewPager;
@@ -39,13 +49,18 @@ public class LocationDetailActivity extends FragmentActivity {
         setupLocationInformation();
     }
 
-    /*@OnClick(R.id.showMap)
+    @OnClick(R.id.goBack)
+    void onGoBackClicked() {
+        finish();
+    }
+
+    @OnClick(R.id.showMap)
     void onShowMapClicked() {
         Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
         startActivity(intent);
-    }*/
+    }
 
     private void setupLocationInformation() {
-        //locationTitle.setText(location.title);
+        locationTitle.setText(location.title);
     }
 }

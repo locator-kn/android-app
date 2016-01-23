@@ -18,28 +18,36 @@
             android:layout_height="fill_parent"
             android:layout_weight="1" />
 
-        <ImageView
-            android:id="@+id/button_previous"
-            android:layout_width="100dp"
-            android:layout_height="30dp"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="10dp"
-            android:src="@drawable/go_back_icon_black"/>
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="100dp"
+            android:layout_alignParentTop="true">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:text="LOCATION-TITEL"/>
+            <ImageView
+                android:id="@+id/goBack"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:src="@drawable/go_back_icon_black"
+                android:adjustViewBounds="true" />
 
-        <ImageView
-            android:id="@+id/button_next"
-            android:layout_width="100dp"
-            android:layout_height="30dp"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="10dp"
-            android:src="@drawable/map_icon_black"/>
+            <TextView
+                android:id="@+id/locationTitle"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="2"
+                android:gravity="start|center"
+                android:text="LOCATION-TITEL"/>
+
+            <ImageView
+                android:id="@+id/showMap"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:src="@drawable/map_icon_black"
+                android:adjustViewBounds="true" />
+
+        </LinearLayout>
 
     </RelativeLayout>
 
