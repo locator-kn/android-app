@@ -32,7 +32,7 @@ public class UsersApiService {
         Observable<Response<LogoutResponse>> logout();
 
         @GET(Api.version + "/users/protected")
-        Observable<Response<Object>> requestProtected();
+        Observable<Response<LoginResponse>> requestProtected();
 
         @POST(Api.version + "/users/register")
         Observable<Response<RegistrationResponse>> register(@Body RegistrationRequest registrationBodyRequest);
@@ -128,19 +128,18 @@ public class UsersApiService {
         return Observable.error(new Exception("http-error: " + Integer.toString(response.code())));
     }
 
-    public Observable<Boolean> checkProtected() {
+    public Observable<LoginResponse> checkProtected() {
         return service.requestProtected()
-                .onErrorReturn(throwable -> Response.success(new Object()))
-                .map(response -> response.code() == 200);
+                .flatMap(this::parseProtectedResponse);
     }
 
-    private Observable<Boolean> parseProtectedResponse(Response<Object> response) {
-        if (response.code() == 200) {
-            return Observable.just(true);
+    private Observable<LoginResponse> parseProtectedResponse(Response<LoginResponse> response) {
+        if (response.isSuccess()) {
+            return Observable.just(response.body());
         }
         if (response.code() == 401) {
-            return Observable.just(false);
+            return Observable.error(new Exception("you are not authorized"));
         }
-        return Observable.just(false);
+        return Observable.error(new Exception("http-code: " + Integer.toString(response.code())));
     }
 }

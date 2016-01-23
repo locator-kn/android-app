@@ -47,7 +47,7 @@ public class UserController {
                 .doOnNext(this::handleLogin);
     }
 
-    public Observable<Boolean> logInLastLoggedInUser() {
+    public Observable<LoginResponse> logInLastLoggedInUser() {
         SharedPreferences preferences = LocatorApplication.getSharedPreferences();
         String lastLoggedInUserEmail = preferences.getString(lastLoggedInUserEmailKey, "");
         if (lastLoggedInUserEmail.isEmpty()) {
@@ -55,7 +55,8 @@ public class UserController {
         } else {
             Couch.get().switchToDatabase(lastLoggedInUserEmail);
             Couch.get().restore(me);
-            return userService.checkProtected();
+            return userService.checkProtected()
+                    .doOnNext(this::handleLogin);
         }
     }
 

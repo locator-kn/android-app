@@ -45,13 +45,8 @@ public class LoginRegisterStartActivity extends AppCompatActivity {
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
-                    (loggedIn) -> {
-                        if (loggedIn) {
-                            jumpToHomeScreen();
-                        }
-                    },
-                    (err) -> {
-                    }
+                    (loginResponse -> jumpToHomeScreen()),
+                    (err) -> { }
             );
 
         //TODO: getDeviceId
