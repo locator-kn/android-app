@@ -5,6 +5,8 @@ import android.util.Log;
 import com.locator_app.locator.model.LocatorLocation;
 import com.locator_app.locator.apiservice.Api;
 import com.locator_app.locator.apiservice.ServiceFactory;
+import com.locator_app.locator.model.impressions.AbstractImpression;
+import com.locator_app.locator.model.impressions.Impression;
 
 import java.net.UnknownHostException;
 import java.util.List;
@@ -35,6 +37,9 @@ public class LocationsApiService {
 
         @GET(Api.version + "/locations/users/{userId}")
         Observable<Response<List<LocatorLocation>>> getLocationsByUser(@Path("userId") String userId);
+
+        @GET(Api.version + "/locations/{locationId}/stream")
+        Observable<Response<List<Impression>>> getImpressionsByLocationId(@Path("locationId") String locationId);
     }
 
     LocationsApi service = ServiceFactory.createService(LocationsApi.class);
@@ -86,6 +91,19 @@ public class LocationsApiService {
     private Observable<LocatorLocation> parseLocationsList(Response<List<LocatorLocation>> response) {
         if (response.isSuccess()) {
             return Observable.from(response.body());
+        }
+        return Observable.error(new Exception("http-code: " + Integer.toString(response.code())));
+    }
+
+    public Observable<AbstractImpression> getImpressions(String locationId) {
+        return service.getImpressionsByLocationId(locationId)
+                .flatMap(this::parseImpressions);
+    }
+
+    private Observable<AbstractImpression> parseImpressions(Response<List<Impression>> response) {
+        if (response.isSuccess()) {
+            return Observable.from(response.body())
+                    .map(AbstractImpression::createImpression);
         }
         return Observable.error(new Exception("http-code: " + Integer.toString(response.code())));
     }
