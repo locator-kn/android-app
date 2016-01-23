@@ -1,4 +1,4 @@
-package com.locator_app.locator.view.adapter;
+package com.locator_app.locator.view.recyclerviewadapter;
 
 
 import android.support.v7.widget.RecyclerView;

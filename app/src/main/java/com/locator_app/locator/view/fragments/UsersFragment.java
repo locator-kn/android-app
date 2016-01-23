@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 
 import com.locator_app.locator.R;
 import com.locator_app.locator.view.DividerItemDecoration;
-import com.locator_app.locator.view.adapter.UserRecyclerViewAdapter;
+import com.locator_app.locator.view.recyclerviewadapter.UserRecyclerViewAdapter;
 
 public class UsersFragment extends Fragment {
 

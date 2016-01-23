@@ -1,4 +1,4 @@
-package com.locator_app.locator.view.adapter;
+package com.locator_app.locator.view.recyclerviewadapter;
 
 
 import android.content.Context;
@@ -8,9 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.locator_app.locator.LocatorApplication;
 import com.locator_app.locator.R;
 import com.locator_app.locator.model.User;
 import com.locator_app.locator.view.bubble.BubbleView;
