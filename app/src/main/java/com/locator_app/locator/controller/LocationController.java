@@ -3,6 +3,7 @@ package com.locator_app.locator.controller;
 
 import com.locator_app.locator.model.LocatorLocation;
 import com.locator_app.locator.apiservice.locations.LocationsApiService;
+import com.locator_app.locator.model.impressions.AbstractImpression;
 
 import rx.Observable;
 
@@ -25,6 +26,10 @@ public class LocationController {
 
     public Observable<LocatorLocation> getLocationsByUserId(String userId) {
         return locationService.getLocationsByUser(userId);
+    }
+
+    public Observable<AbstractImpression> getImpressions(String locationId) {
+        return locationService.getImpressions(locationId);
     }
 
     private static LocationController instance;
