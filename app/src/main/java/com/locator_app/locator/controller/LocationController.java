@@ -28,8 +28,8 @@ public class LocationController {
         return locationService.getLocationsByUser(userId);
     }
 
-    public Observable<AbstractImpression> getImpressions(String locationId) {
-        return locationService.getImpressions(locationId);
+    public Observable<AbstractImpression> getImpressionsByLocationId(String locationId) {
+        return locationService.getImpressionsByLocationId(locationId);
     }
 
     private static LocationController instance;

@@ -95,7 +95,7 @@ public class LocationsApiService {
         return Observable.error(new Exception("http-code: " + Integer.toString(response.code())));
     }
 
-    public Observable<AbstractImpression> getImpressions(String locationId) {
+    public Observable<AbstractImpression> getImpressionsByLocationId(String locationId) {
         return service.getImpressionsByLocationId(locationId)
                 .flatMap(this::parseImpressions);
     }
