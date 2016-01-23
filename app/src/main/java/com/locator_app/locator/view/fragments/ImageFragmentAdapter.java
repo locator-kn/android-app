@@ -20,6 +20,7 @@ public class ImageFragmentAdapter extends FragmentStatePagerAdapter {
 
     public void setImages(final List<String> imageUris) {
         this.imageUris = imageUris;
+        notifyDataSetChanged();
     }
 
     @Override
