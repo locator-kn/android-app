@@ -14,6 +14,8 @@ import com.locator_app.locator.controller.LocationController;
 import com.locator_app.locator.model.LocatorLocation;
 import com.locator_app.locator.model.impressions.AbstractImpression;
 import com.locator_app.locator.model.impressions.ImageImpression;
+import com.locator_app.locator.util.DistanceCalculator;
+import com.locator_app.locator.util.GpsService;
 import com.locator_app.locator.view.fragments.ImageFragmentAdapter;
 import com.locator_app.locator.view.map.MapsActivity;
 
@@ -109,5 +111,19 @@ public class LocationDetailActivity extends FragmentActivity {
 
     private void setupLocationInformation() {
         locationTitle.setText(location.title);
+        showDistanceToLocation();
+    }
+
+    private void showDistanceToLocation() {
+        GpsService serivce = new GpsService();
+        serivce.getCurLocationObservable()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        (location) -> {
+                            //double distance = DistanceCalculator.distanceInKm();
+                            //double distanceToLocation = DistanceCalculator.
+                        }
+                );
     }
 }

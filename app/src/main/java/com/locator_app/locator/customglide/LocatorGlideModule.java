@@ -1,4 +1,4 @@
-package com.locator_app.locator;
+package com.locator_app.locator.customglide;
 
 
 import android.content.Context;

@@ -82,7 +82,7 @@
         <meta-data android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id"/>
         <meta-data
-            android:name="com.locator_app.locator.LocatorGlideModule"
+            android:name="com.locator_app.locator.customglide.LocatorGlideModule"
             android:value="GlideModule" />
         <activity android:name=".view.LocationDetailActivity" >
         </activity>
