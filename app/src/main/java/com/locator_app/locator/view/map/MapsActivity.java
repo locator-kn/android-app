@@ -106,7 +106,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 //                .anchor((float) 0.5, (float) 0.5));
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(locationPos, 15));
         googleMap.setMyLocationEnabled(true);
-        googleMap.getUiSettings().setMyLocationButtonEnabled(false);
+        //googleMap.getUiSettings().setMyLocationButtonEnabled(false);
         mapsController.addHeatMap(location.getLongitude(), location.getLatitude());
         mapsController.drawLocationsAt(locationPos);
     }
