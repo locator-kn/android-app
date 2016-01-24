@@ -7,9 +7,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.locator_app.locator.R;
+import com.locator_app.locator.apiservice.Api;
 import com.locator_app.locator.controller.UserController;
 import com.locator_app.locator.model.impressions.AbstractImpression;
 import com.locator_app.locator.model.impressions.AbstractImpression.ImpressionType;
@@ -100,8 +102,11 @@ public class ImpressionRecyclerViewAdapter
                     .subscribe(
                             (user) -> {
                                 userName.setText(user.name);
-                                Glide.with(itemView.getContext()).load(user.thumbnailUri())
+                                Glide.with(userImage.getContext()).load(user.thumbnailUri())
                                         .into(userImage);
+                            },
+                            (error) -> {
+                                Toast.makeText(itemView.getContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
                             }
                     );
             date.setText(DateConverter.toddMMyyyy(imageImpression.getCreateDate()));
@@ -133,7 +138,7 @@ public class ImpressionRecyclerViewAdapter
                     .subscribe(
                             (user) -> {
                                 userName.setText(user.name);
-                                Glide.with(itemView.getContext()).load(user.thumbnailUri())
+                                Glide.with(userImage.getContext()).load(user.thumbnailUri())
                                         .into(userImage);
                             }
                     );

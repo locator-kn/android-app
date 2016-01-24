@@ -95,7 +95,7 @@ public class HomeActivity extends AppCompatActivity {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        (user) -> showUserProfile(user),
+                        this::showUserProfile,
                         (error) -> {
                             Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
                         }
@@ -111,7 +111,6 @@ public class HomeActivity extends AppCompatActivity {
 
     private void showUserProfile(User user) {
         Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
-        user.thumb = "/api/v1/users/ec26fc9e9342d7df21a87ab2477d5cf7/profile.jpeg";
         intent.putExtra("profile", user);
         startActivity(intent);
     }
