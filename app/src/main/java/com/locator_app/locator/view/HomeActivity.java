@@ -50,16 +50,24 @@ public class HomeActivity extends AppCompatActivity {
         bubbleController = new BubbleController(bubbleLayout);
 
         ActionBar actionBar = getSupportActionBar();
-        actionBar.hide();
+        if (actionBar != null) {
+            actionBar.hide();
+        }
 
         gpsService = (GpsService) getSupportFragmentManager()
                 .findFragmentById(R.id.gpsService);
     }
 
+
+    @OnClick(R.id.showMap)
+    void onShowMapClicked() {
+        Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
+        startActivity(intent);
+    }
+
     @OnClick(R.id.schoenHierBubble)
     void onSchoenHierBubbleClick() {
         SchoenHierController.getInstance().markCurPosAsSchoenHier(gpsService);
-
         Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
         startActivity(intent);
     }

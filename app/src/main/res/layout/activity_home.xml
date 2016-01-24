@@ -1,33 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.locator_app.locator.view.bubble.RelativeBubbleLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:custom="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/bubbleLayout"
+
+<LinearLayout
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/homescreen_background"
-    tools:context=".MainActivity">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@drawable/homescreen_background">
 
-    <com.locator_app.locator.view.bubble.BubbleView
-        android:id="@+id/schoenHierBubble"
+    <LinearLayout
+        android:id="@+id/header"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        custom:shadowWidth="10"
-        custom:strokeWidth="0" />
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginTop="10dp">
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"/>
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:src="@drawable/locator_logo"
+            android:adjustViewBounds="true" />
+        <ImageView
+            android:id="@+id/showMap"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:src="@drawable/map_icon_black"
+            android:adjustViewBounds="true" />
+    </LinearLayout>
 
-    <com.locator_app.locator.view.bubble.BubbleView
-        android:id="@+id/userProfileBubble"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        custom:shadowWidth="10"
-        custom:strokeWidth="0" />
+    <com.locator_app.locator.view.bubble.RelativeBubbleLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:custom="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/bubbleLayout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="12"
+        tools:context=".MainActivity">
 
-    <fragment
-        android:id="@+id/gpsService"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:name="com.locator_app.locator.util.GpsService"
-        tools:context="com.locator_app.locator.view.HomeActivity"/>
+        <com.locator_app.locator.view.bubble.BubbleView
+            android:id="@+id/schoenHierBubble"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            custom:shadowWidth="10"
+            custom:strokeWidth="0" />
 
-</com.locator_app.locator.view.bubble.RelativeBubbleLayout>
+        <com.locator_app.locator.view.bubble.BubbleView
+            android:id="@+id/userProfileBubble"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            custom:shadowWidth="10"
+            custom:strokeWidth="0" />
+
+        <fragment
+            android:id="@+id/gpsService"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:name="com.locator_app.locator.util.GpsService"
+            tools:context="com.locator_app.locator.view.HomeActivity"/>
+
+    </com.locator_app.locator.view.bubble.RelativeBubbleLayout>
+
+</LinearLayout>
