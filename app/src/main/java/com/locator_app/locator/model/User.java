@@ -42,10 +42,7 @@ public class User implements LocatorObject, Serializable {
 
     @Override
     public String thumbnailUri() {
-        if (thumb.isEmpty()) {
-            return "drawable://" + R.drawable.profile;
-        }
-        return Api.serverUrl + thumb;
+        return Api.serverUrl + picture;
     }
 
     @Override
