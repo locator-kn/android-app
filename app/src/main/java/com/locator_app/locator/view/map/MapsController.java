@@ -93,18 +93,22 @@ public class MapsController {
     }
 
     public void drawNewLocations() {
+        boolean drawnNew = false;
         while (!newLocations.isEmpty()) {
             LocatorLocation location = newLocations.poll();
             if (drawnlocations.contains(location)) {
                 continue;
             }
+            drawnNew = true;
             //drawLocation(location.geoTag.getLongitude(), location.geoTag.getLatitude());
             clusterManager.addItem(new LocationMarker(location.geoTag.getLatitude(),
                                                       location.geoTag.getLongitude(),
                                                       locationIcon));
             drawnlocations.add(location);
         }
-        clusterManager.cluster();
+        if (drawnNew) {
+            clusterManager.cluster();
+        }
     }
 
     private void drawLocation(double lon, double lat) {

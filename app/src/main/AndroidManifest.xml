@@ -18,7 +18,8 @@
         android:icon="@drawable/locator_app_icon"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/WelcomeActionBarTheme" >
+        android:theme="@style/WelcomeActionBarTheme"
+        android:largeHeap="true">
         <activity
             android:name=".view.LoginRegisterStartActivity"
             android:screenOrientation="portrait" >
