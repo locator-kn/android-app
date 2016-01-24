@@ -2,7 +2,9 @@ package com.locator_app.locator.view;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Window;
 import android.widget.Toast;
 
 
@@ -46,6 +48,9 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
         ButterKnife.bind(this);
         bubbleController = new BubbleController(bubbleLayout);
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.hide();
 
         gpsService = (GpsService) getSupportFragmentManager()
                 .findFragmentById(R.id.gpsService);
