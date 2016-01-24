@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.locator_app.locator.R;
 import com.locator_app.locator.util.CacheImageLoader;
 
@@ -24,7 +25,8 @@ public class ImageViewFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ImageView imageView = new ImageView(container.getContext());
-        CacheImageLoader.getInstance().setImage(imageUri, imageView);
+        //CacheImageLoader.getInstance().setImage(imageUri, imageView);
+        Glide.with(this).load(imageUri).into(imageView);
         return imageView;
     }
 
