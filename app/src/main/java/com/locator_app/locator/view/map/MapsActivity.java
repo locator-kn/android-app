@@ -21,6 +21,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.TileOverlay;
 import com.google.android.gms.maps.model.TileOverlayOptions;
+import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.heatmaps.Gradient;
 import com.google.maps.android.heatmaps.HeatmapTileProvider;
 import com.locator_app.locator.LocatorApplication;
@@ -44,8 +45,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private GoogleMap googleMap;
     private Bitmap currentPos;
-    private Bitmap locationIcon;
-    private MapsController mapsController = new MapsController(this);
+    private MapsController mapsController;
 
     @Bind(R.id.schoenHierButton)
     BubbleView schoenHierButton;
@@ -61,7 +61,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         ButterKnife.bind(this);
 
         String urlCurrentPos = "drawable://" + R.drawable.profile;
-        String urlLocation   = "drawable://" + R.drawable.location_auf_map;
         CacheImageLoader.getInstance().loadAsync(urlCurrentPos).subscribe(
                 (bitmap -> {
                     currentPos = Bitmap.createScaledBitmap(bitmap, 60, 60, false);
@@ -69,13 +68,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 (error -> {
                 })
         );
-        CacheImageLoader.getInstance().loadAsync(urlLocation).subscribe(
-                (bitmap -> {
-                    locationIcon = Bitmap.createScaledBitmap(bitmap, 70, 70, false);
-                }),
-                (error -> {
-                })
-        );
+
 
         schoenHierButton.loadImage("drawable://" + R.drawable.schoenhier);
 
@@ -95,11 +88,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap gMap) {
         googleMap = gMap;
-
-//        googleMap.setOnCameraChangeListener( cameraPosition -> {
-//            mapsController.drawLocationsAt(cameraPosition.target);
-//        });
-
+        mapsController = new MapsController(this, googleMap);
         mapFragment.init(mapsController, googleMap);
 
         gpsService.getCurLocationOnGUIThread(this::initiateMap);
@@ -143,14 +132,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onPause();
         // ---------- Manual Continuous Location Update ----------
 //        continuousLocation.unsubscribe();
-    }
-
-
-    public void drawLocation(double lon, double lat) {
-        googleMap.addMarker(new MarkerOptions()
-                .icon(BitmapDescriptorFactory.fromBitmap(locationIcon))
-                .anchor(0.5f, 0.5f)
-                .position(new LatLng(lat, lon)));
     }
 
     private HeatmapTileProvider heatmapTileProvider;

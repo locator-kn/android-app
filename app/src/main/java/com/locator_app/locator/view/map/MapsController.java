@@ -1,12 +1,20 @@
 package com.locator_app.locator.view.map;
 
+import android.graphics.Bitmap;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.maps.android.clustering.ClusterManager;
 import com.locator_app.locator.LocatorApplication;
+import com.locator_app.locator.R;
 import com.locator_app.locator.controller.LocationController;
 import com.locator_app.locator.controller.SchoenHierController;
 import com.locator_app.locator.model.LocatorLocation;
+import com.locator_app.locator.util.CacheImageLoader;
 
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -18,22 +26,51 @@ import rx.schedulers.Schedulers;
 
 public class MapsController {
 
-    HashSet<LocatorLocation> drawnlocations = new HashSet<>();
-    Queue<LocatorLocation> newLocations = new LinkedList<>();
+    private HashSet<LocatorLocation> drawnlocations = new HashSet<>();
+    private Queue<LocatorLocation> newLocations = new LinkedList<>();
 
-    MapsActivity mapsActivity;
+    private MapsActivity mapsActivity;
+    private GoogleMap googleMap;
 
-    public MapsController(MapsActivity maps) {
+    private BitmapDescriptor locationIcon;
+
+
+    public MapsController(MapsActivity maps, GoogleMap map) {
         mapsActivity = maps;
+        googleMap = map;
+
+        String urlLocation   = "drawable://" + R.drawable.location_auf_map;
+        CacheImageLoader.getInstance().loadAsync(urlLocation).subscribe(
+                (bitmap -> {
+                    Bitmap icon = Bitmap.createScaledBitmap(bitmap, 70, 70, false);
+                    locationIcon = BitmapDescriptorFactory.fromBitmap(icon);
+                }),
+                (error -> {
+                })
+        );
+
+        setUpClusterer();
     }
 
-    private final static int MIN_CALL_DELAY_MS = 2000;
-    private long lastCall;
-    public boolean calledRecently() {
-        long delay = System.currentTimeMillis() - lastCall;
-        lastCall = System.currentTimeMillis();
-        return delay < MIN_CALL_DELAY_MS;
+
+    private ClusterManager<LocationMarker> clusterManager;
+    private void setUpClusterer() {
+        clusterManager = new ClusterManager<>(LocatorApplication.getAppContext(), googleMap);
+
+        googleMap.setOnCameraChangeListener(clusterManager);
+        googleMap.setOnMarkerClickListener(clusterManager);
+        clusterManager.setRenderer(new LocationMarkerRenderer(LocatorApplication.getAppContext(),
+                                                              googleMap,
+                                                              clusterManager));
     }
+
+//    private final static int MIN_CALL_DELAY_MS = 2000;
+//    private long lastCall;
+//    public boolean calledRecently() {
+//        long delay = System.currentTimeMillis() - lastCall;
+//        lastCall = System.currentTimeMillis();
+//        return delay < MIN_CALL_DELAY_MS;
+//    }
 
     public void drawLocationsAt(LatLng position) {
 //        if (!calledRecently()) {
@@ -47,7 +84,7 @@ public class MapsController {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        (item) -> newLocations.add(item),
+                        newLocations::add,
                         (error) -> Toast.makeText(LocatorApplication.getAppContext(),
                                 "Fehler beim Laden von Locations",
                                 Toast.LENGTH_SHORT),
@@ -61,9 +98,20 @@ public class MapsController {
             if (drawnlocations.contains(location)) {
                 continue;
             }
-            mapsActivity.drawLocation(location.geoTag.getLongitude(), location.geoTag.getLatitude());
+            //drawLocation(location.geoTag.getLongitude(), location.geoTag.getLatitude());
+            clusterManager.addItem(new LocationMarker(location.geoTag.getLatitude(),
+                                                      location.geoTag.getLongitude(),
+                                                      locationIcon));
             drawnlocations.add(location);
         }
+        clusterManager.cluster();
+    }
+
+    private void drawLocation(double lon, double lat) {
+//        googleMap.addMarker(new MarkerOptions()
+//                .icon(BitmapDescriptorFactory.fromBitmap(locationIcon))
+//                .anchor(0.5f, 0.5f)
+//                .position(new LatLng(lat, lon)));
     }
 
     private List<LatLng> heatPoints;
