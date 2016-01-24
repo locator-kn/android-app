@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -18,6 +19,7 @@ import com.locator_app.locator.util.DistanceCalculator;
 import com.locator_app.locator.util.GpsService;
 import com.locator_app.locator.view.fragments.ImageFragmentAdapter;
 import com.locator_app.locator.view.map.MapsActivity;
+import com.locator_app.locator.view.recyclerviewadapter.ImpressionRecyclerViewAdapter;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -48,6 +50,7 @@ public class LocationDetailActivity extends FragmentActivity {
     RecyclerView impressionsRecyclerView;
 
     ImageFragmentAdapter imageFragmentAdapter;
+    ImpressionRecyclerViewAdapter impressionAdapter;
 
     LocatorLocation location;
     List<AbstractImpression> impressions = new LinkedList<>();
@@ -62,6 +65,12 @@ public class LocationDetailActivity extends FragmentActivity {
 
         imageFragmentAdapter = new ImageFragmentAdapter(getSupportFragmentManager());
         viewPager.setAdapter(imageFragmentAdapter);
+
+        impressionAdapter = new ImpressionRecyclerViewAdapter();
+
+        impressionsRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        impressionsRecyclerView.addItemDecoration(new DividerItemDecoration(getApplicationContext(), null));
+        impressionsRecyclerView.setAdapter(impressionAdapter);
 
         loadImpressions();
         setupLocationInformation();
@@ -83,6 +92,7 @@ public class LocationDetailActivity extends FragmentActivity {
 
     private void handleImpressions(List<AbstractImpression> impressions) {
         this.impressions = impressions;
+        impressionAdapter.setImpressions(impressions);
         loadImageImpressionsToImageFragmentAdapter();
     }
 
