@@ -1,5 +1,7 @@
 package com.locator_app.locator.view.map;
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.widget.Toast;
 
@@ -8,6 +10,8 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.maps.android.MarkerManager;
+import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 import com.locator_app.locator.LocatorApplication;
 import com.locator_app.locator.R;
@@ -15,10 +19,13 @@ import com.locator_app.locator.controller.LocationController;
 import com.locator_app.locator.controller.SchoenHierController;
 import com.locator_app.locator.model.LocatorLocation;
 import com.locator_app.locator.util.CacheImageLoader;
+import com.locator_app.locator.view.LocationDetailActivity;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Queue;
 
 import rx.android.schedulers.AndroidSchedulers;
@@ -27,6 +34,7 @@ import rx.schedulers.Schedulers;
 public class MapsController {
 
     private HashSet<LocatorLocation> drawnlocations = new HashSet<>();
+    private Map<LocationMarker, LocatorLocation> markerToLocation = new HashMap<>();
     private Queue<LocatorLocation> newLocations = new LinkedList<>();
 
     private MapsActivity mapsActivity;
@@ -62,6 +70,12 @@ public class MapsController {
         clusterManager.setRenderer(new LocationMarkerRenderer(LocatorApplication.getAppContext(),
                                                               googleMap,
                                                               clusterManager));
+        clusterManager.setOnClusterItemClickListener(locationMarker -> {
+            Intent intent = new Intent(mapsActivity, LocationDetailActivity.class);
+            intent.putExtra("location", markerToLocation.get(locationMarker));
+            mapsActivity.startActivity(intent);
+            return false;
+        });
     }
 
 //    private final static int MIN_CALL_DELAY_MS = 2000;
@@ -101,9 +115,11 @@ public class MapsController {
             }
             drawnNew = true;
             //drawLocation(location.geoTag.getLongitude(), location.geoTag.getLatitude());
-            clusterManager.addItem(new LocationMarker(location.geoTag.getLatitude(),
-                                                      location.geoTag.getLongitude(),
-                                                      locationIcon));
+            LocationMarker marker = new LocationMarker(location.geoTag.getLatitude(),
+                                                       location.geoTag.getLongitude(),
+                                                       locationIcon);
+            clusterManager.addItem(marker);
+            markerToLocation.put(marker, location);
             drawnlocations.add(location);
         }
         if (drawnNew) {
