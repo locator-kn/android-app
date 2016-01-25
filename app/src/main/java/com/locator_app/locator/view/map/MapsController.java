@@ -3,7 +3,9 @@ package com.locator_app.locator.view.map;
 import android.graphics.Bitmap;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -14,7 +16,6 @@ import com.locator_app.locator.R;
 import com.locator_app.locator.controller.LocationController;
 import com.locator_app.locator.controller.SchoenHierController;
 import com.locator_app.locator.model.LocatorLocation;
-import com.locator_app.locator.util.CacheImageLoader;
 
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -39,15 +40,16 @@ public class MapsController {
         mapsActivity = maps;
         googleMap = map;
 
-        String urlLocation   = "drawable://" + R.drawable.location_auf_map;
-        CacheImageLoader.getInstance().loadAsync(urlLocation).subscribe(
-                (bitmap -> {
-                    Bitmap icon = Bitmap.createScaledBitmap(bitmap, 70, 70, false);
+        Glide.with(mapsActivity).load(R.drawable.location_auf_map)
+            .asBitmap()
+            .override(70, 70)
+            .into(new SimpleTarget<Bitmap>() {
+                @Override
+                public void onResourceReady(Bitmap resource, GlideAnimation glideAnimation) {
+                    Bitmap icon = Bitmap.createScaledBitmap(resource, 70, 70, false);
                     locationIcon = BitmapDescriptorFactory.fromBitmap(icon);
-                }),
-                (error -> {
-                })
-        );
+                }
+            });
 
         setUpClusterer();
     }

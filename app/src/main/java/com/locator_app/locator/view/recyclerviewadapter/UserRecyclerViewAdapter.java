@@ -72,7 +72,7 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
         public void update(User user) {
             title.setText(user.name);
             description.setText(user.description);
-            bubbleView.loadImage(user.thumbnailUri());
+            bubbleView.setImage(user.thumbnailUri());
         }
     }
 }

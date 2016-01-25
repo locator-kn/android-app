@@ -75,7 +75,7 @@ public class ProfileActivity extends FragmentActivity {
     private void setupUserInformation() {
         userName.setText(user.name);
         residence.setText(user.residence);
-        profileImageBubbleView.loadImage(user.thumbnailUri());
+        profileImageBubbleView.setImage(user.thumbnailUri());
     }
 
     private void setupTabLayout() {

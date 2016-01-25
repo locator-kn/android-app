@@ -3,8 +3,10 @@ package com.locator_app.locator.view.bubble;
 import android.content.Intent;
 import android.graphics.Point;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.locator_app.locator.LocatorApplication;
 import com.locator_app.locator.R;
 import com.locator_app.locator.model.LocatorLocation;
@@ -53,14 +55,14 @@ public class BubbleController {
         int radius = getRadiusByPriority(schoenHierBubble.priority);
         layout.setBubbleRadius(schoenHierBubble.view, radius);
         layout.setBubbleCenter(schoenHierBubble.view, 0.5, 0.38);
-        schoenHierBubble.view.loadImage("drawable://" + R.drawable.schoenhier);
+        schoenHierBubble.view.setImage(R.drawable.schoenhier);
     }
 
     public void initUserProfileBubble() {
         int radius = getRadiusByPriority(2);
         layout.setBubbleRadius(userProfileBubble.view, radius);
         layout.setBubbleCenter(userProfileBubble.view, 0.5, 0.89);
-        userProfileBubble.view.loadImage("drawable://" + R.drawable.profile);
+        userProfileBubble.view.setImage(R.drawable.profile);
     }
 
     public void onBubbleScreenUpdate(BubbleScreenResponse response) {
@@ -124,7 +126,11 @@ public class BubbleController {
                     return makeMessageBubble(message, priority);
                 });
         Observable.merge(locations, messages)
-            .subscribe(bubble -> bubbles.add(bubble));
+            .subscribe(
+                    bubbles::add,
+                    (error) -> {
+                        Log.d("BubbleController", error.getMessage());
+                    });
         positionBubblesInDifferentQuadrants();
     }
 
@@ -135,7 +141,7 @@ public class BubbleController {
         view.setFillColor(color(R.color.innerYellow));
         view.setStrokeColor(color(R.color.borderYellow));
         view.setStrokeWidth(getStrokeWidthByPriority(priority));
-        view.loadImage(message.thumbnailUri());
+        view.setImage(R.drawable.message);
 
         Bubble bubble = new Bubble();
         bubble.data = message;
@@ -152,7 +158,7 @@ public class BubbleController {
         view.setFillColor(color(R.color.innerRed));
         view.setStrokeColor(color(R.color.borderRed));
         view.setStrokeWidth(getStrokeWidthByPriority(priority));
-        view.loadImage(location.thumbnailUri());
+        view.setImage(location.thumbnailUri());
 
         Bubble bubble = new Bubble();
         bubble.data = location;
@@ -293,7 +299,7 @@ public class BubbleController {
         // data may have changed
         if (!onScreen.data.equals(newBubble.data)) {
             onScreen.data = newBubble.data;
-            onScreen.view.loadImage(onScreen.data.thumbnailUri());
+            onScreen.view.setImage(onScreen.data.thumbnailUri());
         }
     }
 

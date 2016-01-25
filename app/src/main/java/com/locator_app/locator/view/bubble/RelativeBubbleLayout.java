@@ -57,6 +57,7 @@ public class RelativeBubbleLayout extends RelativeLayout {
         params.height = radius * 2;
         params.leftMargin = centerX - radius;
         params.topMargin = centerY - radius;
+        bubble.radius = radius;
         bubble.setLayoutParams(params);
     }
 

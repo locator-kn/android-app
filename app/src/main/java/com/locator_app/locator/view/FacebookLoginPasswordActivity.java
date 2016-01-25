@@ -8,8 +8,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.locator_app.locator.R;
-import com.locator_app.locator.util.CacheImageLoader;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -77,12 +77,7 @@ public class FacebookLoginPasswordActivity extends AppCompatActivity {
 
     private void loadImages() {
         //set images url's
-        String urlFacebookLogo = "drawable://" + R.drawable.facebook_logo;
-        CacheImageLoader.getInstance().loadAsync(urlFacebookLogo)
-                .subscribe(
-                        (bitmap -> facebookLogo.setImageBitmap(bitmap)),
-                        (error -> {})
-                );
+        Glide.with(this).load(R.drawable.facebook_logo).into(facebookLogo);
     }
 }
 
