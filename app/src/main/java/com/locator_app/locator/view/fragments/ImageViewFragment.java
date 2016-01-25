@@ -22,7 +22,7 @@ public class ImageViewFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ImageView imageView = new ImageView(container.getContext());
-        Glide.with(this).load(imageUri).centerCrop().into(imageView);
+        Glide.with(this).load(imageUri).centerCrop().crossFade(2000).into(imageView);
         return imageView;
     }
 }

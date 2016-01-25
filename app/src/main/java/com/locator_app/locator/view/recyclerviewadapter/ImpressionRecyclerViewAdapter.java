@@ -23,6 +23,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
+import jp.wasabeef.glide.transformations.CropCircleTransformation;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -103,6 +104,8 @@ public class ImpressionRecyclerViewAdapter
                             (user) -> {
                                 userName.setText(user.name);
                                 Glide.with(userImage.getContext()).load(user.thumbnailUri())
+                                        .placeholder(R.drawable.profile)
+                                        .bitmapTransform(new CropCircleTransformation(userImage.getContext()))
                                         .into(userImage);
                             },
                             (error) -> {
@@ -139,6 +142,8 @@ public class ImpressionRecyclerViewAdapter
                             (user) -> {
                                 userName.setText(user.name);
                                 Glide.with(userImage.getContext()).load(user.thumbnailUri())
+                                        .placeholder(R.drawable.profile)
+                                        .bitmapTransform(new CropCircleTransformation(userImage.getContext()))
                                         .into(userImage);
                             }
                     );
