@@ -74,6 +74,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap gMap) {
         googleMap = gMap;
+        googleMap.getUiSettings().setMapToolbarEnabled(false);
         mapsController = new MapsController(this, googleMap);
         mapFragment.init(mapsController, googleMap);
 
