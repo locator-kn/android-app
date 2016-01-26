@@ -51,16 +51,12 @@ public class MarkerInfoWindow extends Fragment {
         view = inflater.inflate(R.layout.fragment_marker_info_window, container, false);
         ButterKnife.bind(this, view);
 
+        dotButton.setVisibility(View.GONE);
+
         return view;
     }
 
     public View getView() {
-
-//        statsBar.setLocationName(nameText);
-//        statsBar.setViews(views);
-//        statsBar.setFollowers(followers);
-//        statsBar.setJourneys(journeys);
-
         titleTextView.setText(titleText);
         nameTextView.setText(nameText);
         viewsTextView.setText(viewsText);
@@ -92,9 +88,5 @@ public class MarkerInfoWindow extends Fragment {
 
     public void setImage(String imageUrl, Context context) {
         Glide.with(context).load(imageUrl).into(titleImageView);
-    }
-
-    public void setOnDotButtonClickListener(View.OnClickListener listener) {
-        dotButton.setOnClickListener(listener);
     }
 }
