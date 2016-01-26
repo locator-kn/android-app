@@ -42,7 +42,9 @@
             android:textSize="14sp"
             android:layout_alignRight="@+id/linearLayout"
             android:layout_alignEnd="@+id/linearLayout"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:ellipsize="end"
+            android:singleLine="true" />
 
         <LinearLayout
             android:orientation="horizontal"
@@ -61,6 +63,8 @@
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="Lukas Doe"
                 android:id="@+id/nameTextView"
+                android:ellipsize="end"
+                android:singleLine="true"
                 android:textSize="@dimen/text_size_small" />
 
             <TextView
