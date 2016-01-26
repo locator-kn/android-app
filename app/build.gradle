@@ -61,8 +61,6 @@ dependencies {
 
     compile 'com.jakewharton:butterknife:7.0.1'
 
-    compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
-
     compile 'com.squareup.okhttp:okhttp:2.6.0'
     compile 'com.squareup.okhttp:logging-interceptor:2.6.0'
     compile 'com.squareup.retrofit:adapter-rxjava:2.0.0-beta2'

@@ -2,32 +2,23 @@ package com.locator_app.locator.view.map;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
-import android.view.MotionEvent;
-import android.view.View;
-import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptor;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.TileOverlay;
 import com.google.android.gms.maps.model.TileOverlayOptions;
-import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.heatmaps.Gradient;
 import com.google.maps.android.heatmaps.HeatmapTileProvider;
-import com.locator_app.locator.LocatorApplication;
 import com.locator_app.locator.R;
 import com.locator_app.locator.controller.SchoenHierController;
-import com.locator_app.locator.util.CacheImageLoader;
 import com.locator_app.locator.util.GpsService;
 import com.locator_app.locator.view.bubble.BubbleView;
 
@@ -36,10 +27,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import rx.Observable;
 import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -60,17 +48,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         setContentView(R.layout.activity_maps);
         ButterKnife.bind(this);
 
-        String urlCurrentPos = "drawable://" + R.drawable.profile;
-        CacheImageLoader.getInstance().loadAsync(urlCurrentPos).subscribe(
-                (bitmap -> {
-                    currentPos = Bitmap.createScaledBitmap(bitmap, 60, 60, false);
-                }),
-                (error -> {
-                })
-        );
 
+        Glide.with(this).load(R.drawable.profile).asBitmap().override(60, 60).into(new SimpleTarget<Bitmap>() {
+            @Override
+            public void onResourceReady(Bitmap resource, GlideAnimation glideAnimation) {
+                MapsActivity.this.currentPos = resource;
+            }
+        });
 
-        schoenHierButton.loadImage("drawable://" + R.drawable.schoenhier);
+        schoenHierButton.setImage(R.drawable.schoenhier);
 
         gpsService = (GpsService) getSupportFragmentManager()
                 .findFragmentById(R.id.gpsService);

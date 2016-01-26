@@ -67,7 +67,7 @@ public class LocationRecyclerViewAdapter extends RecyclerView.Adapter<LocationRe
         public void update(LocatorLocation location) {
             title.setText(location.title);
             description.setText(location.description);
-            bubbleView.loadImage(location.thumbnailUri());
+            bubbleView.setImage(location.thumbnailUri());
             if (formattedDate.isEmpty()) {
                 formattedDate = DateConverter.toddMMyyyy(location.createDate);
             }

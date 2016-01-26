@@ -5,12 +5,9 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.locator_app.locator.R;
-import com.locator_app.locator.controller.UserController;
-import com.locator_app.locator.db.Couch;
-import com.locator_app.locator.util.CacheImageLoader;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -57,14 +54,8 @@ public class OnBoardingChoiceActivity extends AppCompatActivity {
     }
 
     void loadImages() {
-
-        //set images url's
-        String urlLocator = "drawable://" + R.drawable.locator_logo;
-        String urlYes = "drawable://" + R.drawable.yes;
-        String urlNo = "drawable://" + R.drawable.no;
-
-        CacheImageLoader.getInstance().setImage(urlLocator, onboardingLocatorLogo);
-        CacheImageLoader.getInstance().setImage(urlYes, onboardingYes);
-        CacheImageLoader.getInstance().setImage(urlNo, onboardingNo);
+        Glide.with(this).load(R.drawable.locator_logo).into(onboardingLocatorLogo);
+        Glide.with(this).load(R.drawable.yes).into(onboardingYes);
+        Glide.with(this).load(R.drawable.no).into(onboardingNo);
     }
 }

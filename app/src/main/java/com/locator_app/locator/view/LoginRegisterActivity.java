@@ -8,16 +8,16 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.locator_app.locator.R;
-import com.locator_app.locator.util.CacheImageLoader;
-import com.facebook.FacebookSdk;
 
 import org.json.JSONObject;
 
@@ -77,16 +77,11 @@ public class LoginRegisterActivity extends AppCompatActivity {
     }
 
     private void loadImages() {
-        //set images url's
-        String urlLocator = "drawable://" + R.drawable.locator_logo;
-        String urlLogin = "drawable://" + R.drawable.login;
-        String urlLoginFacebook = "drawable://" + R.drawable.login_facebook;
-        String urlRegister= "drawable://" + R.drawable.register;
-
-        CacheImageLoader.getInstance().setImage(urlLocator, locatorLogo);
-        CacheImageLoader.getInstance().setImage(urlLogin, login);
-        CacheImageLoader.getInstance().setImage(urlLoginFacebook, loginFacebook);
-        CacheImageLoader.getInstance().setImage(urlRegister, register);
+        // set images url's
+        Glide.with(this).load(R.drawable.locator_logo).into(locatorLogo);
+        Glide.with(this).load(R.drawable.login).into(login);
+        Glide.with(this).load(R.drawable.login_facebook).into(loginFacebook);
+        Glide.with(this).load(R.drawable.register).into(register);
     }
 
     private void facebookLogin() {

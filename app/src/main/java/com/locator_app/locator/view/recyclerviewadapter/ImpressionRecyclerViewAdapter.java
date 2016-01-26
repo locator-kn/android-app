@@ -103,8 +103,10 @@ public class ImpressionRecyclerViewAdapter
                     .subscribe(
                             (user) -> {
                                 userName.setText(user.name);
-                                Glide.with(userImage.getContext()).load(user.thumbnailUri())
+                                Glide.with(userImage.getContext())
+                                        .load(user.thumbnailUri())
                                         .placeholder(R.drawable.profile)
+                                        .error(R.drawable.profile)
                                         .bitmapTransform(new CropCircleTransformation(userImage.getContext()))
                                         .into(userImage);
                             },
@@ -113,7 +115,7 @@ public class ImpressionRecyclerViewAdapter
                             }
                     );
             date.setText(DateConverter.toddMMyyyy(imageImpression.getCreateDate()));
-            Glide.with(itemView.getContext()).load(imageImpression.getImageUri()).into(impressionImage);
+            Glide.with(itemView.getContext()).load(imageImpression.getImageUri()).centerCrop().into(impressionImage);
         }
     }
 
@@ -143,6 +145,7 @@ public class ImpressionRecyclerViewAdapter
                                 userName.setText(user.name);
                                 Glide.with(userImage.getContext()).load(user.thumbnailUri())
                                         .placeholder(R.drawable.profile)
+                                        .error(R.drawable.profile)
                                         .bitmapTransform(new CropCircleTransformation(userImage.getContext()))
                                         .into(userImage);
                             }

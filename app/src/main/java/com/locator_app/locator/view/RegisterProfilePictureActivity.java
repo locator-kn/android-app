@@ -15,11 +15,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.locator_app.locator.R;
-import com.locator_app.locator.controller.UserController;
 import com.locator_app.locator.apiservice.users.RegistrationRequest;
+import com.locator_app.locator.controller.UserController;
 import com.locator_app.locator.util.BitmapHelper;
-import com.locator_app.locator.util.CacheImageLoader;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -191,12 +191,8 @@ public class RegisterProfilePictureActivity extends AppCompatActivity {
     }
 
     private void loadImages() {
-        //set images url's
-        String urlProfile = "drawable://" + R.drawable.profile;
-        String urlNo = "drawable://" + R.drawable.no;
-
-        CacheImageLoader.getInstance().setImage(urlProfile, profilePicture);
-        CacheImageLoader.getInstance().setImage(urlNo, profileNo);
+        Glide.with(this).load(R.drawable.profile).into(profilePicture);
+        Glide.with(this).load(R.drawable.no).into(profileNo);
     }
 }
 

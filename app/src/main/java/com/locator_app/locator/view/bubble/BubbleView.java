@@ -11,17 +11,21 @@ import android.graphics.Point;
 import android.util.AttributeSet;
 import android.view.View;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.locator_app.locator.R;
 import com.locator_app.locator.util.BitmapHelper;
-import com.locator_app.locator.util.CacheImageLoader;
 
 public class BubbleView extends View {
 
     private Point center = new Point(0, 0);
-    private int radius = 80;
+    int radius = 80;
 
     private Paint painter = new Paint(Paint.ANTI_ALIAS_FLAG);
     private Paint bitmapPainter = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private String imageUri;
+    private Bitmap icon;
 
     private int fillColor = Color.TRANSPARENT;
     public void setFillColor(int fillColor) {
@@ -35,7 +39,7 @@ public class BubbleView extends View {
     public void setStrokeWidth(int strokeWidth) {
         if (this.strokeWidth != strokeWidth) {
             this.strokeWidth = strokeWidth;
-            roundAndSetIcon(originalIcon);
+            setImage(imageUri);
             invalidate();
         }
     }
@@ -52,26 +56,7 @@ public class BubbleView extends View {
     public void setShadowWidth(int shadowWidth) {
         if (this.shadowWidth != shadowWidth) {
             this.shadowWidth = shadowWidth;
-            invalidate();
-        }
-    }
-
-    private String imageUri = "";
-    private Bitmap originalIcon;
-    private Bitmap icon;
-    private void roundAndSetIcon(Bitmap icon) {
-        if (icon != null) {
-            this.originalIcon = icon;
-            int iconSize = (radius-strokeWidth-shadowWidth) * 2;
-            this.icon = BitmapHelper.getRoundBitmap(icon, iconSize);
-            invalidate();
-        }
-    }
-
-    public void setIcon(Bitmap icon) {
-        if (icon != originalIcon && this.icon != icon) {
-            this.originalIcon = icon;
-            this.icon = icon;
+            setImage(imageUri);
             invalidate();
         }
     }
@@ -98,7 +83,6 @@ public class BubbleView extends View {
         a.recycle();
     }
 
-
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
@@ -116,7 +100,22 @@ public class BubbleView extends View {
             canvas.drawCircle(center.x, center.y, radius - shadowWidth - strokeWidth, painter);
         }
 
-        if (icon != null) {
+        final int imageSize = (radius - shadowWidth - strokeWidth) * 2;
+        final int r = imageSize / 2;
+        if (this.icon == null) {
+            Glide.with(getContext())
+                    .load(imageUri)
+                    .asBitmap()
+                    .dontAnimate()
+                    .override(imageSize, imageSize)
+                    .into(new SimpleTarget<Bitmap>() {
+                        @Override
+                        public void onResourceReady(Bitmap resource, GlideAnimation glideAnimation) {
+                            BubbleView.this.icon = BitmapHelper.getRoundBitmap(resource, imageSize);
+                            invalidate();
+                        }
+                    });
+        } else if (imageSize > 0) {
             int distance = strokeWidth + shadowWidth;
             int left = center.x - radius + distance;
             int top = center.y - radius + distance;
@@ -159,40 +158,22 @@ public class BubbleView extends View {
             center.x = w / 2;
             center.y = h / 2;
             radius = Math.min(center.x, center.y);
-
-            roundAndSetIcon(originalIcon);
+            this.icon = null;
         }
     }
 
     @Override
     protected void	onLayout(boolean changed, int left, int top, int right, int bottom) {
-        if (this.originalIcon != null) {
-            roundAndSetIcon(this.originalIcon);
-        }
+        this.icon = null;
     }
 
-    public void loadImage(String imageUri) {
-        loadImage(imageUri, "");
+    public void setImage(String imageUri) {
+        this.icon = null;
+        this.imageUri = imageUri;
     }
 
-    public void loadImage(String imageUri, String fallbackImageUri) {
-        if (!this.imageUri.equals(imageUri)) {
-            this.imageUri = imageUri;
-            CacheImageLoader.getInstance().loadAsync(imageUri)
-                    .subscribe(
-                            (bitmap) -> roundAndSetIcon(bitmap),
-                            (error) -> loadFallbackImage(fallbackImageUri)
-                    );
-        }
-    }
-
-    private void loadFallbackImage(String fallbackImageUri) {
-        if (!fallbackImageUri.isEmpty()) {
-            CacheImageLoader.getInstance().loadAsync(fallbackImageUri)
-                    .subscribe(
-                            (fallbackBitmap) -> roundAndSetIcon(fallbackBitmap),
-                            (error) -> {}
-                    );
-        }
+    public void setImage(int resourceId) {
+        final String imageUri = "android.resource://" + getContext().getPackageName() + "/" + resourceId;
+        setImage(imageUri);
     }
 }
