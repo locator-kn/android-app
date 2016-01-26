@@ -8,8 +8,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -18,8 +16,6 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.locator_app.locator.R;
 import com.locator_app.locator.util.BitmapHelper;
-
-import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
 public class BubbleView extends View {
 
@@ -105,11 +101,14 @@ public class BubbleView extends View {
         }
 
         final int imageSize = (radius - shadowWidth - strokeWidth) * 2;
+        final int r = imageSize / 2;
         if (this.icon == null) {
             Glide.with(getContext())
                     .load(imageUri)
                     .asBitmap()
-                    .into(new SimpleTarget<Bitmap>(imageSize, imageSize) {
+                    .dontAnimate()
+                    .override(imageSize, imageSize)
+                    .into(new SimpleTarget<Bitmap>() {
                         @Override
                         public void onResourceReady(Bitmap resource, GlideAnimation glideAnimation) {
                             BubbleView.this.icon = BitmapHelper.getRoundBitmap(resource, imageSize);
@@ -159,13 +158,13 @@ public class BubbleView extends View {
             center.x = w / 2;
             center.y = h / 2;
             radius = Math.min(center.x, center.y);
-            // set this.icon = null ?
+            this.icon = null;
         }
     }
 
     @Override
     protected void	onLayout(boolean changed, int left, int top, int right, int bottom) {
-        // set this.icon = null ?
+        this.icon = null;
     }
 
     public void setImage(String imageUri) {
