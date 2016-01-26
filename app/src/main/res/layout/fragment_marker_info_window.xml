@@ -12,7 +12,7 @@
         <ImageView
             android:layout_width="fill_parent"
             android:layout_height="100dp"
-            android:id="@+id/imageView4"
+            android:id="@+id/titleImageView"
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true" />

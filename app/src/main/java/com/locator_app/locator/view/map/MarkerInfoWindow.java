@@ -1,14 +1,18 @@
 package com.locator_app.locator.view.map;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.locator_app.locator.R;
+import com.locator_app.locator.view.fragments.ImageViewFragment;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -33,6 +37,9 @@ public class MarkerInfoWindow extends Fragment {
     @Bind(R.id.journeysTextView)
     TextView journeysTextView;
     private String journeysText = "0";
+
+    @Bind(R.id.titleImageView)
+    ImageView titleImageView;
 
     @Bind(R.id.dotButton)
     Button dotButton;
@@ -81,6 +88,10 @@ public class MarkerInfoWindow extends Fragment {
 
     public void setJourneys(int journeys) {
         journeysText = String.valueOf(journeys);
+    }
+
+    public void setImage(String imageUrl, Context context) {
+        Glide.with(context).load(imageUrl).into(titleImageView);
     }
 
     public void setOnDotButtonClickListener(View.OnClickListener listener) {
