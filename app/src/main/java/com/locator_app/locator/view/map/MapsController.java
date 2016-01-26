@@ -1,5 +1,6 @@
 package com.locator_app.locator.view.map;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -20,6 +21,7 @@ import com.locator_app.locator.R;
 import com.locator_app.locator.controller.LocationController;
 import com.locator_app.locator.controller.SchoenHierController;
 import com.locator_app.locator.model.LocatorLocation;
+import com.locator_app.locator.view.LocationDetailActivity;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -80,8 +82,18 @@ public class MapsController {
                 clusterManager,
                 markerIDToLocationMarker));
 
-        clusterManager.setOnClusterItemInfoWindowClickListener(
-                locationMarker -> Toast.makeText(mapsActivity, "Info Window clicked", Toast.LENGTH_SHORT).show());
+        clusterManager.setOnClusterItemInfoWindowClickListener(new ClusterManager.OnClusterItemInfoWindowClickListener<LocationMarker>() {
+            @Override
+            public void onClusterItemInfoWindowClick(LocationMarker locationMarker) {
+                if (markerToLocation.containsKey(locationMarker)) {
+                    LocatorLocation location = markerToLocation.get(locationMarker);
+
+                    Intent intent = new Intent(mapsActivity, LocationDetailActivity.class);
+                    intent.putExtra("location", location);
+                    mapsActivity.startActivity(intent);
+                }
+            }
+        });
 
         infoWindow = new MarkerInfoWindow();
         infoWindow.onCreateView(mapsActivity.getLayoutInflater(), null, null);
@@ -119,10 +131,7 @@ public class MapsController {
 //    }
 
     public void drawLocationsAt(LatLng position) {
-//        if (!calledRecently()) {
-//                drawHeatMapAt(cameraPosition.target);
-            drawLocationsAtP(position);
-//        }
+        drawLocationsAtP(position);
     }
 
     private void drawLocationsAtP(LatLng position) {
