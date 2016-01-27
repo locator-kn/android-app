@@ -1,7 +1,5 @@
 package com.locator_app.locator.view.map;
 
-import android.graphics.Bitmap;
-
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.ClusterItem;
