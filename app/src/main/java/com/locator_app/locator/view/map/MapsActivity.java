@@ -1,5 +1,6 @@
 package com.locator_app.locator.view.map;
 
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -20,6 +21,7 @@ import com.google.android.gms.maps.model.TileOverlay;
 import com.google.android.gms.maps.model.TileOverlayOptions;
 import com.google.maps.android.heatmaps.Gradient;
 import com.google.maps.android.heatmaps.HeatmapTileProvider;
+import com.locator_app.locator.LocatorApplication;
 import com.locator_app.locator.R;
 import com.locator_app.locator.controller.SchoenHierController;
 import com.locator_app.locator.util.GpsService;
@@ -46,11 +48,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Bind(R.id.toggleHeatmapButton)
     ImageView toggleHeatmapButton;
-    boolean isHeatmapEnabled = true;
+    boolean isHeatmapEnabled;
 
     @Bind(R.id.toggleLocationsButton)
     ImageView toggleLocationsButton;
-    boolean isLocationsEnabled = true;
+    boolean isLocationsEnabled;
 
     GpsService gpsService;
 
@@ -84,9 +86,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @OnClick(R.id.viewOptionsButton)
     void onviewOptionsButtonClick() {
-        isViewOptionsEnabled = toggle(isViewOptionsEnabled,
-                                      R.drawable.map_view_inverted,
-                                      R.drawable.map_view);
+        setToggleButton(!isViewOptionsEnabled,
+                        viewOptionsButton,
+                        R.drawable.map_view_inverted,
+                        R.drawable.map_view);
+        isViewOptionsEnabled = !isViewOptionsEnabled;
 
         enableToggleButtons(isViewOptionsEnabled);
     }
@@ -98,21 +102,38 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @OnClick(R.id.toggleHeatmapButton)
     void ontoggleHeatmapButtonClick() {
-        Toast.makeText(this, "Heatmap toggle", Toast.LENGTH_SHORT).show();
+        setHeatmapEnabled(!isHeatmapEnabled);
+    }
+
+    void setHeatmapEnabled(boolean enabled) {
+        setToggleButton(enabled,
+                toggleHeatmapButton,
+                R.drawable.map_heatmap_inverted,
+                R.drawable.map_heatmap);
+        isHeatmapEnabled = enabled;
+
+        SharedPreferences preferences = LocatorApplication.getSharedPreferences();
+        preferences.edit().putBoolean("show_heatmap", isHeatmapEnabled).apply();
     }
 
     @OnClick(R.id.toggleLocationsButton)
     void ontoggleLocationsButtonClick() {
-        Toast.makeText(this, "Location toggle", Toast.LENGTH_SHORT).show();
+        setLocationsEnabled(!isLocationsEnabled);
     }
 
-    private boolean toggle(Boolean enabled, int enabledId, int disabledId) {
-        if (enabled) {
-            viewOptionsButton.setImageResource(disabledId);
-        } else {
-            viewOptionsButton.setImageResource(enabledId);
-        }
-        return !enabled;
+    private void setLocationsEnabled(boolean enabled) {
+        setToggleButton(enabled,
+                        toggleLocationsButton,
+                        R.drawable.map_location_inverted,
+                        R.drawable.map_location);
+        isLocationsEnabled = enabled;
+
+        SharedPreferences preferences = LocatorApplication.getSharedPreferences();
+        preferences.edit().putBoolean("show_locations", isLocationsEnabled).apply();
+    }
+
+    private void setToggleButton(Boolean enabled, ImageView imageView, int enabledId, int disabledId) {
+        imageView.setImageResource(enabled ? enabledId : disabledId);
     }
 
     @Override
@@ -151,7 +172,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onResume() {
         super.onResume();
-        isViewOptionsEnabled = false;
+        SharedPreferences preferences = LocatorApplication.getSharedPreferences();
+        isLocationsEnabled = preferences.getBoolean("show_locations", true);
+        isHeatmapEnabled = preferences.getBoolean("show_heatmap", true);
+        setLocationsEnabled(isLocationsEnabled);
+        setHeatmapEnabled(isHeatmapEnabled);
         // ---------- Manual Continuous Location Update ----------
 //        continuousLocation = gpsService.getContinuousCurLocation()
 //                                            .subscribeOn(Schedulers.io())
