@@ -9,13 +9,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.locator_app.locator.LocatorApplication;
 import com.locator_app.locator.R;
 import com.locator_app.locator.model.User;
-import com.locator_app.locator.view.bubble.BubbleView;
 import com.locator_app.locator.view.profile.ProfileActivity;
 
 import java.util.LinkedList;
 import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerViewAdapter.ViewHolder> {
 
@@ -56,14 +59,14 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
         public final View view;
         public final TextView name;
         public final TextView description;
-        public final BubbleView bubbleView;
+        public final CircleImageView imageView;
 
         public ViewHolder(View view) {
             super(view);
             this.view = view;
             name = (TextView) view.findViewById(R.id.text);
             description = (TextView) view.findViewById(R.id.description);
-            bubbleView = (BubbleView) view.findViewById(R.id.bubbleView);
+            imageView = (CircleImageView)view.findViewById(R.id.bubbleView);
 
             TextView bubbleInfo = (TextView) view.findViewById(R.id.bubble_info);
             bubbleInfo.setVisibility(View.GONE);
@@ -72,7 +75,10 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
         public void update(User user) {
             title.setText(user.name);
             description.setText(user.description);
-            bubbleView.setImage(user.thumbnailUri());
+            Glide.with(LocatorApplication.getAppContext())
+                    .load(user.thumbnailUri())
+                    .dontAnimate()
+                    .into(imageView);
         }
     }
 }
