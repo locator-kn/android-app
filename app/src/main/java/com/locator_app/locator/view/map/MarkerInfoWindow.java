@@ -87,6 +87,6 @@ public class MarkerInfoWindow extends Fragment {
     }
 
     public void setImage(String imageUrl, Context context) {
-        Glide.with(context).load(imageUrl).into(titleImageView);
+        Glide.with(context).load(R.drawable.map_icon_black).into(titleImageView);
     }
 }

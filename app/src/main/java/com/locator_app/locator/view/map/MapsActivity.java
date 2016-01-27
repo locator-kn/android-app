@@ -4,7 +4,9 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
@@ -38,6 +40,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Bind(R.id.schoenHierButton)
     ImageView schoenHierButton;
 
+    @Bind(R.id.viewOptionsButton)
+    ImageView viewOptionsButton;
+    boolean isViewOptionsEnabled = false;
+
+    @Bind(R.id.toggleHeatmapButton)
+    ImageView toggleHeatmapButton;
+    boolean isHeatmapEnabled = true;
+
+    @Bind(R.id.toggleLocationsButton)
+    ImageView toggleLocationsButton;
+    boolean isLocationsEnabled = true;
+
     GpsService gpsService;
 
     MapFragment mapFragment;
@@ -47,7 +61,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         ButterKnife.bind(this);
-
 
         Glide.with(this).load(R.drawable.profile).asBitmap().override(60, 60).into(new SimpleTarget<Bitmap>() {
             @Override
@@ -67,6 +80,39 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @OnClick(R.id.schoenHierButton)
     void onschoenHierButtonClick() {
         SchoenHierController.getInstance().markCurPosAsSchoenHier(gpsService);
+    }
+
+    @OnClick(R.id.viewOptionsButton)
+    void onviewOptionsButtonClick() {
+        isViewOptionsEnabled = toggle(isViewOptionsEnabled,
+                                      R.drawable.map_view_inverted,
+                                      R.drawable.map_view);
+
+        enableToggleButtons(isViewOptionsEnabled);
+    }
+
+    private void enableToggleButtons(boolean enable) {
+        toggleLocationsButton.setVisibility(enable ? View.VISIBLE : View.INVISIBLE);
+        toggleHeatmapButton  .setVisibility(enable ? View.VISIBLE : View.INVISIBLE);
+    }
+
+    @OnClick(R.id.toggleHeatmapButton)
+    void ontoggleHeatmapButtonClick() {
+        Toast.makeText(this, "Heatmap toggle", Toast.LENGTH_SHORT).show();
+    }
+
+    @OnClick(R.id.toggleLocationsButton)
+    void ontoggleLocationsButtonClick() {
+        Toast.makeText(this, "Location toggle", Toast.LENGTH_SHORT).show();
+    }
+
+    private boolean toggle(Boolean enabled, int enabledId, int disabledId) {
+        if (enabled) {
+            viewOptionsButton.setImageResource(disabledId);
+        } else {
+            viewOptionsButton.setImageResource(enabledId);
+        }
+        return !enabled;
     }
 
     @Override
@@ -105,6 +151,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onResume() {
         super.onResume();
+        isViewOptionsEnabled = false;
         // ---------- Manual Continuous Location Update ----------
 //        continuousLocation = gpsService.getContinuousCurLocation()
 //                                            .subscribeOn(Schedulers.io())
