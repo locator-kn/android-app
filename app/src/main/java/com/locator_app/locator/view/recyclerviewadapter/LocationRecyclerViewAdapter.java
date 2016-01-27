@@ -8,6 +8,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.google.android.gms.maps.model.Circle;
+import com.locator_app.locator.LocatorApplication;
 import com.locator_app.locator.R;
 import com.locator_app.locator.model.LocatorLocation;
 import com.locator_app.locator.util.DateConverter;
@@ -15,6 +18,8 @@ import com.locator_app.locator.view.bubble.BubbleView;
 
 import java.util.LinkedList;
 import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class LocationRecyclerViewAdapter extends RecyclerView.Adapter<LocationRecyclerViewAdapter.ViewHolder> {
 
@@ -52,7 +57,7 @@ public class LocationRecyclerViewAdapter extends RecyclerView.Adapter<LocationRe
         public final TextView title;
         public final TextView description;
         public final TextView creationDate;
-        public final BubbleView bubbleView;
+        public final CircleImageView imageView;
         private String formattedDate = "";
 
         public ViewHolder(View view) {
@@ -61,13 +66,16 @@ public class LocationRecyclerViewAdapter extends RecyclerView.Adapter<LocationRe
             title = (TextView) view.findViewById(R.id.text);
             description = (TextView) view.findViewById(R.id.description);
             creationDate = (TextView) view.findViewById(R.id.bubble_info);
-            bubbleView = (BubbleView) view.findViewById(R.id.bubbleView);
+            imageView = (CircleImageView) view.findViewById(R.id.bubbleView);
         }
 
         public void update(LocatorLocation location) {
             title.setText(location.title);
             description.setText(location.description);
-            bubbleView.setImage(location.thumbnailUri());
+            Glide.with(LocatorApplication.getAppContext())
+                    .load(location.thumbnailUri())
+                    .dontAnimate()
+                    .into(imageView);
             if (formattedDate.isEmpty()) {
                 formattedDate = DateConverter.toddMMyyyy(location.createDate);
             }
