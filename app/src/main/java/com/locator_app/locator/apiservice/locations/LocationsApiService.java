@@ -38,7 +38,7 @@ public class LocationsApiService {
         @GET(Api.version + "/locations/users/{userId}")
         Observable<Response<List<LocatorLocation>>> getLocationsByUser(@Path("userId") String userId);
 
-        @GET(Api.version + "/locations/{locationId}/stream")
+        @GET(Api.version + "/locations/{locationId}/impressions")
         Observable<Response<List<Impression>>> getImpressionsByLocationId(@Path("locationId") String locationId);
     }
 
