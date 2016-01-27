@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
@@ -20,7 +21,6 @@ import com.google.maps.android.heatmaps.HeatmapTileProvider;
 import com.locator_app.locator.R;
 import com.locator_app.locator.controller.SchoenHierController;
 import com.locator_app.locator.util.GpsService;
-import com.locator_app.locator.view.bubble.BubbleView;
 
 import java.util.List;
 
@@ -36,7 +36,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private MapsController mapsController;
 
     @Bind(R.id.schoenHierButton)
-    BubbleView schoenHierButton;
+    ImageView schoenHierButton;
 
     GpsService gpsService;
 
@@ -55,8 +55,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 MapsActivity.this.currentPos = resource;
             }
         });
-
-        schoenHierButton.setImage(R.drawable.schoenhier);
 
         gpsService = (GpsService) getSupportFragmentManager()
                 .findFragmentById(R.id.gpsService);
