@@ -14,15 +14,17 @@
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="fill_parent"
-            android:layout_height="40dp"
+            android:layout_height="60dp"
             android:layout_margin="20dp">
 
-            <ImageView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
+
+            <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/userThumbnail"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:src="@drawable/com_facebook_button_send_icon_blue" />
+                android:src="@drawable/profile_black"
+                android:adjustViewBounds="false" />
 
             <LinearLayout
                 android:orientation="vertical"
@@ -53,7 +55,7 @@
                 android:id="@+id/imageView6"
                 android:layout_weight="1"
                 android:src="@drawable/small_gray_chat"
-                android:layout_margin="10dp" />
+                android:layout_margin="15dp" />
 
         </LinearLayout>
 
