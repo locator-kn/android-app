@@ -45,8 +45,6 @@ public class LoginRegisterStartActivity extends AppCompatActivity {
                     (loginResponse -> jumpToHomeScreen()),
                     (err) -> { }
             );
-
-        //TODO: getDeviceId
     }
 
     private void setupEventBus() {
