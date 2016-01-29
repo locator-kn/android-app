@@ -159,6 +159,12 @@ public class ImpressionRecyclerViewAdapter
                                         .error(R.drawable.profile_black)
                                         .dontAnimate()
                                         .into(userImage);
+                                userImage.setOnClickListener(v -> {
+                                            Intent intent = new Intent(v.getContext(), ProfileActivity.class);
+                                            intent.putExtra("profile", user);
+                                            v.getContext().startActivity(intent);
+                                        }
+                                );
                             }
                     );
             date.setText(DateConverter.toddMMyyyy(textImpression.getCreateDate()));
