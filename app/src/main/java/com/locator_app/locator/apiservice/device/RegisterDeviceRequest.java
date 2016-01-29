@@ -8,7 +8,7 @@ public class RegisterDeviceRequest {
     public String deviceId = "";
 
     @SerializedName("type")
-    public String type = "";
+    public final String type = "android";
 
     @SerializedName("version")
     public String version = "";
