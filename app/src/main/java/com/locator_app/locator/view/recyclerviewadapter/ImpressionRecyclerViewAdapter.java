@@ -158,7 +158,6 @@ public class ImpressionRecyclerViewAdapter
                                         .load(user.thumbnailUri())
                                         .error(R.drawable.profile_black)
                                         .dontAnimate()
-                                        .bitmapTransform(new CropCircleTransformation(userImage.getContext()))
                                         .into(userImage);
                             }
                     );
