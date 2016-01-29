@@ -1,6 +1,7 @@
 package com.locator_app.locator.view.recyclerviewadapter;
 
 
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,7 @@ import com.locator_app.locator.model.impressions.AbstractImpression.ImpressionTy
 import com.locator_app.locator.model.impressions.ImageImpression;
 import com.locator_app.locator.model.impressions.TextImpression;
 import com.locator_app.locator.util.DateConverter;
+import com.locator_app.locator.view.profile.ProfileActivity;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -105,10 +107,14 @@ public class ImpressionRecyclerViewAdapter
                                 userName.setText(user.name);
                                 Glide.with(userImage.getContext())
                                         .load(user.thumbnailUri())
-                                        .placeholder(R.drawable.profile)
-                                        .error(R.drawable.profile)
-                                        .bitmapTransform(new CropCircleTransformation(userImage.getContext()))
+                                        .dontAnimate()
                                         .into(userImage);
+                                userImage.setOnClickListener(v -> {
+                                            Intent intent = new Intent(v.getContext(), ProfileActivity.class);
+                                            intent.putExtra("profile", user);
+                                            v.getContext().startActivity(intent);
+                                        }
+                                );
                             },
                             (error) -> {
                                 Toast.makeText(itemView.getContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
@@ -148,8 +154,7 @@ public class ImpressionRecyclerViewAdapter
                             (user) -> {
                                 userName.setText(user.name);
                                 Glide.with(userImage.getContext()).load(user.thumbnailUri())
-                                        .placeholder(R.drawable.profile)
-                                        .error(R.drawable.profile)
+                                        .error(R.drawable.profile_black)
                                         .dontAnimate()
                                         .bitmapTransform(new CropCircleTransformation(userImage.getContext()))
                                         .into(userImage);
