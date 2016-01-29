@@ -1,6 +1,7 @@
 package com.locator_app.locator.view.recyclerviewadapter;
 
 
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,7 @@ import com.locator_app.locator.LocatorApplication;
 import com.locator_app.locator.R;
 import com.locator_app.locator.model.LocatorLocation;
 import com.locator_app.locator.util.DateConverter;
+import com.locator_app.locator.view.LocationDetailActivity;
 import com.locator_app.locator.view.bubble.BubbleView;
 
 import java.util.LinkedList;
@@ -41,8 +43,11 @@ public class LocationRecyclerViewAdapter extends RecyclerView.Adapter<LocationRe
     public void onBindViewHolder(final LocationRecyclerViewAdapter.ViewHolder holder, int position) {
         final LocatorLocation location = locations.get(position);
         holder.update(location);
-        holder.view.setOnClickListener(v ->
-                Toast.makeText(v.getContext(), location.city.title, Toast.LENGTH_SHORT).show()
+        holder.view.setOnClickListener( v -> {
+                    Intent intent = new Intent(v.getContext(), LocationDetailActivity.class);
+                    intent.putExtra("location", location);
+                    v.getContext().startActivity(intent);
+                }
         );
     }
 
