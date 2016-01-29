@@ -3,7 +3,7 @@ package com.locator_app.locator.apiservice.device;
 
 import com.google.gson.annotations.SerializedName;
 
-public class DeviceRegisterResponse {
+public class RegisterDeviceResponse {
 
     @SerializedName("message")
     public String message = "";

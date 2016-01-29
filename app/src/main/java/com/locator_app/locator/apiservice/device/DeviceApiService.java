@@ -13,17 +13,17 @@ public class DeviceApiService {
 
     interface DeviceApi {
         @POST(Api.version + "/device/register")
-        Observable<Response<DeviceRegisterResponse>> registerDevice(@Body DeviceRegisterRequest request);
+        Observable<Response<RegisterDeviceResponse>> registerDevice(@Body RegisterDeviceRequest request);
     }
 
     DeviceApi service = ServiceFactory.createService(DeviceApi.class);
 
-    public Observable<DeviceRegisterResponse> registerDevice(DeviceRegisterRequest request) {
+    public Observable<RegisterDeviceResponse> registerDevice(RegisterDeviceRequest request) {
         return service.registerDevice(request)
                 .flatMap(this::parseResponse);
     }
 
-    private Observable<DeviceRegisterResponse> parseResponse(Response<DeviceRegisterResponse> response) {
+    private Observable<RegisterDeviceResponse> parseResponse(Response<RegisterDeviceResponse> response) {
         if (response.code() == 201) {
             return Observable.just(response.body());
         }
