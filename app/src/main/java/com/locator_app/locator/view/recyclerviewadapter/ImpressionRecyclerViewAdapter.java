@@ -107,6 +107,7 @@ public class ImpressionRecyclerViewAdapter
                                 userName.setText(user.name);
                                 Glide.with(userImage.getContext())
                                         .load(user.thumbnailUri())
+                                        .error(R.drawable.profile_black)
                                         .dontAnimate()
                                         .into(userImage);
                                 userImage.setOnClickListener(v -> {
@@ -153,7 +154,8 @@ public class ImpressionRecyclerViewAdapter
                     .subscribe(
                             (user) -> {
                                 userName.setText(user.name);
-                                Glide.with(userImage.getContext()).load(user.thumbnailUri())
+                                Glide.with(userImage.getContext())
+                                        .load(user.thumbnailUri())
                                         .error(R.drawable.profile_black)
                                         .dontAnimate()
                                         .bitmapTransform(new CropCircleTransformation(userImage.getContext()))
