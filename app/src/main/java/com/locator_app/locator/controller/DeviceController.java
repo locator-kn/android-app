@@ -3,7 +3,6 @@ package com.locator_app.locator.controller;
 
 import android.os.Build;
 import android.provider.Settings;
-import android.telephony.TelephonyManager;
 
 import com.locator_app.locator.LocatorApplication;
 import com.locator_app.locator.apiservice.device.DeviceApiService;
@@ -12,7 +11,7 @@ import com.locator_app.locator.apiservice.device.RegisterDeviceResponse;
 
 import rx.Observable;
 
-public class RegisterDeviceController {
+public class DeviceController {
 
     DeviceApiService service = new DeviceApiService();
 
@@ -27,10 +26,10 @@ public class RegisterDeviceController {
         return service.registerDevice(request);
     }
 
-    private static RegisterDeviceController instance;
-    public static RegisterDeviceController getInstance() {
+    private static DeviceController instance;
+    public static DeviceController getInstance() {
         if (instance == null) {
-            instance = new RegisterDeviceController();
+            instance = new DeviceController();
         }
         return instance;
     }
