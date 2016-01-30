@@ -16,6 +16,9 @@ public class RegisterDeviceRequest {
     @SerializedName("deviceModel")
     public String deviceModel = "";
 
+    @SerializedName("manufacturer")
+    public String manufacturer = "";
+
     @SerializedName("pushToken")
     public String pushToken = "";
 }

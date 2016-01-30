@@ -20,6 +20,7 @@ public class RegisterDeviceController {
         RegisterDeviceRequest request = new RegisterDeviceRequest();
         request.version = Build.VERSION.RELEASE;
         request.deviceModel = Build.MODEL;
+        request.manufacturer = Build.MANUFACTURER;
         request.deviceId = Settings.Secure.getString(LocatorApplication.getAppContext()
         .getContentResolver(), Settings.Secure.ANDROID_ID);
         request.pushToken = "todo";
