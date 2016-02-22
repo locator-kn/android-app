@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -31,6 +32,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnTouch;
 import rx.Subscription;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
@@ -82,6 +84,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @OnClick(R.id.schoenHierButton)
     void onschoenHierButtonClick() {
         SchoenHierController.getInstance().markCurPosAsSchoenHier(gpsService);
+    }
+
+    @OnTouch(R.id.schoenHierButton)
+    boolean onschoenHierButtonTouch(MotionEvent arg1) {
+        if (arg1.getAction()== MotionEvent.ACTION_DOWN) {
+            schoenHierButton.setAlpha((float) 0.8);
+        }
+        else if (arg1.getAction()==MotionEvent.ACTION_UP){
+            schoenHierButton.setAlpha((float) 1);
+        }
+        return true;
     }
 
     @OnClick(R.id.viewOptionsButton)
