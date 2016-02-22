@@ -37,7 +37,7 @@ import rx.Subscription;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
-    private GoogleMap googleMap;
+    private GoogleMap googleMap = null;
     private Bitmap currentPos;
     private MapsController mapsController;
 
@@ -50,11 +50,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Bind(R.id.toggleHeatmapButton)
     ImageView toggleHeatmapButton;
-    boolean isHeatmapEnabled;
+    boolean isHeatmapEnabled = true;
 
     @Bind(R.id.toggleLocationsButton)
     ImageView toggleLocationsButton;
-    boolean isLocationsEnabled;
+    boolean isLocationsEnabled = true;
 
     GpsService gpsService;
 
@@ -118,12 +118,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         setHeatmapEnabled(!isHeatmapEnabled);
     }
 
+    synchronized
     void setHeatmapEnabled(boolean enabled) {
         setToggleButton(enabled,
                 toggleHeatmapButton,
                 R.drawable.map_heatmap_inverted,
                 R.drawable.map_heatmap);
         isHeatmapEnabled = enabled;
+
+        if (enabled) {
+            if (googleMap != null) {
+                LatLng mapPos = googleMap.getCameraPosition().target;
+                mapsController.addHeatMap(mapPos.longitude, mapPos.latitude);
+            }
+        } else {
+            if (tileOverlay != null) {
+                tileOverlay.remove();
+            }
+        }
 
         SharedPreferences preferences = LocatorApplication.getSharedPreferences();
         preferences.edit().putBoolean("show_heatmap", isHeatmapEnabled).apply();
@@ -172,7 +184,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(locationPos, 15));
         googleMap.setMyLocationEnabled(true);
         //googleMap.getUiSettings().setMyLocationButtonEnabled(false);
-        mapsController.addHeatMap(location.getLongitude(), location.getLatitude());
+
+        if (isHeatmapEnabled) {
+            mapsController.addHeatMap(location.getLongitude(), location.getLatitude());
+        }
         mapsController.drawLocationsAt(locationPos);
     }
 
@@ -204,8 +219,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 //        continuousLocation.unsubscribe();
     }
 
-    private HeatmapTileProvider heatmapTileProvider;
-    private TileOverlay tileOverlay;
+    private HeatmapTileProvider heatmapTileProvider = null ;
+    private TileOverlay tileOverlay = null;
 
     static private int[] colors = {
             Color.rgb(0, 255, 0),
@@ -231,9 +246,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 //                .opacity(0.6)
 //                .gradient(gradient)
                 .build();
-        try {
-            tileOverlay = googleMap.addTileOverlay(new TileOverlayOptions().tileProvider(heatmapTileProvider));
-        } catch(OutOfMemoryError e) {
-        }
+        addHeatmapToGoogleMap();
+    }
+
+    public void addHeatmapToGoogleMap() {
+        tileOverlay = googleMap.addTileOverlay(new TileOverlayOptions().tileProvider(heatmapTileProvider));
     }
 }

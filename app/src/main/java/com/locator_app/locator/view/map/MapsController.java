@@ -131,10 +131,6 @@ public class MapsController {
 //    }
 
     public void drawLocationsAt(LatLng position) {
-        drawLocationsAtP(position);
-    }
-
-    private void drawLocationsAtP(LatLng position) {
         LocationController.getInstance().getLocationsNearby(position.longitude, position.latitude, 1, 100) //TODO: calculate radius
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
