@@ -8,27 +8,39 @@ import java.net.CookieStore;
 import java.net.HttpCookie;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
 public class PersistentCookieStore implements CookieStore {
 
-    List<HttpCookie> cookies = new LinkedList<>();
+    final List<HttpCookie> cookies = new LinkedList<>();
+    final List<String> supportedCookieNames = Arrays.asList("locator_session", "locator");
 
     public void add(URI uri, HttpCookie cookie) {
-        if (cookie.getName().equals("locator_session")) {
-            cookies.clear();
+        final String cookieName = cookie.getName();
+        if (supportedCookieNames.contains(cookieName) && !cookieAlreadyInList(cookieName)) {
             cookies.add(cookie);
             SharedPreferences preferences = LocatorApplication.getSharedPreferences();
-            preferences.edit().putString("locator_session", cookie.getValue()).apply();
+            preferences.edit().putString(cookieName, cookie.getValue()).apply();
         }
+    }
+
+    private boolean cookieAlreadyInList(String cookieName) {
+        for (HttpCookie cookie: cookies) {
+            if (cookie.getName().equals(cookieName))
+                return true;
+        }
+        return false;
     }
 
     public PersistentCookieStore() {
         SharedPreferences preferences = LocatorApplication.getSharedPreferences();
-        String sessionKey = preferences.getString("locator_session", "");
-        if (!sessionKey.isEmpty()) {
-            cookies.add(new HttpCookie("locator_session", sessionKey));
+        for (String cookieName: supportedCookieNames) {
+            String cookieValue = preferences.getString(cookieName, "");
+            if (!cookieValue.isEmpty()) {
+                cookies.add(new HttpCookie(cookieName, cookieValue));
+            }
         }
     }
 
