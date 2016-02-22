@@ -1,3 +1,5 @@
+[![Stories in Ready](https://badge.waffle.io/locator-kn/android-app.svg?label=ready&title=Ready)](http://waffle.io/locator-kn/android-app)
+
 # android-app
 native android application
 

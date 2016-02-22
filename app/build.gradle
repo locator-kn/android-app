@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'me.tatarka.retrolambda'
 
+
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
@@ -32,6 +33,10 @@ android {
         exclude 'META-INF/notice.txt'
         exclude 'META-INF/NOTICE'
     }
+    compileOptions {
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
+    }
 }
 
 dependencies {
@@ -54,6 +59,7 @@ dependencies {
 
     compile 'com.github.bumptech.glide:glide:3.6.1'
 
+    compile 'com.google.android.gms:play-services:8.4.0'
     compile 'com.google.android.gms:play-services-location:8.4.0'
     compile 'com.google.android.gms:play-services-maps:8.4.0'
     compile 'com.google.code.gson:gson:2.4'
@@ -67,6 +73,8 @@ dependencies {
     compile 'com.squareup.retrofit:retrofit:2.0.0-beta2'
     compile 'com.squareup.retrofit:converter-gson:2.0.0-beta2'
 
+    compile 'de.hdodenhof:circleimageview:2.0.0'
+
     compile 'io.reactivex:rxandroid:1.0.1'
     compile 'io.reactivex:rxjava:1.0.16'
 
@@ -79,3 +87,7 @@ apt {
         androidManifestFile variant.outputs[0]?.processResources?.manifestFile
     }
 }
+
+// why the hell does this plugin has be at the end of the file?
+// leave me here, otherwise the build process will fail!
+apply plugin: 'com.google.gms.google-services'

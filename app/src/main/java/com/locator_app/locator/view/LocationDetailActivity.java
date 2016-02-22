@@ -92,7 +92,7 @@ public class LocationDetailActivity extends FragmentActivity {
 
     private void handleImpressions(List<AbstractImpression> impressions) {
         this.impressions = impressions;
-        impressionAdapter.setImpressions(impressions);
+        impressionAdapter.setImpressions(impressions, this.location);
         loadImageImpressionsToImageFragmentAdapter();
     }
 
