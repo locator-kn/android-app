@@ -69,8 +69,7 @@ public class LoginRegisterStartActivity extends AppCompatActivity {
 
     @OnClick(R.id.login_no)
     void onLoginNoClicked() {
-
-        //jumpToHomeScreen();
+        jumpToHomeScreen();
     }
 
     private void jumpToHomeScreen() {
