@@ -8,6 +8,7 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.locator_app.locator.R;
+import com.locator_app.locator.controller.DeviceController;
 import com.locator_app.locator.controller.UserController;
 import com.locator_app.locator.service.RegistrationIntentService;
 
@@ -36,20 +37,23 @@ public class LoginRegisterStartActivity extends AppCompatActivity {
         setCustomActionBar();
         setupEventBus();
         loadImages();
-        registerDevice();
-
-        UserController.getInstance().logInLastLoggedInUser()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(
-                    (loginResponse -> jumpToHomeScreen()),
-                    (err) -> { }
-            );
+        registerDeviceAndLogin();
     }
 
-    private void registerDevice() {
-        Intent intent = new Intent(getApplicationContext(), RegistrationIntentService.class);
-        startService(intent);
+    private void registerDeviceAndLogin() {
+        if (!DeviceController.getInstance().isDeviceAlreadyRegistered()) {
+            Intent intent = new Intent(getApplicationContext(), RegistrationIntentService.class);
+            startService(intent);
+        } else {
+            UserController.getInstance().logInLastLoggedInUser()
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(
+                            (loginResponse -> jumpToHomeScreen()),
+                            (err) -> {
+                            }
+                    );
+        }
     }
 
     private void setupEventBus() {
