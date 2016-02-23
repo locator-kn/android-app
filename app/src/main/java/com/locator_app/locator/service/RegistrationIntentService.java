@@ -31,13 +31,15 @@ public class RegistrationIntentService extends IntentService {
             String token = instanceID.getToken(getString(R.string.gcm_defaultSenderId),
                     GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
 
-            DeviceController.getInstance().registerDevice(token)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(
-                            (val) -> {},
-                            (err) -> {}
-                    );
+            if (token != null && !token.isEmpty()) {
+                DeviceController.getInstance().registerDevice(token)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                                (val) -> {},
+                                (err) -> {}
+                        );
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
