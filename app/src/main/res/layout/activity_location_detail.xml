@@ -21,16 +21,22 @@
                 android:layout_width="fill_parent"
                 android:layout_height="0dp"
                 android:layout_weight="2"
-                app:layout_scrollFlags="scroll">
+                app:layout_scrollFlags="scroll|snap">
 
                 <android.support.v4.view.ViewPager
                     android:id="@+id/viewPager"
                     android:layout_width="fill_parent"
-                    android:layout_height="200dp" />
+                    android:layout_height="300dp" />
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="120dp"
+                    android:background="@drawable/shape_gradient"
+                    />
 
                 <LinearLayout
                     android:layout_width="fill_parent"
-                    android:layout_height="100dp"
+                    android:layout_height="60dp"
                     android:layout_alignParentTop="true">
 
                     <ImageView
@@ -38,16 +44,21 @@
                         android:layout_width="0dp"
                         android:layout_height="fill_parent"
                         android:layout_weight="1"
-                        android:src="@drawable/go_back_icon_black"
-                        android:adjustViewBounds="true" />
+                        android:src="@drawable/go_back_icon_white"
+                        android:adjustViewBounds="true"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginBottom="20dp" />
 
                     <TextView
                         android:id="@+id/locationTitle"
                         android:layout_width="0dp"
                         android:layout_height="fill_parent"
-                        android:layout_weight="2"
+                        android:layout_weight="5"
+                        android:textColor="@color/colorWhite"
                         android:gravity="start|center"
-                        android:text="LOCATION-TITEL"/>
+                        android:textAppearance="@android:style/TextAppearance.Medium"
+                        android:text="LOCATION-TITEL"
+                        android:singleLine="true" />
 
                     <ImageView
                         android:id="@+id/showMap"
