@@ -125,8 +125,8 @@ public class LocationDetailActivity extends FragmentActivity {
     }
 
     private void showDistanceToLocation() {
-        GpsService serivce = new GpsService();
-        serivce.getCurLocationObservable()
+        GpsService service = new GpsService();
+        service.getCurLocationObservable()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
