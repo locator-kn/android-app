@@ -17,9 +17,6 @@ public class DeviceController {
     DeviceApiService service = new DeviceApiService();
 
     public Observable<RegisterDeviceResponse> registerDevice(String pushToken) {
-        if (deviceAlreadyRegistered()) {
-            return Observable.just(new RegisterDeviceResponse());
-        }
         RegisterDeviceRequest request = new RegisterDeviceRequest();
         request.version = Build.VERSION.RELEASE;
         request.deviceModel = Build.MODEL;
@@ -27,17 +24,7 @@ public class DeviceController {
         request.deviceId = Settings.Secure.getString(LocatorApplication.getAppContext()
             .getContentResolver(), Settings.Secure.ANDROID_ID);
         request.pushToken = pushToken;
-        return service.registerDevice(request)
-                .doOnCompleted(this::onDeviceRegistered);
-    }
-
-    private void onDeviceRegistered() {
-        SharedPreferences preferences = LocatorApplication.getSharedPreferences();
-        preferences.edit().putBoolean("pushtoken", true).apply();
-    }
-
-    private boolean deviceAlreadyRegistered() {
-        return LocatorApplication.getSharedPreferences().getBoolean("pushtoken", false);
+        return service.registerDevice(request);
     }
 
     private static DeviceController instance;
