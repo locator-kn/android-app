@@ -39,22 +39,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private GoogleMap googleMap = null;
     private Bitmap currentPos;
-    private MapsController mapsController;
+    private MapsController mapsController = null;
 
     @Bind(R.id.schoenHierButton)
     ImageView schoenHierButton;
 
     @Bind(R.id.viewOptionsButton)
     ImageView viewOptionsButton;
-    boolean isViewOptionsEnabled = false;
+    private boolean isViewOptionsEnabled = false;
 
     @Bind(R.id.toggleHeatmapButton)
     ImageView toggleHeatmapButton;
-    boolean isHeatmapEnabled = true;
+    private boolean isHeatmapEnabled = true;
+    public boolean isHeatmapEnabled() {  return isHeatmapEnabled; }
 
     @Bind(R.id.toggleLocationsButton)
     ImageView toggleLocationsButton;
-    boolean isLocationsEnabled = true;
+    private boolean isLocationsEnabled = true;
+    public boolean isLocationsEnabled() { return isLocationsEnabled; }
 
     GpsService gpsService;
 
@@ -146,12 +148,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         setLocationsEnabled(!isLocationsEnabled);
     }
 
+    synchronized
     private void setLocationsEnabled(boolean enabled) {
         setToggleButton(enabled,
                         toggleLocationsButton,
                         R.drawable.map_location_inverted,
                         R.drawable.map_location);
         isLocationsEnabled = enabled;
+
+        if (mapsController != null) {
+            if (enabled) {
+                mapsController.setAllLocationsVisible();
+                LatLng mapPos = googleMap.getCameraPosition().target;
+                mapsController.drawLocationsAt(mapPos);
+            } else {
+                mapsController.setAllLocationsInvisible();
+            }
+        }
 
         SharedPreferences preferences = LocatorApplication.getSharedPreferences();
         preferences.edit().putBoolean("show_locations", isLocationsEnabled).apply();
@@ -188,7 +201,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (isHeatmapEnabled) {
             mapsController.addHeatMap(location.getLongitude(), location.getLatitude());
         }
-        mapsController.drawLocationsAt(locationPos);
+        if (isLocationsEnabled) {
+            mapsController.drawLocationsAt(locationPos);
+        }
     }
 
     private void setPersonPosition(android.location.Location location) {

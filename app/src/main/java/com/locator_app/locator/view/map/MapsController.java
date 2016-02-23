@@ -130,7 +130,37 @@ public class MapsController {
 //        return delay < MIN_CALL_DELAY_MS;
 //    }
 
+    public void setAllLocationsInvisible() {
+        googleMap.setOnCameraChangeListener(null);
+        googleMap.setOnMarkerClickListener(null);
+        googleMap.setOnInfoWindowClickListener(null);
+        googleMap.setInfoWindowAdapter(null);
+        for (Marker marker : clusterManager.getClusterMarkerCollection().getMarkers()) {
+            marker.setVisible(false);
+        }
+        for (Marker marker : clusterManager.getMarkerCollection().getMarkers()) {
+            marker.setVisible(false);
+        }
+    }
+
+    public void setAllLocationsVisible() {
+        for (Marker marker : clusterManager.getClusterMarkerCollection().getMarkers()) {
+            marker.setVisible(true);
+        }
+        for (Marker marker : clusterManager.getMarkerCollection().getMarkers()) {
+            marker.setVisible(true);
+        }
+        clusterManager.onCameraChange(googleMap.getCameraPosition());
+        googleMap.setOnCameraChangeListener(clusterManager);
+        googleMap.setOnMarkerClickListener(clusterManager);
+        googleMap.setOnInfoWindowClickListener(clusterManager);
+        googleMap.setInfoWindowAdapter(clusterManager.getMarkerManager());
+    }
+
     public void drawLocationsAt(LatLng position) {
+        if (!mapsActivity.isLocationsEnabled()) {
+            return;
+        }
         LocationController.getInstance().getLocationsNearby(position.longitude, position.latitude, 1, 100) //TODO: calculate radius
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -154,7 +184,7 @@ public class MapsController {
             //drawLocation(location.geoTag.getLongitude(), location.geoTag.getLatitude());
             LocationMarker marker = new LocationMarker(location.geoTag.getLatitude(),
                                                        location.geoTag.getLongitude(),
-                                                       locationIcon);
+                    locationIcon);
             clusterManager.addItem(marker);
             markerToLocation.put(marker, location);
             drawnlocations.add(location);
