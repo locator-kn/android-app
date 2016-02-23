@@ -85,7 +85,7 @@ public class HomeActivity extends AppCompatActivity {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         (logoutResponse) -> jumpToLoginScreen(),
-                        (error) -> onLogoutError(error)
+                        (error) -> jumpToLoginScreen()
                 );
     }
 
@@ -120,11 +120,7 @@ public class HomeActivity extends AppCompatActivity {
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
-
-    private void onLogoutError(Throwable t) {
-        Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_LONG).show();
-    }
-
+    
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
