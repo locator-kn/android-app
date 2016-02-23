@@ -25,9 +25,8 @@ public class PersistentCookieStore implements CookieStore {
         final String cookieName = cookie.getName();
         if (supportedCookieNames.contains(cookieName)) {
             removeCookieByName(cookieName);
-            cookies.add(cookie);
-            SharedPreferences preferences = LocatorApplication.getSharedPreferences();
-            preferences.edit().putString(cookieName, cookie.getValue()).apply();
+            addCookie(cookie);
+            storeCookie(cookie);
         }
     }
 
@@ -40,13 +39,22 @@ public class PersistentCookieStore implements CookieStore {
         }
     }
 
+    private void addCookie(HttpCookie cookie) {
+        if (!cookie.getValue().isEmpty()) {
+            cookies.add(cookie);
+        }
+    }
+
+    private void storeCookie(HttpCookie cookie) {
+        SharedPreferences preferences = LocatorApplication.getSharedPreferences();
+        preferences.edit().putString(cookie.getName(), cookie.getValue()).apply();
+    }
+
     public PersistentCookieStore() {
         SharedPreferences preferences = LocatorApplication.getSharedPreferences();
         for (String cookieName: supportedCookieNames) {
             String cookieValue = preferences.getString(cookieName, "");
-            if (!cookieValue.isEmpty()) {
-                cookies.add(new HttpCookie(cookieName, cookieValue));
-            }
+            addCookie(new HttpCookie(cookieName, cookieValue));
         }
     }
 
