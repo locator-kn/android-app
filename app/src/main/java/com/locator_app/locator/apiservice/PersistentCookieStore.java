@@ -14,8 +14,12 @@ import java.util.List;
 
 public class PersistentCookieStore implements CookieStore {
 
+    public static final String LOCATOR_USER_COOKIE = "locator_session";
+    public static final String LOCATOR_DEVICE_COOKIE = "locator";
+
     final List<HttpCookie> cookies = new LinkedList<>();
-    final List<String> supportedCookieNames = Arrays.asList("locator_session", "locator");
+    final List<String> supportedCookieNames = Arrays.asList(LOCATOR_USER_COOKIE,
+                                                            LOCATOR_DEVICE_COOKIE);
 
     public void add(URI uri, HttpCookie cookie) {
         final String cookieName = cookie.getName();
