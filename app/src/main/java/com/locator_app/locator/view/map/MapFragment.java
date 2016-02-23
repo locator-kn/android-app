@@ -11,6 +11,7 @@ import android.widget.FrameLayout;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
 
 public class MapFragment extends SupportMapFragment {
     public View originalContentView;
@@ -49,7 +50,9 @@ public class MapFragment extends SupportMapFragment {
         @Override
         public boolean dispatchTouchEvent(MotionEvent event) {
             if (event.getAction() == MotionEvent.ACTION_UP && isInitialized) {
-                mapsController.drawLocationsAt(googleMap.getCameraPosition().target);
+                LatLng curMapPos = googleMap.getCameraPosition().target;
+                mapsController.drawLocationsAt(curMapPos);
+                mapsController.drawHeatMapAt(curMapPos);
             }
             return super.dispatchTouchEvent(event);
         }

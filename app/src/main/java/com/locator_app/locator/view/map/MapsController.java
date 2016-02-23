@@ -130,11 +130,37 @@ public class MapsController {
 //        return delay < MIN_CALL_DELAY_MS;
 //    }
 
-    public void drawLocationsAt(LatLng position) {
-        drawLocationsAtP(position);
+    public void setAllLocationsInvisible() {
+        googleMap.setOnCameraChangeListener(null);
+        googleMap.setOnMarkerClickListener(null);
+        googleMap.setOnInfoWindowClickListener(null);
+        googleMap.setInfoWindowAdapter(null);
+        for (Marker marker : clusterManager.getClusterMarkerCollection().getMarkers()) {
+            marker.setVisible(false);
+        }
+        for (Marker marker : clusterManager.getMarkerCollection().getMarkers()) {
+            marker.setVisible(false);
+        }
     }
 
-    private void drawLocationsAtP(LatLng position) {
+    public void setAllLocationsVisible() {
+        for (Marker marker : clusterManager.getClusterMarkerCollection().getMarkers()) {
+            marker.setVisible(true);
+        }
+        for (Marker marker : clusterManager.getMarkerCollection().getMarkers()) {
+            marker.setVisible(true);
+        }
+        clusterManager.onCameraChange(googleMap.getCameraPosition());
+        googleMap.setOnCameraChangeListener(clusterManager);
+        googleMap.setOnMarkerClickListener(clusterManager);
+        googleMap.setOnInfoWindowClickListener(clusterManager);
+        googleMap.setInfoWindowAdapter(clusterManager.getMarkerManager());
+    }
+
+    public void drawLocationsAt(LatLng position) {
+        if (!mapsActivity.isLocationsEnabled()) {
+            return;
+        }
         LocationController.getInstance().getLocationsNearby(position.longitude, position.latitude, 1, 100) //TODO: calculate radius
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -158,7 +184,7 @@ public class MapsController {
             //drawLocation(location.geoTag.getLongitude(), location.geoTag.getLatitude());
             LocationMarker marker = new LocationMarker(location.geoTag.getLatitude(),
                                                        location.geoTag.getLongitude(),
-                                                       locationIcon);
+                    locationIcon);
             clusterManager.addItem(marker);
             markerToLocation.put(marker, location);
             drawnlocations.add(location);
@@ -175,12 +201,13 @@ public class MapsController {
 //                .position(new LatLng(lat, lon)));
     }
 
-    private List<LatLng> heatPoints;
+    private List<LatLng> heatPoints = new LinkedList<>();
 
-    public void addHeatMap(double lon, double lat) {
-        heatPoints = new LinkedList<>();
-
-        SchoenHierController.getInstance().schoenHiersNearby(lon, lat, 10, 100)
+    public void drawHeatMapAt(LatLng pos) {
+        if (!mapsActivity.isHeatmapEnabled()) {
+            return;
+        }
+        SchoenHierController.getInstance().schoenHiersNearby(pos.longitude, pos.latitude, 10, 100)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .flatMapIterable(response -> response.results)
@@ -188,8 +215,11 @@ public class MapsController {
                         (item) -> {
                             double shLon = item.schoenHier.geoTag.getLongitude();
                             double shLat = item.schoenHier.geoTag.getLatitude();
+                            LatLng shPoint = new LatLng(shLat, shLon);
 
-                            heatPoints.add(new LatLng(shLat, shLon));
+                            if (!heatPoints.contains(shPoint)) {
+                                heatPoints.add(shPoint);
+                            }
                         },
                         (error) -> Toast.makeText(LocatorApplication.getAppContext(),
                                 "Schön hier nicht bekommen",

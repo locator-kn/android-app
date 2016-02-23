@@ -88,7 +88,9 @@
                 android:layout_width="20dp"
                 android:layout_height="fill_parent"
                 android:id="@+id/viewsIcon"
-                android:src="@drawable/mini_follower"/>
+                android:src="@drawable/location_detail_views"
+                android:padding="3dp"
+                android:antialias="true" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -108,9 +110,11 @@
 
             <ImageView
                 android:layout_width="20dp"
-                android:layout_height="match_parent"
+                android:layout_height="fill_parent"
                 android:id="@+id/followersIcon"
-                android:src="@drawable/mini_follower" />
+                android:src="@drawable/location_detail_likes"
+                android:padding="3dp"
+                android:antialias="true" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -131,9 +135,11 @@
 
             <ImageView
                 android:layout_width="20dp"
-                android:layout_height="match_parent"
+                android:layout_height="fill_parent"
                 android:id="@+id/journeysIcon"
-                android:src="@drawable/mini_locations" />
+                android:src="@drawable/location_detail_lists"
+                android:padding="3dp"
+                android:antialias="true" />
 
         </LinearLayout>
     </RelativeLayout>
