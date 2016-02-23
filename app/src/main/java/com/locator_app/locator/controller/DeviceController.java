@@ -10,7 +10,6 @@ import com.locator_app.locator.apiservice.PersistentCookieStore;
 import com.locator_app.locator.apiservice.device.DeviceApiService;
 import com.locator_app.locator.apiservice.device.RegisterDeviceRequest;
 import com.locator_app.locator.apiservice.device.RegisterDeviceResponse;
-import com.locator_app.locator.apiservice.users.RegistrationResponse;
 
 import rx.Observable;
 
@@ -19,6 +18,10 @@ public class DeviceController {
     DeviceApiService service = new DeviceApiService();
 
     public Observable<RegisterDeviceResponse> registerDevice(String pushToken) {
+        /* note: the device cookie we receive when device gets successfully registered
+                 will be stored by our PersistentCookieManager!
+         */
+
         if (deviceAlreadyRegistered()) {
             return Observable.just(new RegisterDeviceResponse());
         }
