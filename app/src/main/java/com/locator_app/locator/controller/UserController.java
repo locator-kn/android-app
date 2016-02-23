@@ -2,6 +2,7 @@ package com.locator_app.locator.controller;
 
 
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.locator_app.locator.LocatorApplication;
 import com.locator_app.locator.db.Couch;
@@ -20,7 +21,7 @@ public class UserController {
     private final String lastLoggedInUserEmailKey = "lastLoggedInUser";
     private UsersApiService userService;
     private User me;
-    private boolean loggedIn;
+    private boolean loggedIn = false;
     public User me() {
         return this.me;
     }
@@ -65,6 +66,7 @@ public class UserController {
     }
 
     private void handleLogin(LoginResponse loginResponse) {
+        Log.d("UserController", "successfully logged in: " + loginResponse.mail);
         SharedPreferences preferences = LocatorApplication.getSharedPreferences();
         preferences.edit().putString(lastLoggedInUserEmailKey, loginResponse.mail).apply();
         me._id = loginResponse._id;
@@ -77,7 +79,7 @@ public class UserController {
     }
 
     private void handleLoginError(Throwable throwable) {
-
+        Log.d("UserController", "error on login: " + throwable.getMessage());
     }
 
     public Observable<LogoutResponse> logout() {
@@ -98,7 +100,6 @@ public class UserController {
     }
 
     private void handleLogoutError(Throwable throwable) {
-
     }
 
     public Observable<User> getUser(String userId) {

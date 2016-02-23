@@ -8,7 +8,9 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/showHideImpressionTypes">
+        android:id="@+id/showHideImpressionTypes"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp">
 
         <TextView
             android:layout_width="wrap_content"

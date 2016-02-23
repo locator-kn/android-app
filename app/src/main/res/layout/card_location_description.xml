@@ -11,13 +11,18 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Beschreibung"
-        android:id="@+id/textView" />
+        android:id="@+id/textView"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Medium Text"
-        android:id="@+id/description" />
+        android:id="@+id/description"
+        android:layout_marginLeft="20dp"
+        android:layout_marginBottom="20dp" />
 
 </LinearLayout>

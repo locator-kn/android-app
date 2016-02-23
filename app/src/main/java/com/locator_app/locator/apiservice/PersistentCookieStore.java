@@ -8,27 +8,53 @@ import java.net.CookieStore;
 import java.net.HttpCookie;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
 public class PersistentCookieStore implements CookieStore {
 
-    List<HttpCookie> cookies = new LinkedList<>();
+    public static final String LOCATOR_USER_COOKIE = "locator_session";
+    public static final String LOCATOR_DEVICE_COOKIE = "locator";
+
+    final List<HttpCookie> cookies = new LinkedList<>();
+    final List<String> supportedCookieNames = Arrays.asList(LOCATOR_USER_COOKIE,
+                                                            LOCATOR_DEVICE_COOKIE);
 
     public void add(URI uri, HttpCookie cookie) {
-        if (cookie.getName().equals("locator_session")) {
-            cookies.clear();
-            cookies.add(cookie);
-            SharedPreferences preferences = LocatorApplication.getSharedPreferences();
-            preferences.edit().putString("locator_session", cookie.getValue()).apply();
+        final String cookieName = cookie.getName();
+        if (supportedCookieNames.contains(cookieName)) {
+            removeCookieByName(cookieName);
+            addCookie(cookie);
+            storeCookie(cookie);
         }
+    }
+
+    private void removeCookieByName(String cookieName) {
+        for (HttpCookie cookie: cookies) {
+            if (cookie.getName().equals(cookieName)) {
+                cookies.remove(cookie);
+                break;
+            }
+        }
+    }
+
+    private void addCookie(HttpCookie cookie) {
+        if (!cookie.getValue().isEmpty()) {
+            cookies.add(cookie);
+        }
+    }
+
+    private void storeCookie(HttpCookie cookie) {
+        SharedPreferences preferences = LocatorApplication.getSharedPreferences();
+        preferences.edit().putString(cookie.getName(), cookie.getValue()).apply();
     }
 
     public PersistentCookieStore() {
         SharedPreferences preferences = LocatorApplication.getSharedPreferences();
-        String sessionKey = preferences.getString("locator_session", "");
-        if (!sessionKey.isEmpty()) {
-            cookies.add(new HttpCookie("locator_session", sessionKey));
+        for (String cookieName: supportedCookieNames) {
+            String cookieValue = preferences.getString(cookieName, "");
+            addCookie(new HttpCookie(cookieName, cookieValue));
         }
     }
 

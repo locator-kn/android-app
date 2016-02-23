@@ -1,6 +1,8 @@
 package com.locator_app.locator.controller;
 
 
+import android.util.Log;
+
 import com.locator_app.locator.apiservice.my.BubbleScreenResponse;
 import com.locator_app.locator.apiservice.my.MyApiService;
 
@@ -11,7 +13,12 @@ public class MyController {
     MyApiService myService = null;
 
     public Observable<BubbleScreenResponse> getBubbleScreen() {
-        return myService.bubbleScreen();
+        return myService.bubbleScreen()
+                .doOnError(this::onBubbleScreenError);
+    }
+
+    private void onBubbleScreenError(Throwable throwable) {
+        Log.d("MyController", throwable.getMessage());
     }
 
     private static MyController instance;

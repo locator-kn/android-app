@@ -8,7 +8,9 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.locator_app.locator.R;
+import com.locator_app.locator.controller.DeviceController;
 import com.locator_app.locator.controller.UserController;
+import com.locator_app.locator.service.RegistrationIntentService;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -33,18 +35,25 @@ public class LoginRegisterStartActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login_register_start);
         ButterKnife.bind(this);
         setCustomActionBar();
-
         setupEventBus();
-
         loadImages();
+        registerDeviceAndLogin();
+    }
 
-        UserController.getInstance().logInLastLoggedInUser()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(
-                    (loginResponse -> jumpToHomeScreen()),
-                    (err) -> { }
-            );
+    private void registerDeviceAndLogin() {
+        if (!DeviceController.getInstance().isDeviceAlreadyRegistered()) {
+            Intent intent = new Intent(getApplicationContext(), RegistrationIntentService.class);
+            startService(intent);
+        } else {
+            UserController.getInstance().logInLastLoggedInUser()
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(
+                            (loginResponse -> jumpToHomeScreen()),
+                            (err) -> {
+                            }
+                    );
+        }
     }
 
     private void setupEventBus() {

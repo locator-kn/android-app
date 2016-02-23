@@ -1,6 +1,5 @@
 package com.locator_app.locator.apiservice;
 
-import com.locator_app.locator.LocatorApplication;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.logging.HttpLoggingInterceptor;
 
