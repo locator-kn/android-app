@@ -40,9 +40,6 @@ public class LocationDetailActivity extends FragmentActivity {
     @Bind(R.id.locationTitle)
     TextView locationTitle;
 
-    @Bind(R.id.showMap)
-    ImageView showMap;
-
     @Bind(R.id.viewPager)
     ViewPager viewPager;
 
@@ -113,9 +110,10 @@ public class LocationDetailActivity extends FragmentActivity {
         finish();
     }
 
-    @OnClick(R.id.showMap)
+    @OnClick(R.id.bubblescreen)
     void onShowMapClicked() {
-        Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
+        Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
 
