@@ -20,7 +20,7 @@ public class UserController {
     private final String lastLoggedInUserEmailKey = "lastLoggedInUser";
     private UsersApiService userService;
     private User me;
-    private boolean loggedIn;
+    private boolean loggedIn = false;
     public User me() {
         return this.me;
     }
