@@ -222,7 +222,7 @@ public class ImpressionRecyclerViewAdapter
         public CreateImpressionViewHolder(View itemView) {
             super(itemView);
             TextView numberOfImpressions = (TextView)itemView.findViewById(R.id.numberOfImpressions);
-            numberOfImpressions.setText(Integer.toString(impressions.size()));
+            numberOfImpressions.setText(Integer.toString(impressions.size()) + " Impressions");
             LinearLayout impressionTypes = (LinearLayout)itemView.findViewById(R.id.impressionTypes);
             impressionTypes.setVisibility(View.GONE);
             LinearLayout showHideImpressionTypes = (LinearLayout)itemView.findViewById(R.id.showHideImpressionTypes);
