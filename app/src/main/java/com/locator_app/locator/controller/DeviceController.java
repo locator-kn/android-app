@@ -4,9 +4,9 @@ package com.locator_app.locator.controller;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.provider.Settings;
+import android.util.Log;
 
 import com.locator_app.locator.LocatorApplication;
-import com.locator_app.locator.apiservice.PersistentCookieStore;
 import com.locator_app.locator.apiservice.device.DeviceApiService;
 import com.locator_app.locator.apiservice.device.RegisterDeviceRequest;
 import com.locator_app.locator.apiservice.device.RegisterDeviceResponse;
@@ -15,16 +15,11 @@ import rx.Observable;
 
 public class DeviceController {
 
+    private static final String DEVICE_REGISTERED_FLAG = "device_registered";
+
     DeviceApiService service = new DeviceApiService();
 
     public Observable<RegisterDeviceResponse> registerDevice(String pushToken) {
-        /* note: the device cookie we receive when device gets successfully registered
-                 will be stored by our PersistentCookieManager!
-         */
-
-        if (deviceAlreadyRegistered()) {
-            return Observable.just(new RegisterDeviceResponse());
-        }
         RegisterDeviceRequest request = new RegisterDeviceRequest();
         request.version = Build.VERSION.RELEASE;
         request.deviceModel = Build.MODEL;
@@ -32,14 +27,26 @@ public class DeviceController {
         request.deviceId = Settings.Secure.getString(LocatorApplication.getAppContext()
             .getContentResolver(), Settings.Secure.ANDROID_ID);
         request.pushToken = pushToken;
-        return service.registerDevice(request);
+        return service.registerDevice(request)
+                .doOnCompleted(this::setDeviceRegisteredFlag)
+                .doOnError((throwable) ->
+                        Log.d("DeviceController",
+                              "Could not register device: " + throwable.getMessage()));
     }
 
-    private boolean deviceAlreadyRegistered() {
+    public void setDeviceRegisteredFlag() {
         SharedPreferences prefs = LocatorApplication.getSharedPreferences();
-        String deviceCookie = prefs.getString(PersistentCookieStore.LOCATOR_DEVICE_COOKIE, "");
-        boolean isDeviceCookieSet = !deviceCookie.isEmpty();
-        return isDeviceCookieSet;
+        prefs.edit().putBoolean(DEVICE_REGISTERED_FLAG, true).commit();
+    }
+
+    public boolean isDeviceAlreadyRegistered() {
+        SharedPreferences prefs = LocatorApplication.getSharedPreferences();
+        return prefs.getBoolean(DEVICE_REGISTERED_FLAG, false);
+    }
+
+    public void clearDeviceRegisteredFlag() {
+        SharedPreferences prefs = LocatorApplication.getSharedPreferences();
+        prefs.edit().remove(DEVICE_REGISTERED_FLAG).commit();
     }
 
     private static DeviceController instance;
