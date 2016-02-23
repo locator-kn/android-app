@@ -131,10 +131,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (enabled) {
             if (googleMap != null) {
                 LatLng mapPos = googleMap.getCameraPosition().target;
-                mapsController.addHeatMap(mapPos.longitude, mapPos.latitude);
+                mapsController.drawHeatMapAt(mapPos);
             }
         } else {
             if (tileOverlay != null) {
+                curNumberOfHeatPoints = 0;
                 tileOverlay.remove();
             }
         }
@@ -198,12 +199,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         googleMap.setMyLocationEnabled(true);
         //googleMap.getUiSettings().setMyLocationButtonEnabled(false);
 
-        if (isHeatmapEnabled) {
-            mapsController.addHeatMap(location.getLongitude(), location.getLatitude());
-        }
-        if (isLocationsEnabled) {
-            mapsController.drawLocationsAt(locationPos);
-        }
+        mapsController.drawHeatMapAt(locationPos);
+        mapsController.drawLocationsAt(locationPos);
     }
 
     private void setPersonPosition(android.location.Location location) {
@@ -236,6 +233,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private HeatmapTileProvider heatmapTileProvider = null ;
     private TileOverlay tileOverlay = null;
+    private int curNumberOfHeatPoints = 0;
 
     static private int[] colors = {
             Color.rgb(0, 255, 0),
@@ -247,10 +245,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             (float) 0.8
     };
 
+    synchronized
     public void drawHeatMap(List<LatLng> heatPoints) {
         if (heatPoints.isEmpty()) {
             return;
         }
+        if (heatmapTileProvider != null && tileOverlay != null) {
+            if (curNumberOfHeatPoints != heatPoints.size()) {
+                heatmapTileProvider.setData(heatPoints);
+                tileOverlay.clearTileCache();
+                curNumberOfHeatPoints = heatPoints.size();
+            }
+            return;
+        }
+        curNumberOfHeatPoints = heatPoints.size();
 
         Gradient gradient = new Gradient(colors, startPoints);
 
@@ -261,10 +269,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 //                .opacity(0.6)
 //                .gradient(gradient)
                 .build();
-        addHeatmapToGoogleMap();
-    }
-
-    public void addHeatmapToGoogleMap() {
         tileOverlay = googleMap.addTileOverlay(new TileOverlayOptions().tileProvider(heatmapTileProvider));
     }
 }

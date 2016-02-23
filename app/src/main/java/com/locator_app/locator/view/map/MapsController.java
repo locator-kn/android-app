@@ -201,12 +201,13 @@ public class MapsController {
 //                .position(new LatLng(lat, lon)));
     }
 
-    private List<LatLng> heatPoints;
+    private List<LatLng> heatPoints = new LinkedList<>();
 
-    public void addHeatMap(double lon, double lat) {
-        heatPoints = new LinkedList<>();
-
-        SchoenHierController.getInstance().schoenHiersNearby(lon, lat, 10, 100)
+    public void drawHeatMapAt(LatLng pos) {
+        if (!mapsActivity.isHeatmapEnabled()) {
+            return;
+        }
+        SchoenHierController.getInstance().schoenHiersNearby(pos.longitude, pos.latitude, 10, 100)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .flatMapIterable(response -> response.results)
@@ -214,8 +215,11 @@ public class MapsController {
                         (item) -> {
                             double shLon = item.schoenHier.geoTag.getLongitude();
                             double shLat = item.schoenHier.geoTag.getLatitude();
+                            LatLng shPoint = new LatLng(shLat, shLon);
 
-                            heatPoints.add(new LatLng(shLat, shLon));
+                            if (!heatPoints.contains(shPoint)) {
+                                heatPoints.add(shPoint);
+                            }
                         },
                         (error) -> Toast.makeText(LocatorApplication.getAppContext(),
                                 "Schön hier nicht bekommen",
