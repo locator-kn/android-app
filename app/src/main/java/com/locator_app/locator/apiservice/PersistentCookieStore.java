@@ -19,19 +19,21 @@ public class PersistentCookieStore implements CookieStore {
 
     public void add(URI uri, HttpCookie cookie) {
         final String cookieName = cookie.getName();
-        if (supportedCookieNames.contains(cookieName) && !cookieAlreadyInList(cookieName)) {
+        if (supportedCookieNames.contains(cookieName)) {
+            removeCookieByName(cookieName);
             cookies.add(cookie);
             SharedPreferences preferences = LocatorApplication.getSharedPreferences();
             preferences.edit().putString(cookieName, cookie.getValue()).apply();
         }
     }
 
-    private boolean cookieAlreadyInList(String cookieName) {
+    private void removeCookieByName(String cookieName) {
         for (HttpCookie cookie: cookies) {
-            if (cookie.getName().equals(cookieName))
-                return true;
+            if (cookie.getName().equals(cookieName)) {
+                cookies.remove(cookie);
+                break;
+            }
         }
-        return false;
     }
 
     public PersistentCookieStore() {
