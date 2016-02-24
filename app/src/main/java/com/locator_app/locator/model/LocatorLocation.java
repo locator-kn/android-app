@@ -12,6 +12,9 @@ public class LocatorLocation implements LocatorObject, Serializable {
     @SerializedName("_id")
     public String id;
 
+    @SerializedName("user_id")
+    public String userId;
+
     @SerializedName("preLocation")
     public boolean prelocation;
 
