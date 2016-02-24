@@ -11,16 +11,20 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.google.android.gms.maps.model.Marker;
 import com.locator_app.locator.R;
+import com.locator_app.locator.controller.UserController;
 import com.locator_app.locator.view.fragments.ImageViewFragment;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class MarkerInfoWindow extends Fragment {
     @Bind(R.id.titleTextView)
@@ -30,6 +34,7 @@ public class MarkerInfoWindow extends Fragment {
     @Bind(R.id.nameTextView)
     TextView nameTextView;
     private String nameText = "Gott";
+    private String currentUserId = "";
 
     @Bind(R.id.viewsTextView)
     TextView viewsTextView;
@@ -64,7 +69,6 @@ public class MarkerInfoWindow extends Fragment {
 
     public View getView() {
         titleTextView.setText(titleText);
-        nameTextView.setText(nameText);
         viewsTextView.setText(viewsText);
         followersTextView.setText(followersText);
         journeysTextView.setText(journeysText);
@@ -76,8 +80,21 @@ public class MarkerInfoWindow extends Fragment {
         titleText = title;
     }
 
-    public void setCreatorName(String name) {
-        nameText = name;
+    synchronized
+    public void setCreatorName(String userId, Marker marker) {
+        if (!currentUserId.equals(userId)) {
+            currentUserId = userId;
+            UserController.getInstance().getUser(userId)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(
+                            (user) -> {
+                                nameTextView.setText(user.name);
+                                marker.showInfoWindow();
+                            },
+                            (error) -> {}
+                    );
+        }
     }
 
     public void setViews(int views) {
@@ -92,6 +109,7 @@ public class MarkerInfoWindow extends Fragment {
         journeysText = String.valueOf(journeys);
     }
 
+    synchronized
     public void setImage(String imageUrl, Context context, Marker marker) {
         if (!currentImageUrl.equals(imageUrl)) {
             currentImageUrl = imageUrl;

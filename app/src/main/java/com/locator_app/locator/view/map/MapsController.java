@@ -116,6 +116,7 @@ public class MapsController {
 
                         infoWindow.setLocationTitle(location.title);
                         infoWindow.setImage(location.images.getNormal(), mapsActivity, marker);
+                        infoWindow.setCreatorName(location.userId, marker);
 
                         return infoWindow.getView();
                     }
