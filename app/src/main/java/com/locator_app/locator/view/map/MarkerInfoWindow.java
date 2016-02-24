@@ -2,6 +2,8 @@ package com.locator_app.locator.view.map;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +13,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.google.android.gms.maps.model.Marker;
 import com.locator_app.locator.R;
 import com.locator_app.locator.view.fragments.ImageViewFragment;
 
@@ -40,6 +45,7 @@ public class MarkerInfoWindow extends Fragment {
 
     @Bind(R.id.titleImageView)
     ImageView titleImageView;
+    private String currentImageUrl = "";
 
     @Bind(R.id.dotButton)
     Button dotButton;
@@ -86,7 +92,19 @@ public class MarkerInfoWindow extends Fragment {
         journeysText = String.valueOf(journeys);
     }
 
-    public void setImage(String imageUrl, Context context) {
-        Glide.with(context).load(R.drawable.map_icon_black).into(titleImageView);
+    public void setImage(String imageUrl, Context context, Marker marker) {
+        if (!currentImageUrl.equals(imageUrl)) {
+            currentImageUrl = imageUrl;
+            titleImageView.setVisibility(View.GONE);
+            Glide.with(context).load(imageUrl).asBitmap().dontAnimate()
+                               .centerCrop().into(new SimpleTarget<Bitmap>() {
+                @Override
+                public void onResourceReady(Bitmap resource, GlideAnimation glideAnimation) {
+                    titleImageView.setImageBitmap(resource);
+                    titleImageView.setVisibility(View.VISIBLE);
+                    marker.showInfoWindow();
+                }
+            });
+        }
     }
 }

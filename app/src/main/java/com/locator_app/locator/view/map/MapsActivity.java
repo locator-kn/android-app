@@ -40,7 +40,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private LatLng initialCameraPosition = null;
     private GoogleMap googleMap = null;
-    private Bitmap currentPos;
     private MapsController mapsController = null;
 
     @Bind(R.id.schoenHierButton)
@@ -69,7 +68,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         ButterKnife.bind(this);
-
+        
         if (getIntent().hasExtra("lon") && getIntent().hasExtra("lat")) {
             double lon = getIntent().getDoubleExtra("lon", 0.0);
             double lat = getIntent().getDoubleExtra("lat", 0.0);
