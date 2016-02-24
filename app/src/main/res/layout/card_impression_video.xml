@@ -13,10 +13,23 @@
         android:layout_margin="20dp">
 
         <include layout="@layout/impression_header"/>
-        
-        <VideoView
+
+        <RelativeLayout
             android:layout_width="fill_parent"
-            android:layout_height="270dp" />
+            android:layout_height="270dp">
+
+            <VideoView
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:id="@+id/videoView"
+                android:layout_gravity="center"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentRight="true"
+                />
+
+        </RelativeLayout>
 
     </LinearLayout>
 

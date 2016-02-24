@@ -2,15 +2,22 @@ package com.locator_app.locator.view.recyclerviewadapter;
 
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.media.Image;
+import android.media.ThumbnailUtils;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
 import com.locator_app.locator.R;
@@ -20,6 +27,7 @@ import com.locator_app.locator.model.impressions.AbstractImpression;
 import com.locator_app.locator.model.impressions.AbstractImpression.ImpressionType;
 import com.locator_app.locator.model.impressions.ImageImpression;
 import com.locator_app.locator.model.impressions.TextImpression;
+import com.locator_app.locator.model.impressions.VideoImpression;
 import com.locator_app.locator.util.DateConverter;
 import com.locator_app.locator.view.profile.ProfileActivity;
 
@@ -72,7 +80,9 @@ public class ImpressionRecyclerViewAdapter
                 View v = LayoutInflater.from(parent.getContext()).inflate(cardId, parent, false);
                 return new TextImpressionViewHolder(v);
             } else if (type == ImpressionType.VIDEO) {
-
+                final int cardId = R.layout.card_impression_video;
+                View v = LayoutInflater.from(parent.getContext()).inflate(cardId, parent, false);
+                return new VideoImpressionViewHolder(v);
             }
         }
         return null;
@@ -202,6 +212,59 @@ public class ImpressionRecyclerViewAdapter
                     );
             date.setText(DateConverter.toddMMyyyy(textImpression.getCreateDate()));
             impressionText.setText(textImpression.getText());
+        }
+    }
+
+    class VideoImpressionViewHolder extends ViewHolder {
+
+        ImageView userImage;
+        TextView date;
+        TextView userName;
+        VideoView videoView;
+
+        public VideoImpressionViewHolder(View itemView) {
+            super(itemView);
+            ImageView impressionType = (ImageView)itemView.findViewById(R.id.impressionType);
+            Glide.with(itemView.getContext()).load(R.drawable.small_gray_video).into(impressionType);
+
+            userImage = (ImageView)itemView.findViewById(R.id.userThumbnail);
+            date = (TextView)itemView.findViewById(R.id.date);
+            userName = (TextView)itemView.findViewById(R.id.userName);
+
+            videoView = (VideoView) itemView.findViewById(R.id.videoView);
+            MediaController mc = new MediaController(itemView.getContext());
+            mc.setMediaPlayer(videoView);
+            videoView.setMediaController(mc);
+        }
+
+        @Override
+        public void bind(AbstractImpression impression) {
+            VideoImpression videoImpression = (VideoImpression)impression;
+            Uri uri = Uri.parse(videoImpression.getVideoUri());
+            videoView.setVideoURI(uri);
+            videoView.start();
+            videoView.pause();
+
+            UserController.getInstance().getUser(videoImpression.getUserId())
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(
+                            (user) -> {
+                                userName.setText(user.name);
+                                Glide.with(userImage.getContext())
+                                        .load(user.thumbnailUri())
+                                        .error(R.drawable.profile_black)
+                                        .dontAnimate()
+                                        .into(userImage);
+                                userImage.setOnClickListener(v -> {
+                                            Intent intent = new Intent(v.getContext(), ProfileActivity.class);
+                                            intent.putExtra("profile", user);
+                                            v.getContext().startActivity(intent);
+                                        }
+                                );
+                            }
+                    );
+            date.setText(DateConverter.toddMMyyyy(videoImpression.getCreateDate()));
         }
     }
 
