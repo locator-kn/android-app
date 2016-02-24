@@ -171,7 +171,6 @@ public class MapsController {
         }
         locationsLoadedRect = newLoadableRect;
 
-        Log.d("Maploading", "loading locations");
         LocationController.getInstance().getLocationsNearby(position.longitude, position.latitude,
                                                             loadableRadius(locationsLoadedRect), 100)
                 .subscribeOn(Schedulers.io())
@@ -224,7 +223,7 @@ public class MapsController {
             return;
         }
         heatmapLoadedRect = newLoadableRect;
-        Log.d("Maploading", "loading schoenhiers");
+        
         SchoenHierController.getInstance().schoenHiersNearby(pos.longitude, pos.latitude,
                                                              loadableRadius(heatmapLoadedRect), 1000)
                 .subscribeOn(Schedulers.io())
