@@ -21,6 +21,7 @@ import com.locator_app.locator.R;
 import com.locator_app.locator.controller.LocationController;
 import com.locator_app.locator.controller.SchoenHierController;
 import com.locator_app.locator.model.LocatorLocation;
+import com.locator_app.locator.util.DistanceCalculator;
 import com.locator_app.locator.view.LocationDetailActivity;
 
 import java.util.HashMap;
@@ -161,7 +162,8 @@ public class MapsController {
         if (!mapsActivity.isLocationsEnabled()) {
             return;
         }
-        LocationController.getInstance().getLocationsNearby(position.longitude, position.latitude, 1, 100) //TODO: calculate radius
+        LocationController.getInstance().getLocationsNearby(position.longitude, position.latitude,
+                                                            currentViewRadius(), 100)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
@@ -207,7 +209,8 @@ public class MapsController {
         if (!mapsActivity.isHeatmapEnabled()) {
             return;
         }
-        SchoenHierController.getInstance().schoenHiersNearby(pos.longitude, pos.latitude, 10, 1000)
+        SchoenHierController.getInstance().schoenHiersNearby(pos.longitude, pos.latitude,
+                                                             currentViewRadius() * 2, 1000)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .flatMapIterable(response -> response.results)
@@ -226,5 +229,14 @@ public class MapsController {
                                 Toast.LENGTH_SHORT),
                         () -> mapsActivity.drawHeatMap(heatPoints)
                 );
+    }
+
+    private int currentViewRadius() {
+        LatLng left = googleMap.getProjection().getVisibleRegion().farLeft;
+        LatLng right = googleMap.getProjection().getVisibleRegion().nearRight;
+        return (int) Math.ceil(DistanceCalculator.distanceInKm(left.latitude,
+                left.longitude,
+                right.latitude,
+                right.longitude));
     }
 }
