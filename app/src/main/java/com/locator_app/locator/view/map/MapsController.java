@@ -207,7 +207,7 @@ public class MapsController {
         if (!mapsActivity.isHeatmapEnabled()) {
             return;
         }
-        SchoenHierController.getInstance().schoenHiersNearby(pos.longitude, pos.latitude, 10, 100)
+        SchoenHierController.getInstance().schoenHiersNearby(pos.longitude, pos.latitude, 10, 1000)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .flatMapIterable(response -> response.results)
