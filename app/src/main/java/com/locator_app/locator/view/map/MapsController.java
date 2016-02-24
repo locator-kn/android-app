@@ -14,7 +14,9 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.VisibleRegion;
 import com.google.maps.android.clustering.ClusterManager;
 import com.locator_app.locator.LocatorApplication;
 import com.locator_app.locator.R;
@@ -162,8 +164,16 @@ public class MapsController {
         if (!mapsActivity.isLocationsEnabled()) {
             return;
         }
+
+        LatLngBounds newLoadableRect = getNewLoadableRect(locationsLoadedRect);
+        if (newLoadableRect == null) {
+            return;
+        }
+        locationsLoadedRect = newLoadableRect;
+
+        Log.d("Maploading", "loading locations");
         LocationController.getInstance().getLocationsNearby(position.longitude, position.latitude,
-                                                            currentViewRadius(), 100)
+                                                            loadableRadius(locationsLoadedRect), 100)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
@@ -209,8 +219,14 @@ public class MapsController {
         if (!mapsActivity.isHeatmapEnabled()) {
             return;
         }
+        LatLngBounds newLoadableRect = getNewLoadableRect(heatmapLoadedRect);
+        if (newLoadableRect == null) {
+            return;
+        }
+        heatmapLoadedRect = newLoadableRect;
+        Log.d("Maploading", "loading schoenhiers");
         SchoenHierController.getInstance().schoenHiersNearby(pos.longitude, pos.latitude,
-                                                             currentViewRadius() * 2, 1000)
+                                                             loadableRadius(heatmapLoadedRect), 1000)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .flatMapIterable(response -> response.results)
@@ -231,12 +247,39 @@ public class MapsController {
                 );
     }
 
-    private int currentViewRadius() {
-        LatLng left = googleMap.getProjection().getVisibleRegion().farLeft;
-        LatLng right = googleMap.getProjection().getVisibleRegion().nearRight;
-        return (int) Math.ceil(DistanceCalculator.distanceInKm(left.latitude,
-                left.longitude,
-                right.latitude,
-                right.longitude));
+    private LatLngBounds locationsLoadedRect = null;
+    private LatLngBounds heatmapLoadedRect = null;
+
+    private LatLngBounds getNewLoadableRect(LatLngBounds loadedRect) {
+        VisibleRegion visibleRegion = googleMap.getProjection().getVisibleRegion();
+        LatLng southwest = visibleRegion.latLngBounds.southwest;
+        LatLng northeast = visibleRegion.latLngBounds.northeast;
+
+        if (loadedRect == null) {
+            return new LatLngBounds(southwest, northeast);
+        } else {
+            if (loadedRect.contains(visibleRegion.farLeft)  &&
+                loadedRect.contains(visibleRegion.farRight) &&
+                loadedRect.contains(visibleRegion.nearLeft) &&
+                loadedRect.contains(visibleRegion.nearRight)) {
+                return null;
+            }
+            return LatLngBounds.builder().include(loadedRect.southwest)
+                    .include(loadedRect.northeast)
+                    .include(visibleRegion.farLeft)
+                    .include(visibleRegion.farRight)
+                    .include(visibleRegion.nearLeft)
+                    .include(visibleRegion.nearRight)
+                    .build();
+        }
+    }
+
+    private int loadableRadius(LatLngBounds loadableRect) {
+        LatLng southwest = loadableRect.southwest;
+        LatLng northeast = loadableRect.northeast;
+        return (int) Math.ceil(DistanceCalculator.distanceInKm(southwest.latitude,
+                                                               southwest.longitude,
+                                                               northeast.latitude,
+                                                               northeast.longitude));
     }
 }
