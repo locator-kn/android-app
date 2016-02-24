@@ -48,6 +48,9 @@ public class LocatorLocation implements LocatorObject, Serializable {
     @SerializedName("images")
     public Images images;
 
+    @SerializedName("favorites")
+    public List<String> favorites = new LinkedList<>();
+
     @Override
     public boolean equals(Object other) {
         return other == this || other instanceof LocatorLocation && id.equals(((LocatorLocation)other).id);

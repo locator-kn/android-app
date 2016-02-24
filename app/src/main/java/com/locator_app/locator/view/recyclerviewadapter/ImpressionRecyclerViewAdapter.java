@@ -275,7 +275,6 @@ public class ImpressionRecyclerViewAdapter
         }
     }
 
-
     class LocationInfoViewHolder extends ViewHolder {
 
         TextView locatorName;
@@ -287,9 +286,23 @@ public class ImpressionRecyclerViewAdapter
         public LocationInfoViewHolder(View itemView) {
             super(itemView);
             locatorName = (TextView)itemView.findViewById(R.id.locatorName);
+            UserController.getInstance().getUser(location.userId)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(
+                            (user) -> {
+                                locatorName.setText(user.name);
+                            },
+                            (err) -> {
+                                locatorName.setText("(unknown)");
+                            }
+                    );
             city = (TextView)itemView.findViewById(R.id.city);
+            city.setText(location.city.title);
             distance = (TextView)itemView.findViewById(R.id.distance);
+            distance.setText("");
             favorites = (TextView)itemView.findViewById(R.id.favorites);
+            favorites.setText(Integer.toString(location.favorites.size()));
             goToHeatmap = (ImageView)itemView.findViewById(R.id.heatmap);
 
             goToHeatmap.setOnClickListener(v -> {
@@ -302,7 +315,6 @@ public class ImpressionRecyclerViewAdapter
 
         @Override
         public void bind(AbstractImpression impression) {
-
         }
     }
 
