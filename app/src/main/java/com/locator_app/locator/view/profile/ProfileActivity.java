@@ -12,6 +12,7 @@ import com.locator_app.locator.R;
 import com.locator_app.locator.controller.LocationController;
 import com.locator_app.locator.controller.UserController;
 import com.locator_app.locator.model.User;
+import com.locator_app.locator.view.HomeActivity;
 import com.locator_app.locator.view.map.MapsActivity;
 import com.locator_app.locator.view.bubble.BubbleView;
 import com.locator_app.locator.view.fragments.FragmentAdapter;
@@ -154,9 +155,10 @@ public class ProfileActivity extends FragmentActivity {
         finish();
     }
 
-    @OnClick(R.id.showMap)
-    public void onShowMapClicked() {
-        Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
+    @OnClick(R.id.goToHomeScreen)
+    public void onGoToHomeScreenClicked() {
+        Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
 }
