@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    tools:context=".view.fragments.LocationStatsBar">
+    tools:context=".view.fragments.LocationStatsBar"
+    android:background="@color/colorWhite">
 
     <Button
         android:layout_width="50dp"

@@ -103,19 +103,19 @@ public class MapsController {
 
         clusterManager.getMarkerCollection().setOnInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
             @Override
-            public View getInfoWindow(Marker marker) {
+            public View getInfoContents(Marker marker) {
                 return null;
             }
 
             @Override
-            public View getInfoContents(Marker marker) {
+            public View getInfoWindow(Marker marker) {
                 if (markerIDToLocationMarker.containsKey(marker.getId())) {
                     LocationMarker locationMarker = markerIDToLocationMarker.get(marker.getId());
                     if (markerToLocation.containsKey(locationMarker)) {
                         LocatorLocation location = markerToLocation.get(locationMarker);
 
-                        infoWindow.setImage(location.images.getNormal(), mapsActivity);
                         infoWindow.setLocationTitle(location.title);
+                        infoWindow.setImage(location.images.getNormal(), mapsActivity, marker);
 
                         return infoWindow.getView();
                     }
@@ -223,7 +223,7 @@ public class MapsController {
             return;
         }
         heatmapLoadedRect = newLoadableRect;
-        
+
         SchoenHierController.getInstance().schoenHiersNearby(pos.longitude, pos.latitude,
                                                              loadableRadius(heatmapLoadedRect), 1000)
                 .subscribeOn(Schedulers.io())
