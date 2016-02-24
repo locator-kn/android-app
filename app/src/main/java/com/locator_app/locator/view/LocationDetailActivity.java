@@ -15,10 +15,8 @@ import com.locator_app.locator.controller.LocationController;
 import com.locator_app.locator.model.LocatorLocation;
 import com.locator_app.locator.model.impressions.AbstractImpression;
 import com.locator_app.locator.model.impressions.ImageImpression;
-import com.locator_app.locator.util.DistanceCalculator;
 import com.locator_app.locator.util.GpsService;
 import com.locator_app.locator.view.fragments.ImageFragmentAdapter;
-import com.locator_app.locator.view.map.MapsActivity;
 import com.locator_app.locator.view.recyclerviewadapter.ImpressionRecyclerViewAdapter;
 
 import java.util.LinkedList;
@@ -29,7 +27,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func2;
 import rx.schedulers.Schedulers;
 
 public class LocationDetailActivity extends FragmentActivity {
@@ -64,6 +61,7 @@ public class LocationDetailActivity extends FragmentActivity {
         viewPager.setAdapter(imageFragmentAdapter);
 
         impressionAdapter = new ImpressionRecyclerViewAdapter();
+        impressionAdapter.setLocation(location);
 
         impressionsRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         impressionsRecyclerView.addItemDecoration(new DividerItemDecoration(getApplicationContext(), null));
@@ -89,7 +87,7 @@ public class LocationDetailActivity extends FragmentActivity {
 
     private void handleImpressions(List<AbstractImpression> impressions) {
         this.impressions = impressions;
-        impressionAdapter.setImpressions(impressions, this.location);
+        impressionAdapter.setImpressions(impressions);
         loadImageImpressionsToImageFragmentAdapter();
     }
 

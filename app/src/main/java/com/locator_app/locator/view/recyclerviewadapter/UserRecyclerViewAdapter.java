@@ -69,12 +69,16 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
             imageView = (CircleImageView)view.findViewById(R.id.bubbleView);
 
             TextView bubbleInfo = (TextView) view.findViewById(R.id.bubble_info);
-            bubbleInfo.setVisibility(View.GONE);
+            bubbleInfo.setText("");
         }
 
         public void update(User user) {
             title.setText(user.name);
-            description.setText(user.description);
+            if (user.description.isEmpty()) {
+                description.setVisibility(View.GONE);
+            } else {
+                description.setText(user.description);
+            }
             Glide.with(LocatorApplication.getAppContext())
                     .load(user.thumbnailUri())
                     .dontAnimate()
