@@ -2,12 +2,7 @@ package com.locator_app.locator.view.recyclerviewadapter;
 
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.media.Image;
-import android.media.ThumbnailUtils;
 import android.net.Uri;
-import android.provider.MediaStore;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +15,7 @@ import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
+import com.locator_app.locator.LocatorApplication;
 import com.locator_app.locator.R;
 import com.locator_app.locator.controller.UserController;
 import com.locator_app.locator.model.LocatorLocation;
@@ -29,7 +25,10 @@ import com.locator_app.locator.model.impressions.ImageImpression;
 import com.locator_app.locator.model.impressions.TextImpression;
 import com.locator_app.locator.model.impressions.VideoImpression;
 import com.locator_app.locator.util.DateConverter;
+import com.locator_app.locator.view.map.MapsActivity;
 import com.locator_app.locator.view.profile.ProfileActivity;
+
+import org.w3c.dom.Text;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -41,8 +40,10 @@ import rx.schedulers.Schedulers;
 public class ImpressionRecyclerViewAdapter
         extends RecyclerView.Adapter<ImpressionRecyclerViewAdapter.ViewHolder>{
 
-    final int locationDescriptionViewType = 100;
-    final int createNewImpressionViewType = 200;
+    final int locationInformationViewType = 100;
+    final int locationDescriptionViewType = 200;
+    final int createNewImpressionViewType = 300;
+    final int numberOfAdditionalInfoTypes = 3;
 
     List<AbstractImpression> impressions = new LinkedList<>();
     LocatorLocation location = null;
@@ -69,6 +70,10 @@ public class ImpressionRecyclerViewAdapter
             final int cardId = R.layout.card_location_description;
             View v = LayoutInflater.from(parent.getContext()).inflate(cardId, parent, false);
             return new LocationDescriptionViewHolder(v);
+        } else if (viewType == locationInformationViewType) {
+            final int cardId = R.layout.card_location_information;
+            View v = LayoutInflater.from(parent.getContext()).inflate(cardId, parent, false);
+            return new LocationInfoViewHolder(v);
         } else {
             ImpressionType type = supportedImpressionTypes.get(viewType);
             if (type == ImpressionType.IMAGE) {
@@ -90,24 +95,26 @@ public class ImpressionRecyclerViewAdapter
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        if (position >= 2) {
-            holder.bind(impressions.get(position - 2));
+        if (position >= numberOfAdditionalInfoTypes) {
+            holder.bind(impressions.get(position - numberOfAdditionalInfoTypes));
         }
     }
 
     @Override
     public int getItemCount() {
-        return impressions.size() + 2;
+        return impressions.size() + numberOfAdditionalInfoTypes;
     }
 
     @Override
     public int getItemViewType(int position) {
-        if (position == 0) { // show location description card
+        if (position == 0) { // show location information card
+            return locationInformationViewType;
+        } else if (position == 1) { // show location description card
             return locationDescriptionViewType;
-        } else if (position == 1) { // create new impression card
+        } else if (position == 2) { // create new impression card
             return createNewImpressionViewType;
         }
-        ImpressionType type = impressions.get(position - 2).type();
+        ImpressionType type = impressions.get(position - numberOfAdditionalInfoTypes).type();
         return supportedImpressionTypes.indexOf(type);
     }
 
@@ -265,6 +272,37 @@ public class ImpressionRecyclerViewAdapter
                             }
                     );
             date.setText(DateConverter.toddMMyyyy(videoImpression.getCreateDate()));
+        }
+    }
+
+
+    class LocationInfoViewHolder extends ViewHolder {
+
+        TextView locatorName;
+        TextView distance;
+        TextView city;
+        TextView favorites;
+        ImageView goToHeatmap;
+
+        public LocationInfoViewHolder(View itemView) {
+            super(itemView);
+            locatorName = (TextView)itemView.findViewById(R.id.locatorName);
+            city = (TextView)itemView.findViewById(R.id.city);
+            distance = (TextView)itemView.findViewById(R.id.distance);
+            favorites = (TextView)itemView.findViewById(R.id.favorites);
+            goToHeatmap = (ImageView)itemView.findViewById(R.id.heatmap);
+
+            goToHeatmap.setOnClickListener(v -> {
+                Intent intent = new Intent(goToHeatmap.getContext(), MapsActivity.class);
+                intent.putExtra("lon", location.geoTag.getLongitude());
+                intent.putExtra("lat", location.geoTag.getLatitude());
+                goToHeatmap.getContext().startActivity(intent);
+            });
+        }
+
+        @Override
+        public void bind(AbstractImpression impression) {
+
         }
     }
 
