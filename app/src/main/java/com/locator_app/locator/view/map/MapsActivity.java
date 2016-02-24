@@ -68,19 +68,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         ButterKnife.bind(this);
-        
+
         if (getIntent().hasExtra("lon") && getIntent().hasExtra("lat")) {
             double lon = getIntent().getDoubleExtra("lon", 0.0);
             double lat = getIntent().getDoubleExtra("lat", 0.0);
             initialCameraPosition = new LatLng(lat, lon);
         }
-
-        Glide.with(this).load(R.drawable.profile).asBitmap().override(60, 60).into(new SimpleTarget<Bitmap>() {
-            @Override
-            public void onResourceReady(Bitmap resource, GlideAnimation glideAnimation) {
-                MapsActivity.this.currentPos = resource;
-            }
-        });
 
         gpsService = (GpsService) getSupportFragmentManager()
                 .findFragmentById(R.id.gpsService);
