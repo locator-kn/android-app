@@ -2,6 +2,7 @@ package com.locator_app.locator.view.recyclerviewadapter;
 
 
 import android.content.Intent;
+import android.media.Image;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -118,6 +119,9 @@ public class ImpressionRecyclerViewAdapter
             date = (TextView)itemView.findViewById(R.id.date);
             userName = (TextView)itemView.findViewById(R.id.userName);
             impressionImage = (ImageView)itemView.findViewById(R.id.impressionImage);
+
+            ImageView impressionType = (ImageView)itemView.findViewById(R.id.impressionType);
+            Glide.with(itemView.getContext()).load(R.drawable.small_gray_photo).into(impressionType);
         }
 
         @Override
@@ -167,6 +171,9 @@ public class ImpressionRecyclerViewAdapter
             date = (TextView)itemView.findViewById(R.id.date);
             userName = (TextView)itemView.findViewById(R.id.userName);
             impressionText = (TextView)itemView.findViewById(R.id.impressionText);
+
+            ImageView impressionType = (ImageView)itemView.findViewById(R.id.impressionType);
+            Glide.with(itemView.getContext()).load(R.drawable.small_gray_chat).into(impressionType);
         }
 
         @Override
