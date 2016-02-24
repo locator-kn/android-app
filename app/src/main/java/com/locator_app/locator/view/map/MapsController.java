@@ -114,6 +114,7 @@ public class MapsController {
                     if (markerToLocation.containsKey(locationMarker)) {
                         LocatorLocation location = markerToLocation.get(locationMarker);
 
+                        
                         infoWindow.setLocationTitle(location.title);
                         infoWindow.setImage(location.images.getNormal(), mapsActivity, marker);
                         infoWindow.setCreatorName(location.userId, marker);

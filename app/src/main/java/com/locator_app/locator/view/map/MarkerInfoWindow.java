@@ -36,17 +36,9 @@ public class MarkerInfoWindow extends Fragment {
     private String nameText = "Gott";
     private String currentUserId = "";
 
-    @Bind(R.id.viewsTextView)
-    TextView viewsTextView;
-    private String viewsText = "0";
-
     @Bind(R.id.followersTextView)
     TextView followersTextView;
     private String followersText = "0";
-
-    @Bind(R.id.journeysTextView)
-    TextView journeysTextView;
-    private String journeysText = "0";
 
     @Bind(R.id.titleImageView)
     ImageView titleImageView;
@@ -69,9 +61,7 @@ public class MarkerInfoWindow extends Fragment {
 
     public View getView() {
         titleTextView.setText(titleText);
-        viewsTextView.setText(viewsText);
         followersTextView.setText(followersText);
-        journeysTextView.setText(journeysText);
 
         return view;
     }
@@ -97,16 +87,8 @@ public class MarkerInfoWindow extends Fragment {
         }
     }
 
-    public void setViews(int views) {
-        viewsText = String.valueOf(views);
-    }
-
     public void setFollowers(int followers) {
         followersText = String.valueOf(followers);
-    }
-
-    public void setJourneys(int journeys) {
-        journeysText = String.valueOf(journeys);
     }
 
     synchronized

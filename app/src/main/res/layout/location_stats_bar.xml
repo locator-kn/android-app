@@ -82,30 +82,6 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="0"
-                android:id="@+id/viewsTextView"
-                android:textSize="@dimen/text_size_small" />
-
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="fill_parent"
-                android:id="@+id/viewsIcon"
-                android:src="@drawable/location_detail_views"
-                android:padding="3dp"
-                android:antialias="true" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:id="@+id/textView4"
-                android:text=" · "
-                android:textSize="@dimen/text_size_small" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="0"
                 android:id="@+id/followersTextView"
                 android:textSize="@dimen/text_size_small" />
 
@@ -114,31 +90,6 @@
                 android:layout_height="fill_parent"
                 android:id="@+id/followersIcon"
                 android:src="@drawable/location_detail_likes"
-                android:padding="3dp"
-                android:antialias="true" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text=" · "
-                android:id="@+id/textView6"
-                android:singleLine="true"
-                android:textSize="@dimen/text_size_small" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="0"
-                android:id="@+id/journeysTextView"
-                android:textSize="@dimen/text_size_small" />
-
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="fill_parent"
-                android:id="@+id/journeysIcon"
-                android:src="@drawable/location_detail_lists"
                 android:padding="3dp"
                 android:antialias="true" />
 
