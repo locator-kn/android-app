@@ -130,13 +130,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         if (enabled) {
             if (googleMap != null) {
+                if (tileOverlay != null) {
+                    tileOverlay.setVisible(true);
+                }
                 LatLng mapPos = googleMap.getCameraPosition().target;
                 mapsController.drawHeatMapAt(mapPos);
             }
         } else {
             if (tileOverlay != null) {
-                curNumberOfHeatPoints = 0;
-                tileOverlay.remove();
+                tileOverlay.setVisible(false);
             }
         }
 
