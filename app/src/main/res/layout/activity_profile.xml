@@ -41,7 +41,8 @@
                         android:id="@+id/goBack"
                         android:src="@drawable/go_back_icon_white"
                         android:layout_weight="1"
-                        android:layout_margin="13dp" />
+                        android:layout_marginTop="15dp"
+                        android:layout_marginBottom="15dp" />
 
                     <TextView
                         android:id="@+id/userName"
@@ -60,7 +61,8 @@
                         android:layout_height="fill_parent"
                         android:src="@drawable/go_to_bubblescreen"
                         android:layout_weight="1"
-                        android:layout_margin="10dp" />
+                        android:layout_marginTop="15dp"
+                        android:layout_marginBottom="15dp" />
                 </LinearLayout>
 
                 <!-- user profile picture -->
