@@ -41,8 +41,12 @@ public class ImpressionRecyclerViewAdapter
     final List<AbstractImpression.ImpressionType> supportedImpressionTypes =
             Arrays.asList(ImpressionType.IMAGE, ImpressionType.VIDEO, ImpressionType.TEXT);
 
-    public void setImpressions(List<AbstractImpression> impressions, LocatorLocation location) {
+    public void setLocation(LocatorLocation location) {
         this.location = location;
+        notifyDataSetChanged();
+    }
+
+    public void setImpressions(List<AbstractImpression> impressions) {
         this.impressions = impressions;
         notifyDataSetChanged();
     }
@@ -83,8 +87,6 @@ public class ImpressionRecyclerViewAdapter
 
     @Override
     public int getItemCount() {
-        if (impressions.isEmpty())
-            return 0;
         return impressions.size() + 2;
     }
 

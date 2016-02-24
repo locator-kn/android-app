@@ -64,6 +64,7 @@ public class LocationDetailActivity extends FragmentActivity {
         viewPager.setAdapter(imageFragmentAdapter);
 
         impressionAdapter = new ImpressionRecyclerViewAdapter();
+        impressionAdapter.setLocation(location);
 
         impressionsRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         impressionsRecyclerView.addItemDecoration(new DividerItemDecoration(getApplicationContext(), null));
@@ -89,7 +90,7 @@ public class LocationDetailActivity extends FragmentActivity {
 
     private void handleImpressions(List<AbstractImpression> impressions) {
         this.impressions = impressions;
-        impressionAdapter.setImpressions(impressions, this.location);
+        impressionAdapter.setImpressions(impressions);
         loadImageImpressionsToImageFragmentAdapter();
     }
 
