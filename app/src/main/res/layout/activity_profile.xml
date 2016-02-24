@@ -17,7 +17,7 @@
             android:id="@+id/appbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/transparent">
+            android:background="@drawable/shape_gradient">
 
             <LinearLayout
                 android:orientation="vertical"
@@ -39,26 +39,28 @@
                         android:layout_width="0dp"
                         android:layout_height="fill_parent"
                         android:id="@+id/goBack"
-                        android:src="@drawable/go_back_icon_black"
-                        android:layout_weight="1" />
+                        android:src="@drawable/go_back_icon_white"
+                        android:layout_weight="1"
+                        android:layout_margin="13dp" />
 
                     <TextView
                         android:id="@+id/userName"
                         android:layout_width="0dp"
                         android:layout_height="fill_parent"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
                         android:text="User Name"
                         android:gravity="center"
                         android:layout_weight="5"
                         android:enabled="false"
-                        android:textColor="@android:color/black" />
+                        android:textColor="@android:color/white" />
 
                     <ImageView
-                        android:id="@+id/showMap"
+                        android:id="@+id/goToHomeScreen"
                         android:layout_width="0dp"
                         android:layout_height="fill_parent"
-                        android:src="@drawable/map_icon_black"
-                        android:layout_weight="1" />
+                        android:src="@drawable/go_to_bubblescreen"
+                        android:layout_weight="1"
+                        android:layout_margin="10dp" />
                 </LinearLayout>
 
                 <!-- user profile picture -->
@@ -164,7 +166,8 @@
                 app:tabTextAppearance="@android:style/TextAppearance.Widget.TabWidget"
                 app:tabTextColor="@android:color/white"
                 app:tabSelectedTextColor="@android:color/white"
-                app:layout_scrollFlags="scroll|snap|enterAlways"/>
+                app:layout_scrollFlags="scroll|snap|enterAlways"
+                android:background="@drawable/shape_gradient_bottom_up"/>
 
         </android.support.design.widget.AppBarLayout>
 
