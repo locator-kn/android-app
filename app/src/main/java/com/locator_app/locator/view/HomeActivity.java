@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MotionEvent;
 import android.view.Window;
 import android.widget.Toast;
 
@@ -24,6 +25,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnLongClick;
+import butterknife.OnTouch;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -63,6 +65,17 @@ public class HomeActivity extends AppCompatActivity {
     void onShowMapClicked() {
         Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
         startActivity(intent);
+    }
+
+    @OnTouch(R.id.schoenHierBubble)
+    boolean onSchoenHierBubbleTouch(MotionEvent arg1) {
+        if (arg1.getAction()== MotionEvent.ACTION_DOWN) {
+            schoenHierBubble.setAlpha((float) 0.8);
+        }
+        else if (arg1.getAction()==MotionEvent.ACTION_UP){
+            schoenHierBubble.setAlpha((float) 1);
+        }
+        return false;
     }
 
     @OnClick(R.id.schoenHierBubble)

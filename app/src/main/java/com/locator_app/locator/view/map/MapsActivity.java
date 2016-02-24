@@ -96,7 +96,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         else if (arg1.getAction()==MotionEvent.ACTION_UP){
             schoenHierButton.setAlpha((float) 1);
         }
-        return true;
+        return false;
     }
 
     @OnClick(R.id.viewOptionsButton)
