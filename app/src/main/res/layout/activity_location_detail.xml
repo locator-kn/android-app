@@ -90,7 +90,9 @@
             android:id="@+id/impressions"
             android:layout_width="fill_parent"
             android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            android:background="#ffffff" />
 
     </android.support.design.widget.CoordinatorLayout>
 
