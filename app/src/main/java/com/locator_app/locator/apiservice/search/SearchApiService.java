@@ -36,26 +36,11 @@ public class SearchApiService {
 //                .flatMap(this::parseSchoenHiersNearbyResponse);
     }
 
-    private Observable<SchoenHiersNearbyResponse> parseSchoenHiersNearbyResponse(Response response) {
+    private Observable<SchoenHiersNearbyResponse> parseSearchResponse(Response response) {
         if (response.isSuccess()) {
             return Observable.just((SchoenHiersNearbyResponse) response.body());
         }
         return Observable.error(new Exception("http-error: " + Integer.toString(response.code())));
-    }
-
-    public Observable<SchoenHiersResponse> markAsSchoenHier(SchoenHierRequest request) {
-        return service.markAsSchoenHier(request)
-                .onErrorResumeNext(throwable -> {
-                    return Observable.error(new Exception(throwable.getMessage()));
-                })
-                .flatMap(this::parseMarkAsSchoenHierResponse);
-    }
-
-    private Observable<SchoenHiersResponse> parseMarkAsSchoenHierResponse(Response<SchoenHiersResponse> response) {
-        if (response.isSuccess()) {
-            return Observable.just(response.body());
-        }
-        return Observable.error(new Exception("http-error" + Integer.toString(response.code())));
     }
 
     private void handleError(Throwable throwable) {
