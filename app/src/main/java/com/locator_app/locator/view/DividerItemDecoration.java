@@ -3,6 +3,8 @@ package com.locator_app.locator.view;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
@@ -15,8 +17,8 @@ import android.view.View;
 public class DividerItemDecoration extends RecyclerView.ItemDecoration {
 
     private Drawable mDivider;
-    private boolean mShowFirstDivider = false;
-    private boolean mShowLastDivider = false;
+    private boolean mShowFirstDivider = true;
+    private boolean mShowLastDivider = true;
 
     int mOrientation = -1;
 
@@ -24,6 +26,9 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
         final TypedArray a = context
                 .obtainStyledAttributes(attrs, new int[]{android.R.attr.listDivider});
         mDivider = a.getDrawable(0);
+        if (mDivider != null) {
+            mDivider.setColorFilter(Color.DKGRAY, PorterDuff.Mode.MULTIPLY);
+        }
         a.recycle();
     }
 
