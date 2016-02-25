@@ -113,4 +113,22 @@ public class LocationsApiService {
         }
         return Observable.error(new Exception("http-code: " + Integer.toString(response.code())));
     }
+
+
+    public Observable<UnFavorResponse> favorLocation(String locationId) {
+        return service.favorLocation(locationId)
+                .flatMap(this::parseUnFavorLocationResponse);
+    }
+
+    public Observable<UnFavorResponse> unfavorLocation(String locationId) {
+        return service.unfavorLocation(locationId)
+                .flatMap(this::parseUnFavorLocationResponse);
+    }
+
+    private Observable<UnFavorResponse> parseUnFavorLocationResponse(Response<UnFavorResponse> response) {
+        if (response.isSuccess()) {
+            return Observable.just(response.body());
+        }
+        return Observable.error(new Exception("http-code: " + Integer.toString(response.code())));
+    }
 }
