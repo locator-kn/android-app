@@ -2,6 +2,7 @@ package com.locator_app.locator.view.map;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.location.Location;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.View;
@@ -90,10 +91,22 @@ public class MapsController {
             public void onClusterItemInfoWindowClick(LocationMarker locationMarker) {
                 if (markerToLocation.containsKey(locationMarker)) {
                     LocatorLocation location = markerToLocation.get(locationMarker);
-
-                    Intent intent = new Intent(mapsActivity, LocationDetailActivity.class);
-                    intent.putExtra("location", location);
-                    mapsActivity.startActivity(intent);
+                    
+                    LocationController.getInstance().getLocationById(location.id)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(
+                                    (newLocationFromServer) -> {
+                                        Intent intent = new Intent(mapsActivity, LocationDetailActivity.class);
+                                        intent.putExtra("location", newLocationFromServer);
+                                        mapsActivity.startActivity(intent);
+                                    },
+                                    (error) -> {
+                                        Intent intent = new Intent(mapsActivity, LocationDetailActivity.class);
+                                        intent.putExtra("location", location);
+                                        mapsActivity.startActivity(intent);
+                                    }
+                            );
                 }
             }
         });
