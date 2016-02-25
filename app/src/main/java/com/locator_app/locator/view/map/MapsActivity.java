@@ -85,7 +85,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @OnClick(R.id.schoenHierButton)
     void onschoenHierButtonClick() {
-        SchoenHierController.getInstance().markCurPosAsSchoenHier(gpsService);
+        SchoenHierController.getInstance().markCurPosAsSchoenHier(gpsService)
+                .map(response -> new LatLng(response.geoTag.getLatitude(),
+                        response.geoTag.getLongitude()))
+                .subscribe(
+                        (latLng) -> {
+                            mapsController.addHeatpointAndRedraw(latLng);
+                        },
+                        (error) -> {
+                        }
+                );
     }
 
     @OnTouch(R.id.schoenHierButton)
@@ -102,9 +111,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @OnClick(R.id.viewOptionsButton)
     void onviewOptionsButtonClick() {
         setToggleButton(!isViewOptionsEnabled,
-                        viewOptionsButton,
-                        R.drawable.map_view_inverted,
-                        R.drawable.map_view);
+                viewOptionsButton,
+                R.drawable.map_view_inverted,
+                R.drawable.map_view);
         isViewOptionsEnabled = !isViewOptionsEnabled;
 
         enableToggleButtons(isViewOptionsEnabled);

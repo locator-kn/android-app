@@ -91,7 +91,7 @@ public class MapsController {
             public void onClusterItemInfoWindowClick(LocationMarker locationMarker) {
                 if (markerToLocation.containsKey(locationMarker)) {
                     LocatorLocation location = markerToLocation.get(locationMarker);
-                    
+
                     LocationController.getInstance().getLocationById(location.id)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
@@ -228,6 +228,19 @@ public class MapsController {
     }
 
     private List<LatLng> heatPoints = new LinkedList<>();
+
+    public void addHeatPoint(LatLng latLng) {
+        heatPoints.add(latLng);
+    }
+
+    public void redrawHeatpoints() {
+        mapsActivity.drawHeatMap(heatPoints);
+    }
+
+    public void addHeatpointAndRedraw(LatLng latLng) {
+        addHeatPoint(latLng);
+        redrawHeatpoints();
+    }
 
     public void drawHeatMapAt(LatLng pos) {
         if (!mapsActivity.isHeatmapEnabled()) {

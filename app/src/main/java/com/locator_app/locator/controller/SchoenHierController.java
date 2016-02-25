@@ -22,27 +22,22 @@ public class SchoenHierController {
         return schoenHierService.schoenHiersNearby(lon, lat, dist, max);
     }
 
-    public void markCurPosAsSchoenHier(GpsService gpsService) {
-        gpsService.getCurLocationOnIOThread(this::markAsSchoenHier);
+    public Observable<SchoenHiersResponse> markCurPosAsSchoenHier(GpsService gpsService) {
+        return gpsService.getCurLocationObservable()
+                .flatMap(this::markAsSchoenHier);
     }
 
-    private void markAsSchoenHier(android.location.Location location) {
+    private Observable<SchoenHiersResponse> markAsSchoenHier(android.location.Location location) {
         SchoenHierRequest request = new SchoenHierRequest();
         request.lon = location.getLongitude();
         request.lat = location.getLatitude();
-        markAsSchoenHier(request);
+        return markAsSchoenHier(request);
     }
 
     public Observable<SchoenHiersResponse> markAsSchoenHier(SchoenHierRequest request) {
         return schoenHierService.markAsSchoenHier(request)
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnError((exception) -> Toast.makeText(LocatorApplication.getAppContext(),
-                                                         "Could not mark as Schön Hier",
-                                                         Toast.LENGTH_LONG).show())
-                .doOnCompleted(() -> Toast.makeText(LocatorApplication.getAppContext(),
-                                                    "geschönhiert",
-                                                    Toast.LENGTH_SHORT).show());
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     private static SchoenHierController instance;
