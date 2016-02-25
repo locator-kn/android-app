@@ -76,13 +76,20 @@ public class LocationDetailActivity extends FragmentActivity {
 
         loadImpressions();
         setupLocationInformation();
-        heartImageView.setOnClickListener(v -> {
+    }
+
+    @OnClick(R.id.heart)
+    void onHeartClick() {
+        if (UserController.getInstance().loggedIn()) {
             if (userFavorsLocation()) {
                 doUnfavorLocation();
             } else {
                 doFavorLocation();
             }
-        });
+        } else {
+            Toast.makeText(getApplicationContext(), "Hierfür musst du dich einloggen :-)",
+                    Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void doFavorLocation() {
@@ -91,7 +98,8 @@ public class LocationDetailActivity extends FragmentActivity {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         (result) -> {
-                            location.favorites.remove(UserController.getInstance().me()._id);
+                            location.favorites.add(UserController.getInstance().me()._id);
+                            impressionAdapter.updateFavorCounter();
                             updateFavorHeart();
                         },
                         (err) -> {
@@ -106,7 +114,8 @@ public class LocationDetailActivity extends FragmentActivity {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         (result) -> {
-                            location.favorites.add(UserController.getInstance().me()._id);
+                            location.favorites.remove(UserController.getInstance().me()._id);
+                            impressionAdapter.updateFavorCounter();
                             updateFavorHeart();
                         },
                         (err) -> {
@@ -117,7 +126,7 @@ public class LocationDetailActivity extends FragmentActivity {
 
     private void handleUnFavorError(Throwable err) {
         Toast.makeText(getApplicationContext(), "uuups, das hat leider nicht geklappt :-/",
-                Toast.LENGTH_LONG).show();
+                Toast.LENGTH_SHORT).show();
     }
 
     private void loadImpressions() {
@@ -172,17 +181,12 @@ public class LocationDetailActivity extends FragmentActivity {
 
     private void updateFavorHeart() {
         int heartResourceId = userFavorsLocation() ? R.drawable.small_heart_red : R.drawable.small_heart_white;
-        Glide.with(getApplicationContext()).load(heartResourceId).animate(1000)
+        Glide.with(getApplicationContext()).load(heartResourceId)
                 .into(heartImageView);
     }
 
     private boolean userFavorsLocation() {
-        boolean loggedIn = UserController.getInstance().loggedIn();
-        if (!loggedIn) {
-            return false;
-        }
-        User me = UserController.getInstance().me();
-        return location.favorites.contains(me._id);
+        return location.favorites.contains(UserController.getInstance().me()._id);
     }
 
     private void showDistanceToLocation() {

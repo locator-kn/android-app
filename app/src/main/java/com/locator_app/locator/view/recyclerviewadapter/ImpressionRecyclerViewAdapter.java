@@ -47,6 +47,7 @@ public class ImpressionRecyclerViewAdapter
 
     List<AbstractImpression> impressions = new LinkedList<>();
     LocatorLocation location = null;
+    LocationInfoViewHolder locationInfo = null;
     final List<AbstractImpression.ImpressionType> supportedImpressionTypes =
             Arrays.asList(ImpressionType.IMAGE, ImpressionType.VIDEO, ImpressionType.TEXT);
 
@@ -57,6 +58,11 @@ public class ImpressionRecyclerViewAdapter
 
     public void setImpressions(List<AbstractImpression> impressions) {
         this.impressions = impressions;
+        notifyDataSetChanged();
+    }
+
+    public void updateFavorCounter() {
+        locationInfo.updateFavorCounter();
         notifyDataSetChanged();
     }
 
@@ -71,9 +77,12 @@ public class ImpressionRecyclerViewAdapter
             View v = LayoutInflater.from(parent.getContext()).inflate(cardId, parent, false);
             return new LocationDescriptionViewHolder(v);
         } else if (viewType == locationInformationViewType) {
-            final int cardId = R.layout.card_location_information;
-            View v = LayoutInflater.from(parent.getContext()).inflate(cardId, parent, false);
-            return new LocationInfoViewHolder(v);
+            if (locationInfo == null) {
+                final int cardId = R.layout.card_location_information;
+                View v = LayoutInflater.from(parent.getContext()).inflate(cardId, parent, false);
+                locationInfo = new LocationInfoViewHolder(v);
+            }
+            return locationInfo;
         } else {
             ImpressionType type = supportedImpressionTypes.get(viewType);
             if (type == ImpressionType.IMAGE) {
@@ -315,6 +324,10 @@ public class ImpressionRecyclerViewAdapter
 
         @Override
         public void bind(AbstractImpression impression) {
+        }
+
+        public void updateFavorCounter() {
+            favorites.setText(Integer.toString(location.favorites.size()));
         }
     }
 
