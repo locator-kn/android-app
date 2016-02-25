@@ -40,6 +40,12 @@ public class LocationsApiService {
 
         @GET(Api.version + "/locations/{locationId}/impressions")
         Observable<Response<List<Impression>>> getImpressionsByLocationId(@Path("locationId") String locationId);
+
+        @POST(Api.version + "/locations/{locationId}/favor")
+        Observable<Response<UnFavorResponse>> favorLocation(@Path("locationId") String locationId);
+
+        @POST(Api.version + "/locations/{locationId}/unfavor")
+        Observable<Response<UnFavorResponse>> unfavorLocation(@Path("locationId") String locationId);
     }
 
     LocationsApi service = ServiceFactory.createService(LocationsApi.class);
