@@ -6,12 +6,15 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.locator_app.locator.R;
 import com.locator_app.locator.controller.LocationController;
+import com.locator_app.locator.controller.UserController;
 import com.locator_app.locator.model.LocatorLocation;
 import com.locator_app.locator.model.impressions.AbstractImpression;
 import com.locator_app.locator.model.impressions.ImageImpression;
@@ -43,6 +46,9 @@ public class LocationDetailActivity extends FragmentActivity {
     @Bind(R.id.impressions)
     RecyclerView impressionsRecyclerView;
 
+    @Bind(R.id.heart)
+    ImageView heartImageView;
+
     ImageFragmentAdapter imageFragmentAdapter;
     ImpressionRecyclerViewAdapter impressionAdapter;
 
@@ -69,6 +75,13 @@ public class LocationDetailActivity extends FragmentActivity {
 
         loadImpressions();
         setupLocationInformation();
+        installOnHeartClickListener();
+    }
+
+    private void installOnHeartClickListener() {
+        heartImageView.setOnClickListener(v -> {
+
+        });
     }
 
     private void loadImpressions() {
@@ -118,6 +131,11 @@ public class LocationDetailActivity extends FragmentActivity {
     private void setupLocationInformation() {
         locationTitle.setText(location.title);
         showDistanceToLocation();
+        UserController controller = UserController.getInstance();
+        if (controller.loggedIn() && location.favorites.contains(controller.me()._id)) {
+            Glide.with(getApplicationContext()).load(R.drawable.small_heart_red).animate(1000)
+                    .into(heartImageView);
+        }
     }
 
     private void showDistanceToLocation() {
