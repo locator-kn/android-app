@@ -7,8 +7,7 @@
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="10dp">
+            android:layout_height="match_parent">
 
             <LinearLayout
                 android:orientation="vertical"
@@ -41,7 +40,8 @@
                         android:textAppearance="?android:attr/textAppearanceSmall"
                         android:text=" · "
                         android:singleLine="true"
-                        android:textSize="@dimen/text_size_small" />
+                        android:textSize="@dimen/text_size_small"
+                        android:visibility="invisible" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -52,7 +52,8 @@
                         android:textSize="14sp"
                         android:textStyle="bold"
                         android:ellipsize="end"
-                        android:singleLine="true" />
+                        android:singleLine="true"
+                        android:visibility="invisible" />
 
                 </LinearLayout>
 
