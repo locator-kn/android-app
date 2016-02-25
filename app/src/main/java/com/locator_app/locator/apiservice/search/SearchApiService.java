@@ -2,17 +2,16 @@ package com.locator_app.locator.apiservice.search;
 
 import com.locator_app.locator.apiservice.Api;
 import com.locator_app.locator.apiservice.ServiceFactory;
-import com.locator_app.locator.apiservice.schoenhier.SchoenHierRequest;
 import com.locator_app.locator.apiservice.schoenhier.SchoenHiersNearbyResponse;
-import com.locator_app.locator.apiservice.schoenhier.SchoenHiersResponse;
+import com.locator_app.locator.apiservice.users.RegistrationResponse;
+import com.locator_app.locator.model.LocatorLocation;
 
 import java.net.UnknownHostException;
+import java.util.List;
 
 import retrofit.HttpException;
 import retrofit.Response;
-import retrofit.http.Body;
 import retrofit.http.GET;
-import retrofit.http.POST;
 import retrofit.http.Path;
 import retrofit.http.Query;
 import rx.Observable;
@@ -21,24 +20,26 @@ public class SearchApiService {
     public interface SearchApi {
 
         @GET(Api.version + "/locations/search/{searchString}")
-        Observable<SearchResponse> search(@Path("searchString") String searchString,
-                                          @Query("long") double lon,
-                                          @Query("lat") double lat);
+        Observable<Response<SearchResponse>> search(@Path("searchString") String searchString,
+                                                    @Query("long") double lon,
+                                                    @Query("lat") double lat);
     }
 
     private SearchApi service = ServiceFactory.createService(SearchApi.class);
 
-    public Observable<SearchResponse> search(String searchString,
+    public Observable<List<LocatorLocation>> search(String searchString,
                                              double lon,
                                              double lat) {
-        return service.search(searchString, lon, lat);
-//                .doOnError(this::handleError)
-//                .flatMap(this::parseSchoenHiersNearbyResponse);
+        return service.search(searchString, lon, lat)
+                .doOnError(this::handleError)
+                .flatMap(this::parseSearchResponse);
     }
 
-    private Observable<SchoenHiersNearbyResponse> parseSearchResponse(Response response) {
+    private Observable<List<LocatorLocation>> parseSearchResponse(Response<SearchResponse> response) {
         if (response.isSuccess()) {
-            return Observable.just((SchoenHiersNearbyResponse) response.body());
+            List<LocatorLocation> allLocations = response.body().locatorLocations;
+            allLocations.addAll(response.body().googleLocations);
+            return Observable.just(allLocations);
         }
         return Observable.error(new Exception("http-error: " + Integer.toString(response.code())));
     }

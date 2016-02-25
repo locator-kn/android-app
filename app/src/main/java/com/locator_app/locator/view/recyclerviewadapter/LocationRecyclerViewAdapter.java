@@ -2,6 +2,7 @@ package com.locator_app.locator.view.recyclerviewadapter;
 
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,10 +33,23 @@ public class LocationRecyclerViewAdapter extends RecyclerView.Adapter<LocationRe
         notifyDataSetChanged();
     }
 
+    private boolean whiteStyle = false;
+    public void setWhiteStyle() { whiteStyle = true; }
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.default_list_item, parent, false);
+
+        if (whiteStyle) {
+            view.setBackgroundColor(Color.TRANSPARENT);
+            TextView text = (TextView) view.findViewById(R.id.text);
+            TextView desc = (TextView) view.findViewById(R.id.description);
+
+            text.setTextColor(Color.WHITE);
+            desc.setTextColor(Color.WHITE);
+        }
+
         return new ViewHolder(view);
     }
 
@@ -81,7 +95,7 @@ public class LocationRecyclerViewAdapter extends RecyclerView.Adapter<LocationRe
                     .load(location.thumbnailUri())
                     .dontAnimate()
                     .into(imageView);
-            if (formattedDate.isEmpty()) {
+            if (formattedDate.isEmpty() && location.createDate != null) {
                 formattedDate = DateConverter.toddMMyyyy(location.createDate);
             }
             creationDate.setText(formattedDate);

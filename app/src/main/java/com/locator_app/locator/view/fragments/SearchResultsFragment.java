@@ -8,15 +8,23 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.locator_app.locator.LocatorApplication;
 import com.locator_app.locator.R;
+import com.locator_app.locator.apiservice.search.SearchResponse;
+import com.locator_app.locator.controller.SearchController;
+import com.locator_app.locator.model.LocatorLocation;
 import com.locator_app.locator.view.DividerItemDecoration;
 import com.locator_app.locator.view.recyclerviewadapter.LocationRecyclerViewAdapter;
+
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class SearchResultsFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
-    public final LocationRecyclerViewAdapter adapter = new LocationRecyclerViewAdapter();
+    private LocationRecyclerViewAdapter adapter = new LocationRecyclerViewAdapter();
     private RecyclerView view;
 
     public SearchResultsFragment() {}
@@ -39,6 +47,12 @@ public class SearchResultsFragment extends Fragment {
         return view;
     }
 
+
+    public void search(String searchString, double lon, double lat) {
+        SearchController.getInstance().search(searchString, lon, lat)
+                .subscribe(adapter::setLocations);
+    }
+
     public void onButtonPressed() {
         if (mListener != null) {
             mListener.onFragmentInteraction();
@@ -48,12 +62,12 @@ public class SearchResultsFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
+//        if (context instanceof OnFragmentInteractionListener) {
+//            mListener = (OnFragmentInteractionListener) context;
+//        } else {
+//            throw new RuntimeException(context.toString()
+//                    + " must implement OnFragmentInteractionListener");
+//        }
     }
 
     @Override
