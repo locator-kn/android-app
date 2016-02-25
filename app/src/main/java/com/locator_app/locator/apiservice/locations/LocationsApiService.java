@@ -40,6 +40,12 @@ public class LocationsApiService {
 
         @GET(Api.version + "/locations/{locationId}/impressions")
         Observable<Response<List<Impression>>> getImpressionsByLocationId(@Path("locationId") String locationId);
+
+        @POST(Api.version + "/locations/{locationId}/favor")
+        Observable<Response<UnFavorResponse>> favorLocation(@Path("locationId") String locationId);
+
+        @POST(Api.version + "/locations/{locationId}/unfavor")
+        Observable<Response<UnFavorResponse>> unfavorLocation(@Path("locationId") String locationId);
     }
 
     LocationsApi service = ServiceFactory.createService(LocationsApi.class);
@@ -104,6 +110,24 @@ public class LocationsApiService {
         if (response.isSuccess()) {
             return Observable.from(response.body())
                     .map(AbstractImpression::createImpression);
+        }
+        return Observable.error(new Exception("http-code: " + Integer.toString(response.code())));
+    }
+
+
+    public Observable<UnFavorResponse> favorLocation(String locationId) {
+        return service.favorLocation(locationId)
+                .flatMap(this::parseUnFavorLocationResponse);
+    }
+
+    public Observable<UnFavorResponse> unfavorLocation(String locationId) {
+        return service.unfavorLocation(locationId)
+                .flatMap(this::parseUnFavorLocationResponse);
+    }
+
+    private Observable<UnFavorResponse> parseUnFavorLocationResponse(Response<UnFavorResponse> response) {
+        if (response.isSuccess()) {
+            return Observable.just(response.body());
         }
         return Observable.error(new Exception("http-code: " + Integer.toString(response.code())));
     }

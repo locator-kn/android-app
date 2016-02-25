@@ -32,7 +32,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="120dp"
                     android:background="@drawable/shape_gradient"
-                    />
+                    android:id="@+id/view" />
 
                 <LinearLayout
                     android:layout_width="fill_parent"
@@ -71,6 +71,16 @@
                         android:layout_marginBottom="20dp" />
 
                 </LinearLayout>
+
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/small_heart_white"
+                    android:layout_below="@+id/view"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginTop="120dp"
+                    android:layout_marginRight="20dp"
+                    android:id="@+id/heart" />
 
             </RelativeLayout>
 

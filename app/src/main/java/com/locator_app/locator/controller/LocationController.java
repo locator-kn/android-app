@@ -1,6 +1,7 @@
 package com.locator_app.locator.controller;
 
 
+import com.locator_app.locator.apiservice.locations.UnFavorResponse;
 import com.locator_app.locator.model.LocatorLocation;
 import com.locator_app.locator.apiservice.locations.LocationsApiService;
 import com.locator_app.locator.model.impressions.AbstractImpression;
@@ -30,6 +31,14 @@ public class LocationController {
 
     public Observable<AbstractImpression> getImpressionsByLocationId(String locationId) {
         return locationService.getImpressionsByLocationId(locationId);
+    }
+
+    public Observable<UnFavorResponse> favorLocation(String locationId) {
+        return locationService.favorLocation(locationId);
+    }
+
+    public Observable<UnFavorResponse> unfavorLocation(String locationId) {
+        return locationService.unfavorLocation(locationId);
     }
 
     private static LocationController instance;
