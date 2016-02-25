@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#344c93">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/shape_gradient_black">
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/are_you_here"
+            android:gravity="center"
+            android:enabled="false"
+            android:textColor="@android:color/white" />
+
+        <ImageView
+            android:id="@+id/cancelButton"
+            android:layout_width="17dp"
+            android:layout_height="17dp"
+            android:src="@drawable/cross"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="17dp" />
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/locations_exist"
+        android:textColor="@color/colorWhite"
+        android:textAlignment="center"
+        android:textSize="22sp"
+        android:fontFamily="source-sans-pro"
+        android:paddingTop="20dp"
+        android:layout_marginLeft="60dp"
+        android:layout_marginRight="60dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp" />
+
+    <ImageView
+        android:id="@+id/no"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="2"
+        android:src="@drawable/no" />
+
+</LinearLayout>
+
+

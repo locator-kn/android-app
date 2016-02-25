@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 
 import com.locator_app.locator.R;
+import com.locator_app.locator.controller.LocationCreationController;
 import com.locator_app.locator.controller.MyController;
 import com.locator_app.locator.controller.SchoenHierController;
 import com.locator_app.locator.controller.UserController;
@@ -87,7 +88,13 @@ public class HomeActivity extends AppCompatActivity {
 
     @OnLongClick(R.id.schoenHierBubble)
     boolean onSchoenHierBubbleLongClick() {
+        LocationCreationController.createLocation(this);
         return true;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        LocationCreationController.onActivityResult(requestCode, resultCode, data, this);
     }
 
     @OnClick(R.id.userProfileBubble)
