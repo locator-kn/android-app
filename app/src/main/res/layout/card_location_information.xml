@@ -1,36 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/cardview"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    card_view:cardBackgroundColor="#fff">
-
-    <!--
-    <include layout="@layout/location_stats_bar"/>
-    -->
-
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="50dp"
-        android:orientation="vertical">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="80dp"
+    android:background="@android:color/white">
 
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp">
 
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="4">
+                android:layout_weight="4"
+                android:layout_marginLeft="10dp">
 
                 <LinearLayout
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="1">
+                    android:layout_weight="1"
+                    android:gravity="center_vertical">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -70,43 +62,46 @@
                     android:layout_height="0dp"
                     android:weightSum="1"
                     android:id="@+id/linearLayout"
-                    android:paddingTop="5dp"
                     android:layout_weight="1">
 
                     <TextView
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:textAppearance="?android:attr/textAppearanceSmall"
                         android:text="Lukas Doe"
                         android:id="@+id/locatorName"
                         android:ellipsize="end"
                         android:singleLine="true"
-                        android:textSize="@dimen/text_size_small" />
+                        android:textSize="@dimen/text_size_small"
+                        android:gravity="center_vertical" />
 
                     <TextView
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:textAppearance="?android:attr/textAppearanceSmall"
                         android:text=" · "
                         android:id="@+id/textView2"
                         android:singleLine="true"
-                        android:textSize="@dimen/text_size_small" />
+                        android:textSize="@dimen/text_size_small"
+                        android:gravity="center_vertical" />
 
                     <TextView
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:textAppearance="?android:attr/textAppearanceSmall"
                         android:text="0"
                         android:id="@+id/favorites"
-                        android:textSize="@dimen/text_size_small" />
+                        android:textSize="@dimen/text_size_small"
+                        android:gravity="center_vertical" />
 
                     <ImageView
                         android:layout_width="20dp"
-                        android:layout_height="fill_parent"
+                        android:layout_height="match_parent"
                         android:id="@+id/followersIcon"
                         android:src="@drawable/location_detail_likes"
-                        android:padding="3dp"
-                        android:antialias="true" />
+                        android:antialias="true"
+                        android:layout_weight="0.01"
+                        android:layout_marginLeft="5dp" />
 
                 </LinearLayout>
 
@@ -120,7 +115,4 @@
                 android:src="@drawable/map_icon_black" />
         </LinearLayout>
 
-    </LinearLayout>
-
-
-</android.support.v7.widget.CardView>
+</LinearLayout>
