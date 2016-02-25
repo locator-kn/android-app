@@ -34,7 +34,7 @@ public class LocatorLocation implements LocatorObject, Serializable {
     public String description;
 
     @SerializedName("city")
-    public City city;
+    public City city = new City();
 
     @SerializedName("public")
     public boolean isPublic;
@@ -46,7 +46,7 @@ public class LocatorLocation implements LocatorObject, Serializable {
     public boolean deleted;
 
     @SerializedName("images")
-    public Images images;
+    public Images images = new Images();
 
     @SerializedName("favorites")
     public List<String> favorites = new LinkedList<>();

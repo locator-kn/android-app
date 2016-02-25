@@ -43,7 +43,14 @@
         android:layout_marginLeft="60dp"
         android:layout_marginRight="60dp"
         android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp" />
+        android:layout_marginBottom="30dp" />
+
+    <fragment
+        android:layout_width="match_parent"
+        android:layout_height="306dp"
+        android:name="com.locator_app.locator.view.fragments.SearchResultsFragment"
+        android:id="@+id/searchFragment"
+        android:layout_gravity="center_horizontal" />
 
     <ImageView
         android:id="@+id/no"
@@ -51,7 +58,9 @@
         android:layout_height="70dp"
         android:layout_gravity="center_horizontal"
         android:layout_weight="2"
-        android:src="@drawable/no" />
+        android:src="@drawable/no"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="5dp" />
 
 </LinearLayout>
 
