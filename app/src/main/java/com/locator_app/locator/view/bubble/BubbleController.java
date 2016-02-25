@@ -9,6 +9,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.locator_app.locator.LocatorApplication;
 import com.locator_app.locator.R;
+import com.locator_app.locator.controller.LocationController;
 import com.locator_app.locator.model.LocatorLocation;
 import com.locator_app.locator.model.LocatorObject;
 import com.locator_app.locator.model.Message;
@@ -20,6 +21,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 
 public class BubbleController {
@@ -174,10 +177,19 @@ public class BubbleController {
 
     private void handleOnLocationBubbleClicked(Bubble bubble) {
         LocatorLocation location = (LocatorLocation) bubble.data;
-        //Toast.makeText(layout.getContext(), location.title, Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(layout.getContext(), LocationDetailActivity.class);
-        intent.putExtra("location", location);
-        layout.getContext().startActivity(intent);
+        LocationController.getInstance().getLocationById(location.id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        (result) -> {
+                            Intent intent = new Intent(layout.getContext(), LocationDetailActivity.class);
+                            intent.putExtra("location", result);
+                            layout.getContext().startActivity(intent);
+                        },
+                        (err) -> {
+
+                        }
+                );
     }
 
     private void handleOnMessageBubbleClicked(Bubble bubble) {
