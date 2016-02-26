@@ -2,6 +2,7 @@ package com.locator_app.locator.apiservice.schoenhier;
 
 import com.locator_app.locator.apiservice.Api;
 import com.locator_app.locator.apiservice.ServiceFactory;
+import com.locator_app.locator.apiservice.errorhandling.GenericErrorHandler;
 
 import java.net.UnknownHostException;
 
@@ -20,7 +21,7 @@ public class SchoenHierApiService {
     public interface SchoenHierApi {
 
         @GET(Api.version + "/schoenhiers/nearby")
-        Observable<SchoenHiersNearbyResponse> schoenHiersNearby(@Query("long") double lon,
+        Observable<Response<SchoenHiersNearbyResponse>> schoenHiersNearby(@Query("long") double lon,
                                                @Query("lat") double lat,
                                                @Query("maxDistance") double distance,
                                                @Query("limit") int limit);
@@ -34,38 +35,11 @@ public class SchoenHierApiService {
     public Observable<SchoenHiersNearbyResponse> schoenHiersNearby(double lon, double lat,
                                                                 double distance,
                                                                 int limit) {
-        return service.schoenHiersNearby(lon, lat, distance, limit);
-//                .doOnError(this::handleError)
-//                .flatMap(this::parseSchoenHiersNearbyResponse);
-    }
-
-    private Observable<SchoenHiersNearbyResponse> parseSchoenHiersNearbyResponse(Response response) {
-        if (response.isSuccess()) {
-            return Observable.just((SchoenHiersNearbyResponse) response.body());
-        }
-        return Observable.error(new Exception("http-error: " + Integer.toString(response.code())));
+        return GenericErrorHandler.wrapSingle(service.schoenHiersNearby(lon, lat, distance, limit));
     }
 
     public Observable<SchoenHiersResponse> markAsSchoenHier(SchoenHierRequest request) {
-        return service.markAsSchoenHier(request)
-                .onErrorResumeNext(throwable -> {
-                    return Observable.error(new Exception(throwable.getMessage()));
-                })
-                .flatMap(this::parseMarkAsSchoenHierResponse);
+        return GenericErrorHandler.wrapSingle(service.markAsSchoenHier(request));
     }
 
-    private Observable<SchoenHiersResponse> parseMarkAsSchoenHierResponse(Response<SchoenHiersResponse> response) {
-        if (response.isSuccess()) {
-            return Observable.just(response.body());
-        }
-        return Observable.error(new Exception("http-error" + Integer.toString(response.code())));
-    }
-
-    private void handleError(Throwable throwable) {
-        if (throwable instanceof HttpException) {
-            HttpException ex = (HttpException) throwable;
-        } else if (throwable instanceof UnknownHostException) {
-            UnknownHostException ex = (UnknownHostException) throwable;
-        }
-    }
 }

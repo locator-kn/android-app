@@ -1,14 +1,12 @@
 package com.locator_app.locator.apiservice.locations;
 
-import android.util.Log;
-
-import com.locator_app.locator.model.LocatorLocation;
 import com.locator_app.locator.apiservice.Api;
 import com.locator_app.locator.apiservice.ServiceFactory;
+import com.locator_app.locator.apiservice.errorhandling.GenericErrorHandler;
+import com.locator_app.locator.model.LocatorLocation;
 import com.locator_app.locator.model.impressions.AbstractImpression;
 import com.locator_app.locator.model.impressions.Impression;
 
-import java.net.UnknownHostException;
 import java.util.List;
 
 import retrofit.Response;
@@ -51,84 +49,27 @@ public class LocationsApiService {
     LocationsApi service = ServiceFactory.createService(LocationsApi.class);
 
     public Observable<LocatorLocation> getLocationById(String locationId) {
-        return service.locationById(locationId)
-                .doOnError(this::handleGetLocationByIdError)
-                .onErrorResumeNext(throwable -> {
-                    return Observable.error(new Exception("uuuuups, sorry :-/"));
-                })
-                .flatMap(this::parseLocatorLocationResponse);
+        return GenericErrorHandler.wrapSingle(service.locationById(locationId));
     }
 
-    private Observable<LocatorLocation> parseLocatorLocationResponse(Response response) {
-        Log.d("LocationsApiService", "na dann mal los ...");
-        if (response.isSuccess()) {
-            if (response.body() != null) {
-                return Observable.just((LocatorLocation)response.body());
-            }
-            return Observable.error(new Error("no such location... :-("));
-        }
-        return Observable.error(new Error("http-error: " + response.code()));
-    }
-
-    private void handleGetLocationByIdError(Throwable throwable) {
-        if (throwable instanceof UnknownHostException) {
-            Log.d("LocationApiService", "Internet aus oder schläft der Locator-Server?");
-        }
-    }
-
-    public Observable<LocationsNearbyResponse> getLocationsNearby(double lon, double lat,
-                                                                  double maxRadius, int limit) {
-        return service.locationsNearby(lon, lat, maxRadius, limit)
-                .flatMap(this::parseLocationsNearbyResponse);
-    }
-
-    private Observable<LocationsNearbyResponse> parseLocationsNearbyResponse(Response response) {
-        if (response.isSuccess()) {
-            return Observable.just((LocationsNearbyResponse)response.body());
-        }
-        return Observable.error(new Exception("http-code: " + Integer.toString(response.code())));
+    public Observable<LocationsNearbyResponse> getLocationsNearby(double lon, double lat, double maxRadius, int limit) {
+        return GenericErrorHandler.wrapSingle(service.locationsNearby(lon, lat, maxRadius, limit));
     }
 
     public Observable<LocatorLocation> getLocationsByUser(String userId) {
-        return service.getLocationsByUser(userId)
-                .flatMap(this::parseLocationsList);
-    }
-
-    private Observable<LocatorLocation> parseLocationsList(Response<List<LocatorLocation>> response) {
-        if (response.isSuccess()) {
-            return Observable.from(response.body());
-        }
-        return Observable.error(new Exception("http-code: " + Integer.toString(response.code())));
+        return GenericErrorHandler.wrapList(service.getLocationsByUser(userId));
     }
 
     public Observable<AbstractImpression> getImpressionsByLocationId(String locationId) {
-        return service.getImpressionsByLocationId(locationId)
-                .flatMap(this::parseImpressions);
+        return GenericErrorHandler.wrapList(service.getImpressionsByLocationId(locationId))
+                .map(AbstractImpression::createImpression);
     }
-
-    private Observable<AbstractImpression> parseImpressions(Response<List<Impression>> response) {
-        if (response.isSuccess()) {
-            return Observable.from(response.body())
-                    .map(AbstractImpression::createImpression);
-        }
-        return Observable.error(new Exception("http-code: " + Integer.toString(response.code())));
-    }
-
 
     public Observable<UnFavorResponse> favorLocation(String locationId) {
-        return service.favorLocation(locationId)
-                .flatMap(this::parseUnFavorLocationResponse);
+        return GenericErrorHandler.wrapSingle(service.favorLocation(locationId));
     }
 
     public Observable<UnFavorResponse> unfavorLocation(String locationId) {
-        return service.unfavorLocation(locationId)
-                .flatMap(this::parseUnFavorLocationResponse);
-    }
-
-    private Observable<UnFavorResponse> parseUnFavorLocationResponse(Response<UnFavorResponse> response) {
-        if (response.isSuccess()) {
-            return Observable.just(response.body());
-        }
-        return Observable.error(new Exception("http-code: " + Integer.toString(response.code())));
+        return GenericErrorHandler.wrapSingle(service.unfavorLocation(locationId));
     }
 }
