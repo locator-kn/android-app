@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.locator_app.locator.R;
+import com.locator_app.locator.view.HomeActivity;
 import com.locator_app.locator.view.LoginCustomActionBar;
 import com.locator_app.locator.view.LoginRegisterStartActivity;
 import com.locator_app.locator.view.RegisterResidenceActivity;
@@ -61,6 +62,12 @@ public class NameLocation extends Activity {
                     Toast.LENGTH_SHORT).show();
             return false;
         }
+    }
+
+    @OnClick(R.id.cancelButton)
+    void onCancelButtonClicked() {
+        Intent intent = new Intent(this, HomeActivity.class);
+        startActivity(intent);
     }
 
     private boolean checkUsernameLength() {
