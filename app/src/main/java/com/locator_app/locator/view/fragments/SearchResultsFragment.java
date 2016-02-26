@@ -56,9 +56,16 @@ public class SearchResultsFragment extends Fragment {
     }
 
 
-    public void search(String searchString, double lon, double lat) {
-        SearchController.getInstance().search(searchString, lon, lat)
-                .subscribe(adapter::setLocations);
+    public void search(double lon, double lat) {
+        SearchController.getInstance().search(lon, lat)
+                .subscribe(adapter::setLocations,
+                           (error) -> {});
+    }
+
+    public void searchString(String searchString, double lon, double lat) {
+        SearchController.getInstance().searchString(searchString, lon, lat)
+                .subscribe(adapter::setLocations,
+                        (error) -> {});
     }
 
     @Override

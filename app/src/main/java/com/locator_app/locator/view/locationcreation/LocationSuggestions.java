@@ -27,6 +27,7 @@ import butterknife.OnClick;
 public class LocationSuggestions extends AppCompatActivity implements SearchResultsFragment.OnSearchItemClickListener {
     SearchResultsFragment searchResultsFragment;
     Bundle extras;
+    GpsService gpsService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +44,12 @@ public class LocationSuggestions extends AppCompatActivity implements SearchResu
 
         searchResultsFragment = (SearchResultsFragment) getSupportFragmentManager()
                                             .findFragmentById(R.id.searchFragment);
-        searchResultsFragment.search("Hotel", 9.169753789901733, 47.66868204997508);
+        gpsService = new GpsService(this);
+        gpsService.getCurLocation()
+                .subscribe((location -> {
+                    searchResultsFragment.search(location.getLongitude(),
+                                                 location.getLatitude());
+                }));
     }
 
     @OnClick(R.id.no)
