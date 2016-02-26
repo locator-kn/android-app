@@ -3,6 +3,7 @@ package com.locator_app.locator.view.locationcreation;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -25,6 +26,7 @@ import butterknife.OnClick;
 
 public class LocationSuggestions extends AppCompatActivity implements SearchResultsFragment.OnSearchItemClickListener {
     SearchResultsFragment searchResultsFragment;
+    Bundle extras;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +38,9 @@ public class LocationSuggestions extends AppCompatActivity implements SearchResu
             actionBar.hide();
         }
 
+
+        extras = getIntent().getExtras();
+
         searchResultsFragment = (SearchResultsFragment) getSupportFragmentManager()
                                             .findFragmentById(R.id.searchFragment);
         searchResultsFragment.search("Hotel", 9.169753789901733, 47.66868204997508);
@@ -43,7 +48,8 @@ public class LocationSuggestions extends AppCompatActivity implements SearchResu
 
     @OnClick(R.id.no)
     void onNoClicked() {
-        Intent intent = new Intent(this, HomeActivity.class);
+        Intent intent = new Intent(this, NameLocation.class);
+        intent.putExtras(extras);
         startActivity(intent);
     }
 
@@ -56,7 +62,9 @@ public class LocationSuggestions extends AppCompatActivity implements SearchResu
     @Override
     public void onLocationClicked(LocatorLocation location) {
         if (location instanceof GoogleLocation) {
-            Toast.makeText(this, "GoogleLocation clicked :)", Toast.LENGTH_SHORT).show();
+            // go to Kategorie wählen
+        } else {
+            // add image as impression; go to location detail view
         }
     }
 }
