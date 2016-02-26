@@ -1,19 +1,25 @@
 package com.locator_app.locator.util;
 
 
+import android.Manifest;
+import android.annotation.TargetApi;
+import android.app.Activity;
+import android.content.Context;
 import android.content.IntentSender;
+import android.content.pm.PackageManager;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
+import android.support.v4.app.ActivityCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.ErrorDialogFragment;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.locator_app.locator.LocatorApplication;
 
@@ -23,104 +29,83 @@ import java.util.List;
 import rx.Observable;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
 public class GpsService extends Fragment implements GoogleApiClient.ConnectionCallbacks,
-                                                    GoogleApiClient.OnConnectionFailedListener,
-                                                    LocationListener {
+        GoogleApiClient.OnConnectionFailedListener {
     private GoogleApiClient googleApiClient;
 
     boolean connected = false;
 
     public GpsService() {
+    }
+
+    public GpsService(Activity activity) {
         googleApiClient = new GoogleApiClient.Builder(LocatorApplication.getAppContext())
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
                 .build();
 
+        activity.onAttachFragment(this);
+    }
+
+    List<Observer> currentLocationSubscribers = new LinkedList<>();
+    Observable<Location> currentLocationObservable = Observable.create(currentLocationSubscribers::add);
+
+    public Observable<android.location.Location> getCurLocation() {
         googleApiClient.connect();
-    }
-
-    int nrSubscribedToContinuousLocation;
-    List<Observer> continuousCurLocationSubscribers = new LinkedList<>();
-    Observable<Location> continuousCurLocation = Observable.create(continuousCurLocationSubscribers::add);
-
-    public Observable<android.location.Location> getContinuousCurLocation() {
-        ++nrSubscribedToContinuousLocation;
-        return continuousCurLocation.doOnUnsubscribe(() -> {
-            --nrSubscribedToContinuousLocation;
-            if (nrSubscribedToContinuousLocation == 0) {
-                continuousCurLocationSubscribers.clear();
-            }
-        });
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
-        for (Observer subscriber : continuousCurLocationSubscribers) {
-            subscriber.onNext(location);
-        }
-    }
-
-    List<Observer> firstCurLocationSubscribers = new LinkedList<>();
-    Observable<Location> firstCurLocation = Observable.create(firstCurLocationSubscribers::add);
-
-    public void getCurLocationOnGUIThread(Action1<? super Location> returnFunction) {
-        getCurLocationObservable()
+        return currentLocationObservable
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(returnFunction);
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public void getCurLocationOnIOThread(Action1<? super Location> returnFunction) {
-        getCurLocationObservable()
-                .subscribeOn(Schedulers.io())
-                .observeOn(Schedulers.io())
-                .subscribe(returnFunction,
-                           (error) -> {});
-    }
-
-    public Observable<android.location.Location> getCurLocationObservable() {
-        if (connected) {
-            android.location.Location location = googlePlayCurLocation();
-            if (location != null)
-            {
-                return Observable.just(location);
-            }
-        }
-        return firstCurLocation;
-    }
+    private static final int PERMISSION_REQUEST_CODE = 69; // :D
 
     @Override
     public void onConnected(Bundle connectionHint) {
-        connected = true;
-
-        android.location.Location location = googlePlayCurLocation();
-        if (location != null) {
-            for (Observer subscriber : firstCurLocationSubscribers) {
-                subscriber.onNext(location);
-                subscriber.onCompleted();
-            }
-        } else {
-            for (Observer subscriber : firstCurLocationSubscribers) {
-                subscriber.onCompleted(); //TODO: convert to onError
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (getActivity().checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED
+                && getActivity().checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED) {
+                getActivity().requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                                                     PERMISSION_REQUEST_CODE);
+                return;
             }
         }
-        firstCurLocationSubscribers.clear();
-
-        LocationRequest locationRequest = new LocationRequest();
-        locationRequest.setInterval(10000);
-        locationRequest.setFastestInterval(5000);
-        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-
-        LocationServices.FusedLocationApi.requestLocationUpdates(
-                googleApiClient, locationRequest, this);
+        notifyObserversWithLocation();
     }
 
-    private android.location.Location googlePlayCurLocation() {
-        return LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
+    private void notifyObserversWithLocation() {
+        Location location = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
+        for (Observer sub : currentLocationSubscribers) {
+            sub.onNext(location);
+            sub.onCompleted();
+        }
+        googleApiClient.disconnect();
+        currentLocationSubscribers.clear();
+    }
+
+    private void notifyObserversWithError() {
+        for (Observer sub : currentLocationSubscribers) {
+            sub.onError(new Exception());
+        }
+        googleApiClient.disconnect();
+        currentLocationSubscribers.clear();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String[] permissions,
+                                           int[] grantResults) {
+        if (requestCode == PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                notifyObserversWithLocation();
+            }
+        }
+        notifyObserversWithError();
     }
 
     @Override
@@ -167,19 +152,15 @@ public class GpsService extends Fragment implements GoogleApiClient.ConnectionCa
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        googleApiClient.connect();
     }
 
     @Override
     public void onStart() {
-        googleApiClient.connect();
         super.onStart();
     }
 
     @Override
     public void onStop() {
-        connected = false;
-        googleApiClient.disconnect();
         super.onStop();
     }
 
