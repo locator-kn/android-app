@@ -3,6 +3,7 @@ package com.locator_app.locator.apiservice.device;
 
 import com.locator_app.locator.apiservice.Api;
 import com.locator_app.locator.apiservice.ServiceFactory;
+import com.locator_app.locator.apiservice.errorhandling.GenericErrorHandler;
 
 import retrofit.Response;
 import retrofit.http.Body;
@@ -19,15 +20,7 @@ public class DeviceApiService {
     DeviceApi service = ServiceFactory.createService(DeviceApi.class);
 
     public Observable<RegisterDeviceResponse> registerDevice(RegisterDeviceRequest request) {
-        return service.registerDevice(request)
-                .flatMap(this::parseResponse);
-    }
-
-    private Observable<RegisterDeviceResponse> parseResponse(Response<RegisterDeviceResponse> response) {
-        if (response.code() == 201) {
-            return Observable.just(response.body());
-        }
-        return Observable.error(new Exception("could not register device"));
+        return GenericErrorHandler.wrapSingle(service.registerDevice(request));
     }
 
 }
