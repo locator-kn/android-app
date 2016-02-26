@@ -35,6 +35,10 @@ public class UserController {
                 .doOnNext(this::handleLogin);
     }
 
+    public Observable<User> followUser(String userId) {
+        return userService.followUser(userId);
+    }
+
     public Observable<LoginResponse> logInLastLoggedInUser() {
         SharedPreferences preferences = LocatorApplication.getSharedPreferences();
         String lastLoggedInUserEmail = preferences.getString(lastLoggedInUserEmailKey, "");
