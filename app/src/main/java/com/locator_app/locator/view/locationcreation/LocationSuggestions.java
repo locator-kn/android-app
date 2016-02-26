@@ -8,9 +8,12 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.locator_app.locator.R;
+import com.locator_app.locator.model.GoogleLocation;
+import com.locator_app.locator.model.LocatorLocation;
 import com.locator_app.locator.util.GpsService;
 import com.locator_app.locator.view.HomeActivity;
 import com.locator_app.locator.view.LoginCustomActionBar;
@@ -20,7 +23,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class LocationSuggestions extends AppCompatActivity {
+public class LocationSuggestions extends AppCompatActivity implements SearchResultsFragment.OnSearchItemClickListener {
     SearchResultsFragment searchResultsFragment;
 
     @Override
@@ -48,5 +51,12 @@ public class LocationSuggestions extends AppCompatActivity {
     void onCancelButtonClicked() {
         Intent intent = new Intent(this, HomeActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    public void onLocationClicked(LocatorLocation location) {
+        if (location instanceof GoogleLocation) {
+            Toast.makeText(this, "GoogleLocation clicked :)", Toast.LENGTH_SHORT).show();
+        }
     }
 }

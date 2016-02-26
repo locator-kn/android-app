@@ -56,16 +56,25 @@ public class LocationRecyclerViewAdapter extends RecyclerView.Adapter<LocationRe
         return new ViewHolder(view);
     }
 
+    LocationClickHandler locationClickHandler = (v, location) -> {
+        Intent intent = new Intent(v.getContext(), LocationDetailActivity.class);
+        intent.putExtra("location", location);
+        v.getContext().startActivity(intent);
+    };
+
+    public void setLocationClickHandler(LocationClickHandler handler) {
+        locationClickHandler = handler;
+    }
+
+    public interface LocationClickHandler {
+        void handleLocationItemClick(View v, LocatorLocation location);
+    }
+
     @Override
     public void onBindViewHolder(final LocationRecyclerViewAdapter.ViewHolder holder, int position) {
         final LocatorLocation location = locations.get(position);
         holder.update(location);
-        holder.view.setOnClickListener( v -> {
-                    Intent intent = new Intent(v.getContext(), LocationDetailActivity.class);
-                    intent.putExtra("location", location);
-                    v.getContext().startActivity(intent);
-                }
-        );
+        holder.view.setOnClickListener( v -> locationClickHandler.handleLocationItemClick(v, location));
     }
 
     @Override
