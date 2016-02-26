@@ -122,8 +122,7 @@ public class ProfileActivity extends FragmentActivity {
                             fragment.adapter.setLocations(locations);
                             countLocations.setText(Integer.toString(locations.size()));
                         }),
-                        (error -> {
-                        })
+                        (error) -> { }
                 );
     }
 
@@ -165,8 +164,7 @@ public class ProfileActivity extends FragmentActivity {
                 .toList()
                 .subscribe(
                         (fragment.adapter::setUsers),
-                        (error -> {
-                        })
+                        (error) -> { }
                 );
     }
 

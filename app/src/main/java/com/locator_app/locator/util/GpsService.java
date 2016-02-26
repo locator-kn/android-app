@@ -37,9 +37,6 @@ public class GpsService extends Fragment implements GoogleApiClient.ConnectionCa
 
     boolean connected = false;
 
-    public GpsService() {
-    }
-
     public GpsService(Activity activity) {
         googleApiClient = new GoogleApiClient.Builder(LocatorApplication.getAppContext())
                 .addConnectionCallbacks(this)

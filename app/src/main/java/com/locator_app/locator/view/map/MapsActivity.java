@@ -191,7 +191,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             initiateMapByLatLon(initialCameraPosition);
         } else {
             gpsService.getCurLocation()
-                    .subscribe(this::initiateMap);
+                    .subscribe(
+                            this::initiateMap,
+                            (err) -> {}
+                    );
         }
     }
 
