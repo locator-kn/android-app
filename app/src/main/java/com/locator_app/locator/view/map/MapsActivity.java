@@ -1,19 +1,16 @@
 package com.locator_app.locator.view.map;
 
+import android.Manifest;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -75,8 +72,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             initialCameraPosition = new LatLng(lat, lon);
         }
 
-        gpsService = (GpsService) getSupportFragmentManager()
-                .findFragmentById(R.id.gpsService);
+        gpsService = new GpsService(this);
 
         mapFragment = (MapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -89,9 +85,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .map(response -> new LatLng(response.geoTag.getLatitude(),
                         response.geoTag.getLongitude()))
                 .subscribe(
-                        (latLng) -> {
-                            mapsController.addHeatpointAndRedraw(latLng);
-                        },
+                        mapsController::addHeatpointAndRedraw,
                         (error) -> {
                         }
                 );
@@ -196,7 +190,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (initialCameraPosition != null) {
             initiateMapByLatLon(initialCameraPosition);
         } else {
-            gpsService.getCurLocationOnGUIThread(this::initiateMap);
+            gpsService.getCurLocation()
+                    .subscribe(this::initiateMap);
         }
     }
 
@@ -208,8 +203,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void initiateMapByLatLon(LatLng locationPos) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M ||
+            checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
+            checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+
+            googleMap.setMyLocationEnabled(true);
+        }
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(locationPos, 15));
-        googleMap.setMyLocationEnabled(true);
         mapsController.drawHeatMapAt(locationPos);
         mapsController.drawLocationsAt(locationPos);
     }

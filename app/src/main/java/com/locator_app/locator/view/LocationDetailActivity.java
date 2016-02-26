@@ -191,9 +191,7 @@ public class LocationDetailActivity extends FragmentActivity {
 
     private void showDistanceToLocation() {
         GpsService service = new GpsService();
-        service.getCurLocationObservable()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+        service.getCurLocation()
                 .subscribe(
                         (location) -> {
                             //double distance = DistanceCalculator.distanceInKm();

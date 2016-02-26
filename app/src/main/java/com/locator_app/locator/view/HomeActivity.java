@@ -56,9 +56,7 @@ public class HomeActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.hide();
         }
-
-        gpsService = (GpsService) getSupportFragmentManager()
-                .findFragmentById(R.id.gpsService);
+        gpsService = new GpsService(this);
     }
 
 

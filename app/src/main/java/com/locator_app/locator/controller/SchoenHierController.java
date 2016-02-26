@@ -23,7 +23,7 @@ public class SchoenHierController {
     }
 
     public Observable<SchoenHiersResponse> markCurPosAsSchoenHier(GpsService gpsService) {
-        return gpsService.getCurLocationObservable()
+        return gpsService.getCurLocation()
                 .flatMap(this::markAsSchoenHier);
     }
 
