@@ -132,6 +132,7 @@
 
         <activity android:name=".view.LocationDetailActivity" />
         <activity android:name=".view.locationcreation.LocationSuggestions" />
+        <activity android:name=".view.locationcreation.NameLocation"></activity>
         <activity android:name=".view.ImageActivity" >
         </activity>
     </application>

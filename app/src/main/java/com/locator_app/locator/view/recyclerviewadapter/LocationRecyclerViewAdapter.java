@@ -33,36 +33,48 @@ public class LocationRecyclerViewAdapter extends RecyclerView.Adapter<LocationRe
         notifyDataSetChanged();
     }
 
-    private boolean whiteStyle = false;
-    public void setWhiteStyle() { whiteStyle = true; }
+    private int itemBackgroundColor = Color.WHITE;
+    public void setItemBackgroundColor(int color) { itemBackgroundColor = color; }
+    private int titleColor = Color.BLACK;
+    public void setTitleColor(int color) { titleColor = color; }
+    private int descrColor = Color.BLACK;
+    public void setDescrColor(int color) { descrColor = color; }
+
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.default_list_item, parent, false);
 
-        if (whiteStyle) {
-            view.setBackgroundColor(Color.TRANSPARENT);
-            TextView text = (TextView) view.findViewById(R.id.text);
-            TextView desc = (TextView) view.findViewById(R.id.description);
+        view.setBackgroundColor(itemBackgroundColor);
+        TextView text = (TextView) view.findViewById(R.id.text);
+        TextView desc = (TextView) view.findViewById(R.id.description);
 
-            text.setTextColor(Color.WHITE);
-            desc.setTextColor(Color.WHITE);
-        }
+        text.setTextColor(titleColor);
+        desc.setTextColor(descrColor);
 
         return new ViewHolder(view);
+    }
+
+    LocationClickHandler locationClickHandler = (v, location) -> {
+        Intent intent = new Intent(v.getContext(), LocationDetailActivity.class);
+        intent.putExtra("location", location);
+        v.getContext().startActivity(intent);
+    };
+
+    public void setLocationClickHandler(LocationClickHandler handler) {
+        locationClickHandler = handler;
+    }
+
+    public interface LocationClickHandler {
+        void handleLocationItemClick(View v, LocatorLocation location);
     }
 
     @Override
     public void onBindViewHolder(final LocationRecyclerViewAdapter.ViewHolder holder, int position) {
         final LocatorLocation location = locations.get(position);
         holder.update(location);
-        holder.view.setOnClickListener( v -> {
-                    Intent intent = new Intent(v.getContext(), LocationDetailActivity.class);
-                    intent.putExtra("location", location);
-                    v.getContext().startActivity(intent);
-                }
-        );
+        holder.view.setOnClickListener( v -> locationClickHandler.handleLocationItemClick(v, location));
     }
 
     @Override

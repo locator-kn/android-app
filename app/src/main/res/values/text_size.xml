@@ -6,4 +6,7 @@
     <dimen
         name="text_size_big"
         >20sp</dimen>
+    <dimen
+        name="text_size_text_fields"
+        >30sp</dimen>
 </resources>
