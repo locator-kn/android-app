@@ -31,11 +31,14 @@ public class UsersApiService {
         @POST(Api.version + "/users/register")
         Observable<Response<LoginResponse>> register(@Body RegistrationRequest registrationBodyRequest);
 
-        @GET(Api.version + "/users/{userId}")
+        @GET(Api.version + "/users/{userId}?count=locations,followers")
         Observable<Response<User>> getUser(@Path("userId") String userId);
 
         @GET(Api.version + "/users/{userId}/follower")
         Observable<Response<List<User>>> getFollowers(@Path("userId") String userId);
+
+        @POST(Api.version + "/users/{userId}/follow")
+        Observable<Response<User>> followUser(String userId);
     }
 
     private UsersApi service = ServiceFactory.createService(UsersApi.class);
@@ -62,5 +65,9 @@ public class UsersApiService {
 
     public Observable<LoginResponse> checkProtected() {
         return GenericErrorHandler.wrapSingle(service.requestProtected());
+    }
+
+    public Observable<User> followUser(String userId) {
+        return GenericErrorHandler.wrapSingle(service.followUser(userId));
     }
 }
