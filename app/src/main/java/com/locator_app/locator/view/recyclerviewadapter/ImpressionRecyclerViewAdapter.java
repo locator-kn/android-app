@@ -25,6 +25,7 @@ import com.locator_app.locator.model.impressions.ImageImpression;
 import com.locator_app.locator.model.impressions.TextImpression;
 import com.locator_app.locator.model.impressions.VideoImpression;
 import com.locator_app.locator.util.DateConverter;
+import com.locator_app.locator.view.ImageActivity;
 import com.locator_app.locator.view.map.MapsActivity;
 import com.locator_app.locator.view.profile.ProfileActivity;
 
@@ -183,6 +184,12 @@ public class ImpressionRecyclerViewAdapter
                     .centerCrop()
                     .dontAnimate()
                     .into(impressionImage);
+
+            impressionImage.setOnClickListener(v -> {
+                Intent intent = new Intent(v.getContext(), ImageActivity.class);
+                intent.putExtra("uri", imageImpression.getImageUri());
+                v.getContext().startActivity(intent);
+            });
         }
     }
 
