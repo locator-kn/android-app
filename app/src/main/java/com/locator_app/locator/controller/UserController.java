@@ -11,7 +11,6 @@ import com.locator_app.locator.apiservice.users.LoginRequest;
 import com.locator_app.locator.apiservice.users.LoginResponse;
 import com.locator_app.locator.apiservice.users.LogoutResponse;
 import com.locator_app.locator.apiservice.users.RegistrationRequest;
-import com.locator_app.locator.apiservice.users.RegistrationResponse;
 import com.locator_app.locator.apiservice.users.UsersApiService;
 
 import rx.Observable;
@@ -28,23 +27,11 @@ public class UserController {
 
     public Observable<LoginResponse> register(RegistrationRequest registrationRequest) {
         return userService.register(registrationRequest)
-                .doOnError(this::handleRegistrationError)
-                .doOnNext(this::handleRegistration)
-                .map(registrationResponse -> LoginRequest.fromRegistrationRequest(registrationRequest))
-                .flatMap(this::login);
-    }
-
-    private void handleRegistrationError(Throwable throwable) {
-
-    }
-
-    private void handleRegistration(RegistrationResponse registrationResponse) {
-
+                .doOnNext(this::handleLogin);
     }
 
     public Observable<LoginResponse> login(LoginRequest loginRequest) {
         return userService.login(loginRequest)
-                .doOnError(this::handleLoginError)
                 .doOnNext(this::handleLogin);
     }
 
@@ -78,13 +65,8 @@ public class UserController {
         Couch.get().save(me);
     }
 
-    private void handleLoginError(Throwable throwable) {
-        Log.d("UserController", "error on login: " + throwable.getMessage());
-    }
-
     public Observable<LogoutResponse> logout() {
         return userService.logout()
-                .doOnError(this::handleLogoutError)
                 .doOnNext(this::handleLogout);
     }
 
@@ -99,8 +81,6 @@ public class UserController {
         Couch.get().switchToDefaultDatabase();
     }
 
-    private void handleLogoutError(Throwable throwable) {
-    }
 
     public Observable<User> getUser(String userId) {
         return userService.getUser(userId);
