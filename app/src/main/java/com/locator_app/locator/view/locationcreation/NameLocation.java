@@ -27,6 +27,8 @@ public class NameLocation extends Activity {
     @Bind(R.id.locationName)
     EditText locationNameEdit;
 
+    Bundle extras;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,6 +45,7 @@ public class NameLocation extends Activity {
             return false;
         });
 
+        extras = getIntent().getExtras();
     }
 
     @OnClick(R.id.next)
@@ -52,13 +55,14 @@ public class NameLocation extends Activity {
 
     private boolean confirmInput() {
         if (checkUsernameLength()) {
-            Toast.makeText(getApplicationContext(),
-                    "ok",
-                    Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(this, ChooseCategories.class);
+            intent.putExtras(extras);
+            intent.putExtra("name", locationNameEdit.getText());
+            startActivity(intent);
             return true;
         } else {
             Toast.makeText(getApplicationContext(),
-                    "Dein Name sollte aus mindestens " + MIN_NAME_LENGTH + " Zeichen bestehen!",
+                    "Der Name sollte aus mindestens " + MIN_NAME_LENGTH + " Zeichen bestehen!",
                     Toast.LENGTH_SHORT).show();
             return false;
         }
