@@ -32,6 +32,10 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
         a.recycle();
     }
 
+    public void setDividerColor(int color) {
+        mDivider.setColorFilter(color, PorterDuff.Mode.MULTIPLY);
+    }
+
     public DividerItemDecoration(Context context, AttributeSet attrs, boolean showFirstDivider,
                                  boolean showLastDivider) {
         this(context, attrs);

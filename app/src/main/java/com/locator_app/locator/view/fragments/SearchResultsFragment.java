@@ -1,6 +1,7 @@
 package com.locator_app.locator.view.fragments;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -27,7 +28,11 @@ public class SearchResultsFragment extends Fragment {
     private LocationRecyclerViewAdapter adapter = new LocationRecyclerViewAdapter();
     private RecyclerView view;
 
-    public SearchResultsFragment() {}
+    public SearchResultsFragment() {
+        adapter.setItemBackgroundColor(Color.TRANSPARENT);
+        adapter.setTitleColor(Color.WHITE);
+        adapter.setDescrColor(Color.WHITE);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -38,9 +43,12 @@ public class SearchResultsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         if (view == null) {
+            DividerItemDecoration divider = new DividerItemDecoration(getContext(), null);
+            divider.setDividerColor(Color.LTGRAY);
+
             view = (RecyclerView) inflater.inflate(R.layout.fragment_list, container, false);
             view.setLayoutManager(new LinearLayoutManager(view.getContext()));
-            view.addItemDecoration(new DividerItemDecoration(getContext(), null));
+            view.addItemDecoration(divider);
             view.setHasFixedSize(true);
             view.setAdapter(adapter);
         }

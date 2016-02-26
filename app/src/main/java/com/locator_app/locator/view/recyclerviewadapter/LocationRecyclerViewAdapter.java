@@ -33,22 +33,25 @@ public class LocationRecyclerViewAdapter extends RecyclerView.Adapter<LocationRe
         notifyDataSetChanged();
     }
 
-    private boolean whiteStyle = false;
-    public void setWhiteStyle() { whiteStyle = true; }
+    private int itemBackgroundColor = Color.WHITE;
+    public void setItemBackgroundColor(int color) { itemBackgroundColor = color; }
+    private int titleColor = Color.BLACK;
+    public void setTitleColor(int color) { titleColor = color; }
+    private int descrColor = Color.BLACK;
+    public void setDescrColor(int color) { descrColor = color; }
+
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.default_list_item, parent, false);
 
-        if (whiteStyle) {
-            view.setBackgroundColor(Color.TRANSPARENT);
-            TextView text = (TextView) view.findViewById(R.id.text);
-            TextView desc = (TextView) view.findViewById(R.id.description);
+        view.setBackgroundColor(itemBackgroundColor);
+        TextView text = (TextView) view.findViewById(R.id.text);
+        TextView desc = (TextView) view.findViewById(R.id.description);
 
-            text.setTextColor(Color.WHITE);
-            desc.setTextColor(Color.WHITE);
-        }
+        text.setTextColor(titleColor);
+        desc.setTextColor(descrColor);
 
         return new ViewHolder(view);
     }
