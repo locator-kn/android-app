@@ -2,6 +2,7 @@ package com.locator_app.locator.apiservice.search;
 
 import com.locator_app.locator.apiservice.Api;
 import com.locator_app.locator.apiservice.ServiceFactory;
+import com.locator_app.locator.apiservice.errorhandling.GenericErrorHandler;
 import com.locator_app.locator.apiservice.schoenhier.SchoenHiersNearbyResponse;
 import com.locator_app.locator.apiservice.users.RegistrationResponse;
 import com.locator_app.locator.model.LocatorLocation;
@@ -30,25 +31,11 @@ public class SearchApiService {
     public Observable<List<LocatorLocation>> search(String searchString,
                                              double lon,
                                              double lat) {
-        return service.search(searchString, lon, lat)
-                .doOnError(this::handleError)
-                .flatMap(this::parseSearchResponse);
-    }
-
-    private Observable<List<LocatorLocation>> parseSearchResponse(Response<SearchResponse> response) {
-        if (response.isSuccess()) {
-            List<LocatorLocation> allLocations = response.body().locatorLocations;
-            allLocations.addAll(response.body().googleLocations);
-            return Observable.just(allLocations);
-        }
-        return Observable.error(new Exception("http-error: " + Integer.toString(response.code())));
-    }
-
-    private void handleError(Throwable throwable) {
-        if (throwable instanceof HttpException) {
-            HttpException ex = (HttpException) throwable;
-        } else if (throwable instanceof UnknownHostException) {
-            UnknownHostException ex = (UnknownHostException) throwable;
-        }
+        return GenericErrorHandler.wrapSingle(service.search(searchString, lon, lat))
+                .flatMap(response -> {
+                    List<LocatorLocation> allLocations = response.locatorLocations;
+                    allLocations.addAll(response.googleLocations);
+                    return Observable.just(allLocations);
+                });
     }
 }
