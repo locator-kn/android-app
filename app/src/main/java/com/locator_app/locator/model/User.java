@@ -40,6 +40,12 @@ public class User implements LocatorObject, Serializable {
     @SerializedName("following")
     public List<String> following = new LinkedList<>();
 
+    @SerializedName("location_count")
+    public int locationCount;
+
+    @SerializedName("follower_count")
+    public int followerCount;
+
     @Override
     public String thumbnailUri() {
         return Api.serverUrl + picture;
