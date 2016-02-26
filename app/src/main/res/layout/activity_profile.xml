@@ -150,10 +150,10 @@
                         />
 
                     <ImageView
-                        android:id="@+id/showMore"
+                        android:id="@+id/unFollowUser"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/three_dots_black"
+                        android:src="@drawable/follow_user_small"
                         android:layout_weight="1"
                         />
 
