@@ -106,6 +106,8 @@ public class ChooseCategories extends Activity {
         }
     }
 
+    boolean loading = false;
+
     @OnClick(R.id.next)
     void onNextClicked() {
         if (selectedCategories.size() > 0) {
@@ -113,9 +115,17 @@ public class ChooseCategories extends Activity {
 //            intent.putExtras(extras);
 //            intent.putCharSequenceArrayListExtra("categories", selectedCategories);
 //            startActivity(intent);
+            loading = true;
             LoadingSpinner.showSpinner(this);
             cancelButton.setVisibility(View.GONE);
             //upload location
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (!loading) {
+            super.onBackPressed();
         }
     }
 
