@@ -54,7 +54,7 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
         return users.size();
     }
 
-    static class ViewHolder extends LocationRecyclerViewAdapter.ViewHolder {
+    static class ViewHolder extends LocationRecyclerViewAdapter.GenericViewHolder {
 
         public final View view;
         public final TextView name;

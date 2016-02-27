@@ -40,6 +40,22 @@ public class LocationRecyclerViewAdapter extends RecyclerView.Adapter<LocationRe
     private int descrColor = Color.BLACK;
     public void setDescrColor(int color) { descrColor = color; }
 
+    private ListItemFiller listItemFiller = (title, description, creationDate, imageView, location) -> {
+        title.setText(location.title);
+        description.setText(location.description);
+        Glide.with(LocatorApplication.getAppContext())
+                .load(location.thumbnailUri())
+                .dontAnimate()
+                .into(imageView);
+        if (location.createDate != null) {
+            String formattedDate = DateConverter.toddMMyyyy(location.createDate);
+            creationDate.setText(formattedDate);
+        }
+    };
+    public void setListItemFiller(ListItemFiller filler) {
+        listItemFiller = filler;
+    }
+
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -53,7 +69,7 @@ public class LocationRecyclerViewAdapter extends RecyclerView.Adapter<LocationRe
         text.setTextColor(titleColor);
         desc.setTextColor(descrColor);
 
-        return new ViewHolder(view);
+        return new ViewHolder(view, listItemFiller);
     }
 
     LocationClickHandler locationClickHandler = (v, location) -> {
@@ -82,16 +98,15 @@ public class LocationRecyclerViewAdapter extends RecyclerView.Adapter<LocationRe
         return locations.size();
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
+    static abstract class GenericViewHolder extends RecyclerView.ViewHolder {
 
         public final View view;
         public final TextView title;
         public final TextView description;
         public final TextView creationDate;
         public final CircleImageView imageView;
-        private String formattedDate = "";
 
-        public ViewHolder(View view) {
+        public GenericViewHolder(View view) {
             super(view);
             this.view = view;
             title = (TextView) view.findViewById(R.id.text);
@@ -99,19 +114,25 @@ public class LocationRecyclerViewAdapter extends RecyclerView.Adapter<LocationRe
             creationDate = (TextView) view.findViewById(R.id.bubble_info);
             imageView = (CircleImageView) view.findViewById(R.id.bubbleView);
         }
+    }
+
+    static class ViewHolder extends GenericViewHolder {
+        private ListItemFiller listItemFiller;
+
+        public ViewHolder(View view, ListItemFiller filler) {
+            super(view);
+            listItemFiller = filler;
+        }
 
         public void update(LocatorLocation location) {
-            title.setText(location.title);
-            description.setText(location.description);
-            Glide.with(LocatorApplication.getAppContext())
-                    .load(location.thumbnailUri())
-                    .dontAnimate()
-                    .into(imageView);
-            if (formattedDate.isEmpty() && location.createDate != null) {
-                formattedDate = DateConverter.toddMMyyyy(location.createDate);
-            }
-            creationDate.setText(formattedDate);
+            listItemFiller.fillItem(title, description, creationDate, imageView, location);
         }
+    }
+
+    public interface ListItemFiller {
+        void fillItem(TextView title, TextView description,
+                      TextView creationDate, CircleImageView imageView,
+                      LocatorLocation location);
     }
 }
 
