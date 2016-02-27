@@ -14,7 +14,7 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="@string/are_you_here"
+            android:text="Benenne deine Location"
             android:gravity="center"
             android:enabled="false"
             android:textColor="@android:color/white" />
