@@ -40,8 +40,8 @@ public class GravitySimulator {
             double cos = (-gravityObject.x + other.x) / distance;
             double sin = (-gravityObject.y + other.y) / distance;
 
-            gravityObject.vx = gravityObject.vx * 0.5 + cos * pen;
-            gravityObject.vx = gravityObject.vx * 0.5 + sin * pen;
+            gravityObject.vx = gravityObject.vx * 0.7 + cos * pen;
+            gravityObject.vy = gravityObject.vy * 0.7 + sin * pen;
         }
 
         for (GravityObject other: gravityObjects) {

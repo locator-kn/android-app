@@ -6,16 +6,13 @@ import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.locator_app.locator.LocatorApplication;
 import com.locator_app.locator.R;
+import com.locator_app.locator.apiservice.my.BubbleScreenResponse;
 import com.locator_app.locator.controller.LocationController;
 import com.locator_app.locator.model.LocatorLocation;
 import com.locator_app.locator.model.LocatorObject;
 import com.locator_app.locator.model.Message;
-import com.locator_app.locator.apiservice.my.BubbleScreenResponse;
 import com.locator_app.locator.view.LocationDetailActivity;
-import com.locator_app.locator.view.profile.ProfileActivity;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -62,7 +59,7 @@ public class BubbleController {
     }
 
     public void initUserProfileBubble() {
-        int radius = getRadiusByPriority(2);
+        int radius = getRadiusByPriority(10);
         layout.setBubbleRadius(userProfileBubble.view, radius);
         layout.setBubbleCenter(userProfileBubble.view, 0.5, 0.89);
         userProfileBubble.view.setImage(R.drawable.profile);
@@ -77,6 +74,8 @@ public class BubbleController {
             handleBubbleUpdate(response);
         }
         if (needGravityUpdate) {
+            simulateGravity();
+            simulateGravity();
             simulateGravity();
         }
     }
@@ -119,11 +118,13 @@ public class BubbleController {
 
     private void handleFirstScreenUpdate(final BubbleScreenResponse response) {
         Observable<Bubble> locations = Observable.from(response.locations)
+                .take(10)
                 .map(locationResult -> {
                     final int priority = getPriority(locationResult, response.locations);
                     return makeLocationBubble(locationResult.location, priority);
                 });
         Observable<Bubble> messages = Observable.from(response.messages)
+                .take(0)
                 .map(message -> {
                     final int priority = getPriority(message, response.messages);
                     return makeMessageBubble(message, priority);
@@ -198,17 +199,24 @@ public class BubbleController {
     }
 
     private void positionBubblesInDifferentQuadrants() {
-        final int startQuadrant = 1;
-        int nextQuadrant = positionBubbles(0, startQuadrant);
-        nextQuadrant = positionBubbles(1, nextQuadrant);
-        nextQuadrant = positionBubbles(2, nextQuadrant);
+        int nextQuadrant = 0;
+        int priority = 0;
+        while (true) {
+            nextQuadrant = positionBubbles(priority, nextQuadrant+1);
+            priority++;
+            if (nextQuadrant == -1) {
+                break;
+            }
+        }
     }
 
     private int positionBubbles(int priority, int startQuadrant) {
-        Iterable<Bubble> bubblesToPosition = Observable.from(bubbles)
+        List<Bubble> bubblesToPosition = Observable.from(bubbles)
                                                 .filter(bubble -> bubble.priority == priority)
-                                                .toBlocking()
-                                                .toIterable();
+                                                .toList().toBlocking().single();
+        if (bubblesToPosition.isEmpty()) {
+            return -1;
+        }
         int quadrant = startQuadrant;
         for (Bubble bubble: bubblesToPosition) {
             Point bubbleCenter = getInitialBubbleCenter(quadrant);
@@ -316,18 +324,15 @@ public class BubbleController {
     }
 
     private int getRadiusByPriority(int priority) {
-        double widthFactor = 0;
+        double widthFactor = 0.09;
         if (priority == -1) {
             widthFactor = 0.2;
         }
-        if (priority == 0) {
-            widthFactor = 0.13;
+        else if (priority == 0) {
+            widthFactor = 0.15;
         }
-        if (priority == 1) {
-            widthFactor = 0.10;
-        }
-        if (priority == 2) {
-            widthFactor = 0.07;
+        else if (priority <= 3) {
+            widthFactor = 0.12;
         }
         return (int) (widthFactor * layout.getWidth());
     }
