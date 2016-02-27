@@ -47,11 +47,11 @@ public class ChooseCategories extends Activity {
     ImageView cancelButton;
 
     private static final String NATURE_ID    = "nature";
-    private static final String NIGHTLIFE_ID = "nightlife";
+    private static final String NIGHTLIFE_ID = "party";
     private static final String CULTURE_ID   = "culture";
     private static final String SECRET_ID    = "secret";
     private static final String GASTRO_ID    = "gastro";
-    private static final String HOLIDAY_ID   = "holitday";
+    private static final String HOLIDAY_ID   = "holiday";
 
     @Bind(R.id.next)
     ImageView next;

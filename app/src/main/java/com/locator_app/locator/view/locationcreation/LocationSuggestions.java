@@ -39,7 +39,6 @@ public class LocationSuggestions extends AppCompatActivity implements SearchResu
             actionBar.hide();
         }
 
-
         extras = getIntent().getExtras();
 
         searchResultsFragment = (SearchResultsFragment) getSupportFragmentManager()
