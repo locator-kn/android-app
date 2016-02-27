@@ -68,7 +68,10 @@ public class LocationSuggestions extends AppCompatActivity implements SearchResu
     @Override
     public void onLocationClicked(LocatorLocation location) {
         if (location instanceof GoogleLocation) {
-            // go to Kategorie wählen
+            Intent intent = new Intent(this, ChooseCategories.class);
+            intent.putExtras(extras);
+            intent.putExtra("name", location.title);
+            startActivity(intent);
         } else {
             // add image as impression; go to location detail view
         }
