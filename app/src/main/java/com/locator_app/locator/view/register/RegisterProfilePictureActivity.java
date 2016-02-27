@@ -1,4 +1,4 @@
-package com.locator_app.locator.view;
+package com.locator_app.locator.view.register;
 
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -20,6 +20,9 @@ import com.locator_app.locator.R;
 import com.locator_app.locator.apiservice.users.RegistrationRequest;
 import com.locator_app.locator.controller.UserController;
 import com.locator_app.locator.util.BitmapHelper;
+import com.locator_app.locator.view.OnBoardingChoiceActivity;
+import com.locator_app.locator.view.login.LoginCustomActionBar;
+import com.locator_app.locator.view.login.LoginRegisterStartActivity;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;

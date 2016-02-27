@@ -1,4 +1,4 @@
-package com.locator_app.locator.view;
+package com.locator_app.locator.view.login;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -10,6 +10,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.locator_app.locator.R;
+import com.locator_app.locator.view.login.LoginCustomActionBar;
+import com.locator_app.locator.view.login.LoginRegisterStartActivity;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;

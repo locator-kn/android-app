@@ -1,19 +1,17 @@
-package com.locator_app.locator.view;
+package com.locator_app.locator.view.register;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
-import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 import com.locator_app.locator.R;
+import com.locator_app.locator.view.login.LoginCustomActionBar;
+import com.locator_app.locator.view.login.LoginRegisterStartActivity;
+
 import java.util.HashMap;
 import butterknife.Bind;
 import butterknife.ButterKnife;

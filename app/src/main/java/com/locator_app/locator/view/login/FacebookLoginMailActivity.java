@@ -1,4 +1,4 @@
-package com.locator_app.locator.view;
+package com.locator_app.locator.view.login;
 
 import android.content.Context;
 import android.content.Intent;

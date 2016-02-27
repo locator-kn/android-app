@@ -64,7 +64,7 @@
             android:exported="false" />
 
         <activity
-            android:name=".view.LoginRegisterStartActivity"
+            android:name=".view.login.LoginRegisterStartActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -76,37 +76,37 @@
             android:name=".view.HomeActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".view.LoginRegisterActivity"
+            android:name=".view.login.LoginRegisterActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".view.LoginMailActivity"
+            android:name=".view.login.LoginMailActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".view.LoginPasswordActivity"
+            android:name=".view.login.LoginPasswordActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".view.RegisterNameActivity"
+            android:name=".view.register.RegisterNameActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".view.RegisterResidenceActivity"
+            android:name=".view.register.RegisterResidenceActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".view.RegisterMailActivity"
+            android:name=".view.register.RegisterMailActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".view.RegisterPasswordActivity"
+            android:name=".view.register.RegisterPasswordActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".view.RegisterProfilePictureActivity"
+            android:name=".view.register.RegisterProfilePictureActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".view.OnBoardingChoiceActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".view.FacebookLoginMailActivity"
+            android:name=".view.login.FacebookLoginMailActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".view.FacebookLoginPasswordActivity"
+            android:name=".view.login.FacebookLoginPasswordActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".view.profile.ProfileActivity"

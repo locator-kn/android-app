@@ -11,11 +11,6 @@ import android.widget.Toast;
 
 import com.locator_app.locator.R;
 import com.locator_app.locator.view.HomeActivity;
-import com.locator_app.locator.view.LoginCustomActionBar;
-import com.locator_app.locator.view.LoginRegisterStartActivity;
-import com.locator_app.locator.view.RegisterResidenceActivity;
-
-import java.util.HashMap;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
