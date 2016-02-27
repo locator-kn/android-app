@@ -43,6 +43,9 @@ public class ChooseCategories extends Activity {
     @Bind(R.id.holiday)
     LinearLayout holiday;
 
+    @Bind(R.id.cancelButton)
+    ImageView cancelButton;
+
     private static final String NATURE_ID    = "nature";
     private static final String NIGHTLIFE_ID = "nightlife";
     private static final String CULTURE_ID   = "culture";
@@ -111,6 +114,7 @@ public class ChooseCategories extends Activity {
 //            intent.putCharSequenceArrayListExtra("categories", selectedCategories);
 //            startActivity(intent);
             LoadingSpinner.showSpinner(this);
+            cancelButton.setVisibility(View.GONE);
             //upload location
         }
     }
