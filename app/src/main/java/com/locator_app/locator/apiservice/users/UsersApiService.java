@@ -38,7 +38,7 @@ public class UsersApiService {
         Observable<Response<List<User>>> getFollowers(@Path("userId") String userId);
 
         @POST(Api.version + "/users/{userId}/follow")
-        Observable<Response<User>> followUser(String userId);
+        Observable<Response<User>> followUser(@Path("userId") String userId);
     }
 
     private UsersApi service = ServiceFactory.createService(UsersApi.class);

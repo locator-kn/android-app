@@ -54,7 +54,9 @@ public class TextImpressionViewHolder extends ImpressionViewHolder {
                                         v.getContext().startActivity(intent);
                                     }
                             );
-                        }
+                        },
+                        (err) -> {}
+
                 );
         date.setText(DateConverter.toddMMyyyy(textImpression.getCreateDate()));
         impressionText.setText(textImpression.getText());

@@ -6,7 +6,10 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.locator_app.locator.R;
 import com.locator_app.locator.controller.LocationController;
@@ -19,11 +22,15 @@ import com.locator_app.locator.view.fragments.FragmentAdapter;
 import com.locator_app.locator.view.fragments.LocationsFragment;
 import com.locator_app.locator.view.fragments.UsersFragment;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 public class ProfileActivity extends FragmentActivity {
@@ -49,6 +56,11 @@ public class ProfileActivity extends FragmentActivity {
 
     @Bind(R.id.countFollowers)
     TextView countFollowers;
+
+    @Bind(R.id.unFollowUser)
+    ImageView unFollowUser;
+
+    List<String> followerIds = null;
 
     User user;
 
@@ -77,6 +89,10 @@ public class ProfileActivity extends FragmentActivity {
         userName.setText(user.name);
         residence.setText(user.residence);
         profileImageBubbleView.setImage(user.thumbnailUri());
+        UserController userController = UserController.getInstance();
+        if (userController.loggedIn() && user._id.equals(userController.me()._id)) {
+            unFollowUser.setVisibility(View.INVISIBLE);
+        }
     }
 
     private void setupTabLayout() {
@@ -106,8 +122,7 @@ public class ProfileActivity extends FragmentActivity {
                             fragment.adapter.setLocations(locations);
                             countLocations.setText(Integer.toString(locations.size()));
                         }),
-                        (error -> {
-                        })
+                        (error) -> { }
                 );
     }
 
@@ -125,9 +140,13 @@ public class ProfileActivity extends FragmentActivity {
                 .observeOn(AndroidSchedulers.mainThread())
                 .toList()
                 .subscribe(
-                        (followers-> {
+                        (followers -> {
                             fragment.adapter.setUsers(followers);
                             countFollowers.setText(Integer.toString(followers.size()));
+
+                            followerIds = Observable.from(followers)
+                                            .map(follower -> follower._id)
+                                            .toList().toBlocking().single();
                         }),
                         (error -> {
                         })
@@ -145,8 +164,7 @@ public class ProfileActivity extends FragmentActivity {
                 .toList()
                 .subscribe(
                         (fragment.adapter::setUsers),
-                        (error -> {
-                        })
+                        (error) -> { }
                 );
     }
 
@@ -160,5 +178,38 @@ public class ProfileActivity extends FragmentActivity {
         Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
+    }
+
+    @OnClick(R.id.unFollowUser)
+    public void unFollowUser() {
+        UserController userController = UserController.getInstance();
+        if (!userController.loggedIn()) {
+            Toast.makeText(getApplicationContext(), "hierfür musst du angemeldet sein :-)", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (followerIds == null) {
+            return;
+        }
+
+        if (!followerIds.contains(userController.me()._id)) {
+            followerIds.add(userController.me()._id);
+            countFollowers.setText(Integer.toString(followerIds.size()));
+            userController.followUser(user._id)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(
+                            (res) -> {
+                            },
+                            (err) -> {
+                                followerIds.remove(userController.me()._id);
+                                countFollowers.setText(Integer.toString(followerIds.size()));
+                                Toast.makeText(getApplicationContext(),
+                                        "uups, das hat leider nicht geklappt", Toast.LENGTH_SHORT).show();
+                            }
+                    );
+        } else {
+            // todo: unfollow
+        }
     }
 }

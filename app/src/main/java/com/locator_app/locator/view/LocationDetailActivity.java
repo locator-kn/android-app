@@ -156,7 +156,10 @@ public class LocationDetailActivity extends FragmentActivity {
         Observable.just(location.images.getNormal())
                 .mergeWith(imageImpressionUris)
                 .toList()
-                .subscribe(imageFragmentAdapter::setImages);
+                .subscribe(
+                        imageFragmentAdapter::setImages,
+                        (err) -> { }
+                );
     }
 
     @OnClick(R.id.goBack)
@@ -188,12 +191,15 @@ public class LocationDetailActivity extends FragmentActivity {
     }
 
     private void showDistanceToLocation() {
-        GpsService service = new GpsService();
+        GpsService service = new GpsService(this);
         service.getCurLocation()
                 .subscribe(
                         (location) -> {
                             //double distance = DistanceCalculator.distanceInKm();
                             //double distanceToLocation = DistanceCalculator.
+                        },
+                        (error) -> {
+
                         }
                 );
     }
