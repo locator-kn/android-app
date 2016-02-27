@@ -29,4 +29,8 @@ public class LocationCreationController {
             activity.startActivity(intent);
         }
     }
+
+    static public void uploadLocation() {
+
+    }
 }

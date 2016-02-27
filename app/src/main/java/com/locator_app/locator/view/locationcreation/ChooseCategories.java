@@ -17,6 +17,7 @@ import com.locator_app.locator.util.GpsService;
 import com.locator_app.locator.view.HomeActivity;
 import com.locator_app.locator.view.fragments.SearchResultsFragment;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -73,7 +74,7 @@ public class ChooseCategories extends Activity {
     @OnClick(R.id.holiday)
     void onHolidayClicked()   { toggleCategory(holiday, HOLIDAY_ID); }
 
-    private List<String> selectedCategories = new LinkedList<>();
+    private ArrayList<CharSequence> selectedCategories = new ArrayList<>();
     private static final int MAX_CATEGORIES = 3;
 
     synchronized
@@ -103,9 +104,13 @@ public class ChooseCategories extends Activity {
 
     @OnClick(R.id.next)
     void onNextClicked() {
-        Intent intent = new Intent(this, NameLocation.class);
-        intent.putExtras(extras);
-        startActivity(intent);
+        if (selectedCategories.size() > 0) {
+//            Intent intent = new Intent(this, NameLocation.class);
+//            intent.putExtras(extras);
+//            intent.putCharSequenceArrayListExtra("categories", selectedCategories);
+//            startActivity(intent);
+            //upload location
+        }
     }
 
     @OnClick(R.id.cancelButton)
