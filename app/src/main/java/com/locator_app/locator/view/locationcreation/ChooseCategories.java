@@ -15,6 +15,7 @@ import com.locator_app.locator.model.GoogleLocation;
 import com.locator_app.locator.model.LocatorLocation;
 import com.locator_app.locator.util.GpsService;
 import com.locator_app.locator.view.HomeActivity;
+import com.locator_app.locator.view.LoadingSpinner;
 import com.locator_app.locator.view.fragments.SearchResultsFragment;
 
 import java.util.ArrayList;
@@ -109,6 +110,7 @@ public class ChooseCategories extends Activity {
 //            intent.putExtras(extras);
 //            intent.putCharSequenceArrayListExtra("categories", selectedCategories);
 //            startActivity(intent);
+            LoadingSpinner.showSpinner(this);
             //upload location
         }
     }
