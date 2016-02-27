@@ -9,15 +9,22 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.locator_app.locator.LocatorApplication;
 import com.locator_app.locator.R;
 import com.locator_app.locator.controller.SearchController;
+import com.locator_app.locator.model.GoogleLocation;
 import com.locator_app.locator.model.LocatorLocation;
+import com.locator_app.locator.util.DateConverter;
 import com.locator_app.locator.view.DividerItemDecoration;
 import com.locator_app.locator.view.recyclerviewadapter.LocationRecyclerViewAdapter;
 
 import java.util.LinkedList;
 import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class SearchResultsFragment extends Fragment {
 
@@ -29,6 +36,19 @@ public class SearchResultsFragment extends Fragment {
         adapter.setItemBackgroundColor(Color.TRANSPARENT);
         adapter.setTitleColor(Color.WHITE);
         adapter.setDescrColor(Color.WHITE);
+        adapter.setListItemFiller((title, description, creationDate, imageView, location) -> {
+            title.setText(location.title);
+            Glide.with(LocatorApplication.getAppContext())
+                    .load(location.thumbnailUri())
+                    .dontAnimate()
+                    .into(imageView);
+
+            if (location instanceof GoogleLocation) {
+                description.setText("Vorschlag von Google");
+            } else {
+                description.setText("Vorschlag von Locator");
+            }
+        });
 
         adapter.setLocationClickHandler((v, location) -> {
             if (listener != null) {
