@@ -94,7 +94,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @OnTouch(R.id.schoenHierButton)
     boolean onschoenHierButtonTouch(MotionEvent arg1) {
         if (arg1.getAction()== MotionEvent.ACTION_DOWN) {
-            schoenHierButton.setAlpha((float) 0.8);
+            schoenHierButton.setAlpha((float) 0.6);
         }
         else if (arg1.getAction()==MotionEvent.ACTION_UP){
             schoenHierButton.setAlpha((float) 1);

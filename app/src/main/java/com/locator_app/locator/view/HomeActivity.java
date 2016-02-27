@@ -69,7 +69,7 @@ public class HomeActivity extends AppCompatActivity {
     @OnTouch(R.id.schoenHierBubble)
     boolean onSchoenHierBubbleTouch(MotionEvent arg1) {
         if (arg1.getAction()== MotionEvent.ACTION_DOWN) {
-            schoenHierBubble.setAlpha((float) 0.8);
+            schoenHierBubble.setAlpha((float) 0.6);
         }
         else if (arg1.getAction()==MotionEvent.ACTION_UP){
             schoenHierBubble.setAlpha((float) 1);
