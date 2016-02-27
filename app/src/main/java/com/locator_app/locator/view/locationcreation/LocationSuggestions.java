@@ -74,7 +74,6 @@ public class LocationSuggestions extends AppCompatActivity implements SearchResu
         if (searchResult.isEmpty()) {
             Intent intent = new Intent(this, NameLocation.class);
             intent.putExtras(extras);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
             startActivity(intent);
             this.finish();
         }
