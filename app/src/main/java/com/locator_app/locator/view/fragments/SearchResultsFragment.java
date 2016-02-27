@@ -16,9 +16,12 @@ import com.locator_app.locator.model.LocatorLocation;
 import com.locator_app.locator.view.DividerItemDecoration;
 import com.locator_app.locator.view.recyclerviewadapter.LocationRecyclerViewAdapter;
 
+import java.util.LinkedList;
+import java.util.List;
+
 public class SearchResultsFragment extends Fragment {
 
-    private OnSearchItemClickListener locationClickListener;
+    private SearchInteractionListener listener;
     private LocationRecyclerViewAdapter adapter = new LocationRecyclerViewAdapter();
     private RecyclerView view;
 
@@ -28,8 +31,8 @@ public class SearchResultsFragment extends Fragment {
         adapter.setDescrColor(Color.WHITE);
 
         adapter.setLocationClickHandler((v, location) -> {
-            if (locationClickListener != null) {
-                locationClickListener.onLocationClicked(location);
+            if (listener != null) {
+                listener.onLocationClicked(location);
             }
         });
     }
@@ -57,31 +60,41 @@ public class SearchResultsFragment extends Fragment {
 
     public void search(double lon, double lat) {
         SearchController.getInstance().search(lon, lat)
-                .subscribe(adapter::setLocations,
-                           (error) -> {});
+                .subscribe(this::onSearchSuccess,
+                           this::onSearchError);
     }
 
     public void searchString(String searchString, double lon, double lat) {
         SearchController.getInstance().searchString(searchString, lon, lat)
-                .subscribe(adapter::setLocations,
-                        (error) -> {});
+                .subscribe(this::onSearchSuccess,
+                           this::onSearchError);
+    }
+
+    private void onSearchError(Throwable throwable) {
+        listener.onSearchResult(new LinkedList<>());
+    }
+
+    private void onSearchSuccess(List<LocatorLocation> result) {
+        listener.onSearchResult(result);
+        adapter.setLocations(result);
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnSearchItemClickListener) {
-            locationClickListener = (OnSearchItemClickListener) context;
+        if (context instanceof SearchInteractionListener) {
+            listener = (SearchInteractionListener) context;
         }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        locationClickListener = null;
+        listener = null;
     }
 
-    public interface OnSearchItemClickListener {
+    public interface SearchInteractionListener {
         void onLocationClicked(LocatorLocation location);
+        void onSearchResult(List<LocatorLocation> searchResult);
     }
 }
