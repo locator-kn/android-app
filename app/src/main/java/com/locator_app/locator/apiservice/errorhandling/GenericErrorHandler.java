@@ -5,30 +5,37 @@ import android.util.Log;
 
 import com.google.gson.JsonSyntaxException;
 import com.locator_app.locator.apiservice.errorhandling.RequestError.RequestErrorType;
+import com.squareup.okhttp.MultipartBuilder;
 
 import java.net.UnknownHostException;
 import java.util.List;
 
 import retrofit.Response;
 import rx.Observable;
+import rx.functions.Func1;
 
 public class GenericErrorHandler {
 
     public static <T> Observable<T> wrapSingle(Observable<Response<T>> observable) {
         return observable
                 .doOnError(throwable -> Log.d("GenericErrorHandler", throwable.getMessage()))
+                .onErrorResumeNext(throwable -> {
+                    Log.d("RequestError", throwable.getClass().toString());
+                    return Observable.error(getRequestErrorFromThrowable(throwable));
+                })
                 .flatMap(response -> {
                     if (response.isSuccess()) {
                         return Observable.just(response.body());
                     }
+                    Log.d("RequestHeaders:", response.raw().request().headers().toString());
+                    Log.d("Request", response.errorBody().toString());
                     return Observable.error(getHttpErrorFromResponse(response));
-                }).onErrorResumeNext(throwable -> {
-                    return Observable.error(getRequestErrorFromThrowable(throwable));
                 });
     }
 
     public static <T> Observable<T> wrapList(Observable<Response<List<T>>> observable) {
-        return wrapSingle(observable).flatMapIterable(x -> x);
+        return wrapSingle(observable)
+                .flatMapIterable(x -> x);
     }
 
     private static HttpError getHttpErrorFromResponse(Response response) {
