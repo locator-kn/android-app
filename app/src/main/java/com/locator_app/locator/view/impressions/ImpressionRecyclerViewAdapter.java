@@ -23,7 +23,7 @@ public class ImpressionRecyclerViewAdapter
     final int numberOfAdditionalInfoTypes = 3;
 
     List<AbstractImpression> impressions = new LinkedList<>();
-    LocatorLocation location = null;
+    public LocatorLocation location = null;
     LocationInfoViewHolder locationInfo = null;
     final List<AbstractImpression.ImpressionType> supportedImpressionTypes =
             Arrays.asList(ImpressionType.IMAGE, ImpressionType.VIDEO, ImpressionType.TEXT);
