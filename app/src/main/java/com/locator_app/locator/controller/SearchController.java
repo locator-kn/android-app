@@ -16,14 +16,17 @@ import rx.schedulers.Schedulers;
 public class SearchController {
     SearchApiService searchService;
 
-    public Observable<List<LocatorLocation>> search(String searchString,
-                                                        double lon, double lat) {
-        return searchService.search(searchString, lon, lat)
+    public Observable<List<LocatorLocation>> search(double lon, double lat) {
+        return searchService.search(lon, lat)
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnError((exception) -> Toast.makeText(LocatorApplication.getAppContext(),
-                        "Search failed",
-                        Toast.LENGTH_LONG).show());
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public Observable<List<LocatorLocation>> searchString(String searchString,
+                                                          double lon, double lat) {
+        return searchService.searchString(searchString, lon, lat)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     private static SearchController instance;

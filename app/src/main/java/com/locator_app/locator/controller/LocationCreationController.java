@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
 
-import com.locator_app.locator.service.RegistrationIntentService;
 import com.locator_app.locator.view.locationcreation.LocationSuggestions;
 
 public class LocationCreationController {
@@ -29,5 +28,9 @@ public class LocationCreationController {
             intent.putExtra("picture", imageBitmap);
             activity.startActivity(intent);
         }
+    }
+
+    static public void uploadLocation() {
+
     }
 }

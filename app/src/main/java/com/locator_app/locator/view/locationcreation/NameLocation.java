@@ -10,11 +10,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.locator_app.locator.R;
-import com.locator_app.locator.view.LoginCustomActionBar;
-import com.locator_app.locator.view.LoginRegisterStartActivity;
-import com.locator_app.locator.view.RegisterResidenceActivity;
-
-import java.util.HashMap;
+import com.locator_app.locator.view.HomeActivity;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -25,6 +21,8 @@ public class NameLocation extends Activity {
 
     @Bind(R.id.locationName)
     EditText locationNameEdit;
+
+    Bundle extras;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +40,7 @@ public class NameLocation extends Activity {
             return false;
         });
 
+        extras = getIntent().getExtras();
     }
 
     @OnClick(R.id.next)
@@ -51,16 +50,23 @@ public class NameLocation extends Activity {
 
     private boolean confirmInput() {
         if (checkUsernameLength()) {
-            Toast.makeText(getApplicationContext(),
-                    "ok",
-                    Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(this, ChooseCategories.class);
+            intent.putExtras(extras);
+            intent.putExtra("name", locationNameEdit.getText());
+            startActivity(intent);
             return true;
         } else {
             Toast.makeText(getApplicationContext(),
-                    "Dein Name sollte aus mindestens " + MIN_NAME_LENGTH + " Zeichen bestehen!",
+                    "Der Name sollte aus mindestens " + MIN_NAME_LENGTH + " Zeichen bestehen!",
                     Toast.LENGTH_SHORT).show();
             return false;
         }
+    }
+
+    @OnClick(R.id.cancelButton)
+    void onCancelButtonClicked() {
+        Intent intent = new Intent(this, HomeActivity.class);
+        startActivity(intent);
     }
 
     private boolean checkUsernameLength() {

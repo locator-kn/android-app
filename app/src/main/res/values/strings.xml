@@ -25,6 +25,7 @@
     <string name="are_you_here">Bist du vielleicht hier?</string>
     <string name="locations_exist">Es gibt schon Locations mit diesen Koordinaten.</string>
     <string name="location_name">Name eintragen</string>
+    <string name="choose_categories">Kategorien wählen</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

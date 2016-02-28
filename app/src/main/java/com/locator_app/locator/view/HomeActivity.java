@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
-import android.view.Window;
 import android.widget.Toast;
 
 
@@ -19,6 +18,7 @@ import com.locator_app.locator.util.GpsService;
 import com.locator_app.locator.view.bubble.BubbleController;
 import com.locator_app.locator.view.bubble.BubbleView;
 import com.locator_app.locator.view.bubble.RelativeBubbleLayout;
+import com.locator_app.locator.view.login.LoginRegisterStartActivity;
 import com.locator_app.locator.view.map.MapsActivity;
 import com.locator_app.locator.view.profile.ProfileActivity;
 
@@ -69,7 +69,7 @@ public class HomeActivity extends AppCompatActivity {
     @OnTouch(R.id.schoenHierBubble)
     boolean onSchoenHierBubbleTouch(MotionEvent arg1) {
         if (arg1.getAction()== MotionEvent.ACTION_DOWN) {
-            schoenHierBubble.setAlpha((float) 0.8);
+            schoenHierBubble.setAlpha((float) 0.6);
         }
         else if (arg1.getAction()==MotionEvent.ACTION_UP){
             schoenHierBubble.setAlpha((float) 1);

@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="#344c93"
+        android:weightSum="1">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/shape_gradient_black">
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/choose_categories"
+                android:gravity="center"
+                android:enabled="false"
+                android:textColor="@android:color/white" />
+
+            <ImageView
+                android:id="@+id/cancelButton"
+                android:layout_width="17dp"
+                android:layout_height="17dp"
+                android:src="@drawable/cross"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginRight="17dp" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/content">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@+id/next">
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:layout_marginLeft="45dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_marginTop="150dp"
+                        android:layout_marginBottom="30dp">
+
+                        <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:id="@+id/nature"
+                            android:layout_weight="1"
+                            android:alpha="0.3">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="0dp"
+                                android:id="@+id/imageView5"
+                                android:src="@drawable/category_natur"
+                                android:layout_weight="1" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp"
+                                android:textAppearance="?android:attr/textAppearanceSmall"
+                                android:text="Natur"
+                                android:id="@+id/textView5"
+                                android:textAlignment="center"
+                                android:layout_weight="0.5"
+                                android:textColor="#ffffff" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:id="@+id/nightlife"
+                            android:alpha="0.3">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="0dp"
+                                android:id="@+id/imageView6"
+                                android:src="@drawable/category_party"
+                                android:layout_weight="1" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp"
+                                android:textAppearance="?android:attr/textAppearanceSmall"
+                                android:text="Nightlife"
+                                android:id="@+id/textView6"
+                                android:layout_weight="0.5"
+                                android:textAlignment="center"
+                                android:textColor="#ffffff" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginTop="100dp"
+                        android:layout_marginBottom="80dp">
+
+                        <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:id="@+id/culture"
+                            android:layout_weight="1"
+                            android:alpha="0.3">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="0dp"
+                                android:id="@+id/imageView7"
+                                android:src="@drawable/category_culture"
+                                android:layout_weight="1" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp"
+                                android:textAppearance="?android:attr/textAppearanceSmall"
+                                android:text="Kultur"
+                                android:id="@+id/textView7"
+                                android:textAlignment="center"
+                                android:layout_weight="0.5"
+                                android:textColor="#ffffff" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:id="@+id/secret"
+                            android:alpha="0.3">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="0dp"
+                                android:id="@+id/imageView8"
+                                android:src="@drawable/category_secret"
+                                android:layout_weight="1" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp"
+                                android:textAppearance="?android:attr/textAppearanceSmall"
+                                android:text="Geheimtip"
+                                android:id="@+id/textView8"
+                                android:layout_weight="0.5"
+                                android:textAlignment="center"
+                                android:textColor="#ffffff" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:layout_marginRight="45dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="150dp"
+                        android:layout_marginBottom="30dp">
+
+                        <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:id="@+id/gastro"
+                            android:layout_weight="1"
+                            android:alpha="0.3">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="0dp"
+                                android:id="@+id/imageView9"
+                                android:src="@drawable/category_gastro"
+                                android:layout_weight="1" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp"
+                                android:textAppearance="?android:attr/textAppearanceSmall"
+                                android:text="Gastronomie"
+                                android:id="@+id/textView9"
+                                android:textAlignment="center"
+                                android:layout_weight="0.5"
+                                android:textColor="#ffffff"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:id="@+id/holiday"
+                            android:alpha="0.3">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="0dp"
+                                android:id="@+id/imageView10"
+                                android:src="@drawable/category_holiday"
+                                android:layout_weight="1" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp"
+                                android:textAppearance="?android:attr/textAppearanceSmall"
+                                android:text="Freizeit"
+                                android:id="@+id/textView10"
+                                android:layout_weight="0.5"
+                                android:textAlignment="center"
+                                android:textColor="#ffffff" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </RelativeLayout>
+
+            <ImageView
+                android:id="@+id/next"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_gravity="center_horizontal"
+                android:src="@drawable/no"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="20dp"
+                android:clickable="false"
+                android:alpha="0.3" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:id="@+id/loadingSpinner"
+        android:layout_centerInParent="true"
+        android:adjustViewBounds="false" />
+</RelativeLayout>

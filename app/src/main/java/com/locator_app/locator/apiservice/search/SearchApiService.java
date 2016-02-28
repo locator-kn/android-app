@@ -17,21 +17,33 @@ public class SearchApiService {
     public interface SearchApi {
 
         @GET(Api.version + "/locations/search/{searchString}")
-        Observable<Response<SearchResponse>> search(@Path("searchString") String searchString,
-                                                    @Query("long") double lon,
+        Observable<Response<SearchResponse>> searchString(@Path("searchString") String searchString,
+                                                          @Query("long") double lon,
+                                                          @Query("lat") double lat);
+
+        @GET(Api.version +"/locations/search")
+        Observable<Response<SearchResponse>> search(@Query("long") double lon,
                                                     @Query("lat") double lat);
     }
 
     private SearchApi service = ServiceFactory.createService(SearchApi.class);
 
-    public Observable<List<LocatorLocation>> search(String searchString,
-                                             double lon,
-                                             double lat) {
-        return GenericErrorHandler.wrapSingle(service.search(searchString, lon, lat))
-                .flatMap(response -> {
-                    List<LocatorLocation> allLocations = response.locatorLocations;
-                    allLocations.addAll(response.googleLocations);
-                    return Observable.just(allLocations);
-                });
+    public Observable<List<LocatorLocation>> searchString(String searchString,
+                                                          double lon,
+                                                          double lat) {
+        return GenericErrorHandler.wrapSingle(service.searchString(searchString, lon, lat))
+                .flatMap(this::parseResponseToList);
+    }
+
+    public Observable<List<LocatorLocation>> search(double lon,
+                                                    double lat) {
+        return GenericErrorHandler.wrapSingle(service.search(lon, lat))
+                .flatMap(this::parseResponseToList);
+    }
+
+    private Observable<List<LocatorLocation>> parseResponseToList(SearchResponse response) {
+        List<LocatorLocation> allLocations = response.locatorLocations;
+        allLocations.addAll(response.googleLocations);
+        return Observable.just(allLocations);
     }
 }

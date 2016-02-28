@@ -1,4 +1,4 @@
-package com.locator_app.locator.view;
+package com.locator_app.locator.view.login;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +11,7 @@ import com.locator_app.locator.R;
 import com.locator_app.locator.controller.DeviceController;
 import com.locator_app.locator.controller.UserController;
 import com.locator_app.locator.service.RegistrationIntentService;
+import com.locator_app.locator.view.HomeActivity;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;

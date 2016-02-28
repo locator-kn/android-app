@@ -1,4 +1,4 @@
-package com.locator_app.locator.view;
+package com.locator_app.locator.view.login;
 
 import android.app.Activity;
 import android.content.Context;
@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.locator_app.locator.R;
+import com.locator_app.locator.view.HomeActivity;
 
 public class LoginCustomActionBar {
 

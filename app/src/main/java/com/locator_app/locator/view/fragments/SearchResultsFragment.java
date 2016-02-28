@@ -9,16 +9,26 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.locator_app.locator.LocatorApplication;
 import com.locator_app.locator.R;
 import com.locator_app.locator.controller.SearchController;
+import com.locator_app.locator.model.GoogleLocation;
 import com.locator_app.locator.model.LocatorLocation;
+import com.locator_app.locator.util.DateConverter;
 import com.locator_app.locator.view.DividerItemDecoration;
 import com.locator_app.locator.view.recyclerviewadapter.LocationRecyclerViewAdapter;
 
+import java.util.LinkedList;
+import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class SearchResultsFragment extends Fragment {
 
-    private OnSearchItemClickListener locationClickListener;
+    private SearchInteractionListener listener;
     private LocationRecyclerViewAdapter adapter = new LocationRecyclerViewAdapter();
     private RecyclerView view;
 
@@ -26,10 +36,23 @@ public class SearchResultsFragment extends Fragment {
         adapter.setItemBackgroundColor(Color.TRANSPARENT);
         adapter.setTitleColor(Color.WHITE);
         adapter.setDescrColor(Color.WHITE);
+        adapter.setListItemFiller((title, description, creationDate, imageView, location) -> {
+            title.setText(location.title);
+            Glide.with(LocatorApplication.getAppContext())
+                    .load(location.thumbnailUri())
+                    .dontAnimate()
+                    .into(imageView);
+
+            if (location instanceof GoogleLocation) {
+                description.setText("Vorschlag von Google");
+            } else {
+                description.setText("Vorschlag von Locator");
+            }
+        });
 
         adapter.setLocationClickHandler((v, location) -> {
-            if (locationClickListener != null) {
-                locationClickListener.onLocationClicked(location);
+            if (listener != null) {
+                listener.onLocationClicked(location);
             }
         });
     }
@@ -55,29 +78,43 @@ public class SearchResultsFragment extends Fragment {
         return view;
     }
 
+    public void search(double lon, double lat) {
+        SearchController.getInstance().search(lon, lat)
+                .subscribe(this::onSearchSuccess,
+                           this::onSearchError);
+    }
 
-    public void search(String searchString, double lon, double lat) {
-        SearchController.getInstance().search(searchString, lon, lat)
-                .subscribe(
-                        adapter::setLocations,
-                        (err) -> {});
+    public void searchString(String searchString, double lon, double lat) {
+        SearchController.getInstance().searchString(searchString, lon, lat)
+                .subscribe(this::onSearchSuccess,
+                           this::onSearchError);
+    }
+
+    private void onSearchError(Throwable throwable) {
+        listener.onSearchResult(new LinkedList<>());
+    }
+
+    private void onSearchSuccess(List<LocatorLocation> result) {
+        listener.onSearchResult(result);
+        adapter.setLocations(result);
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnSearchItemClickListener) {
-            locationClickListener = (OnSearchItemClickListener) context;
+        if (context instanceof SearchInteractionListener) {
+            listener = (SearchInteractionListener) context;
         }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        locationClickListener = null;
+        listener = null;
     }
 
-    public interface OnSearchItemClickListener {
+    public interface SearchInteractionListener {
         void onLocationClicked(LocatorLocation location);
+        void onSearchResult(List<LocatorLocation> searchResult);
     }
 }
