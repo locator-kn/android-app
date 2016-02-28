@@ -20,15 +20,31 @@ public class LoadingSpinner {
     ImageView loadingSpinner;
     View content;
 
-    public LoadingSpinner(Activity a) {
-        activity = a;
-        loadingSpinner = (ImageView) activity.findViewById(R.id.loadingSpinner);
-        content = activity.findViewById(R.id.content);
-
+    private void init() {
         hideSpinner();
         Glide.with(activity).load(R.drawable.preloader)
                 .asGif()
                 .into(loadingSpinner);
+    }
+
+    public LoadingSpinner(Activity a) {
+        activity = a;
+        loadingSpinner = (ImageView) activity.findViewById(R.id.loadingSpinner);
+        content = activity.findViewById(R.id.content);
+        init();
+    }
+
+    public LoadingSpinner(Activity a, ImageView spinner) {
+        activity = a;
+        loadingSpinner = spinner;
+        init();
+    }
+
+    public LoadingSpinner(Activity a, ImageView spinner, View fadeOutContent) {
+        activity = a;
+        loadingSpinner = spinner;
+        content = fadeOutContent;
+        init();
     }
 
     public void showSpinner() {

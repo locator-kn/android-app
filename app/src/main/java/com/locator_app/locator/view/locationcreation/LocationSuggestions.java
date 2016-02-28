@@ -1,20 +1,29 @@
 package com.locator_app.locator.view.locationcreation;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Layout;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.Toast;
 
+import com.locator_app.locator.LocatorApplication;
 import com.locator_app.locator.R;
+import com.locator_app.locator.controller.LocationController;
 import com.locator_app.locator.model.GoogleLocation;
 import com.locator_app.locator.model.LocatorLocation;
 import com.locator_app.locator.util.GpsService;
 import com.locator_app.locator.view.LoadingSpinner;
+import com.locator_app.locator.view.LocationDetailActivity;
 import com.locator_app.locator.view.home.HomeActivity;
 import com.locator_app.locator.view.fragments.SearchResultsFragment;
 
 import java.util.List;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -22,7 +31,21 @@ public class LocationSuggestions extends AppCompatActivity implements SearchResu
     SearchResultsFragment searchResultsFragment;
     Bundle extras;
     GpsService gpsService;
-    LoadingSpinner loadingSpinner;
+
+    @Bind(R.id.uploadLoadingSpinner)
+    ImageView uploadSpinnerView;
+
+    @Bind(R.id.searchLoadingSpinner)
+    ImageView searchSpinnerView;
+
+    @Bind(R.id.content)
+    View fadeOutLayout;
+
+    @Bind(R.id.cancelButton)
+    ImageView cancelButton;
+
+    LoadingSpinner searchLoadingSpinner;
+    LoadingSpinner uploadLoadingSpinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,8 +56,10 @@ public class LocationSuggestions extends AppCompatActivity implements SearchResu
         if (actionBar != null) {
             actionBar.hide();
         }
-        loadingSpinner = new LoadingSpinner(this);
-        loadingSpinner.showSpinner();
+
+        uploadLoadingSpinner = new LoadingSpinner(this, uploadSpinnerView, fadeOutLayout);
+        searchLoadingSpinner = new LoadingSpinner(this, searchSpinnerView);
+        searchLoadingSpinner.showSpinner();
 
         extras = getIntent().getExtras();
 
@@ -73,7 +98,24 @@ public class LocationSuggestions extends AppCompatActivity implements SearchResu
             intent.putExtra("name", location.title);
             startActivity(intent);
         } else {
-            // add image as impression; go to location detail view
+            uploadLoadingSpinner.showSpinner();
+            LocationController.getInstance().createImageImpression(location.id, (Bitmap) extras.get("picture"))
+                    .subscribe(
+                            (val) -> {
+                                Intent intent = new Intent(this, LocationDetailActivity.class);
+                                intent.putExtra("location", location);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                                startActivity(intent);
+                                uploadLoadingSpinner.hideSpinner();
+                                this.finish();
+                            },
+                            (err) -> {
+                                uploadLoadingSpinner.hideSpinner();
+                                Toast.makeText(LocatorApplication.getAppContext(),
+                                        "Deine Impression konnte leider nicht hochgeladen werden :-(",
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                    );
         }
     }
 
@@ -85,7 +127,7 @@ public class LocationSuggestions extends AppCompatActivity implements SearchResu
             startActivity(intent);
             this.finish();
         } else {
-            loadingSpinner.hideSpinner();
+            searchLoadingSpinner.hideSpinner();
         }
     }
 }
