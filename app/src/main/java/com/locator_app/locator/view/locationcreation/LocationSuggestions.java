@@ -9,6 +9,7 @@ import com.locator_app.locator.R;
 import com.locator_app.locator.model.GoogleLocation;
 import com.locator_app.locator.model.LocatorLocation;
 import com.locator_app.locator.util.GpsService;
+import com.locator_app.locator.view.LoadingSpinner;
 import com.locator_app.locator.view.home.HomeActivity;
 import com.locator_app.locator.view.fragments.SearchResultsFragment;
 
@@ -21,6 +22,7 @@ public class LocationSuggestions extends AppCompatActivity implements SearchResu
     SearchResultsFragment searchResultsFragment;
     Bundle extras;
     GpsService gpsService;
+    LoadingSpinner loadingSpinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +33,8 @@ public class LocationSuggestions extends AppCompatActivity implements SearchResu
         if (actionBar != null) {
             actionBar.hide();
         }
+        loadingSpinner = new LoadingSpinner(this);
+        loadingSpinner.showSpinner();
 
         extras = getIntent().getExtras();
 
@@ -76,6 +80,8 @@ public class LocationSuggestions extends AppCompatActivity implements SearchResu
             intent.putExtras(extras);
             startActivity(intent);
             this.finish();
+        } else {
+            loadingSpinner.hideSpinner();
         }
     }
 }
