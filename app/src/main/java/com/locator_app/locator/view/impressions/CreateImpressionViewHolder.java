@@ -1,5 +1,6 @@
 package com.locator_app.locator.view.impressions;
 
+import android.content.Intent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -9,15 +10,20 @@ import android.widget.Toast;
 import com.locator_app.locator.R;
 import com.locator_app.locator.model.impressions.AbstractImpression;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 class CreateImpressionViewHolder extends ImpressionViewHolder {
+
+    TextView numberOfImpressions;
 
     private ImpressionRecyclerViewAdapter impressionRecyclerViewAdapter;
 
     public CreateImpressionViewHolder(ImpressionRecyclerViewAdapter impressionRecyclerViewAdapter, View itemView) {
         super(itemView);
         this.impressionRecyclerViewAdapter = impressionRecyclerViewAdapter;
-        TextView numberOfImpressions = (TextView) itemView.findViewById(R.id.numberOfImpressions);
-        numberOfImpressions.setText(Integer.toString(impressionRecyclerViewAdapter.impressions.size()) + " Impressions");
+        numberOfImpressions = (TextView)itemView.findViewById(R.id.numberOfImpressions);
+        numberOfImpressions.setText("");
         LinearLayout impressionTypes = (LinearLayout) itemView.findViewById(R.id.impressionTypes);
         impressionTypes.setVisibility(View.GONE);
         LinearLayout showHideImpressionTypes = (LinearLayout) itemView.findViewById(R.id.showHideImpressionTypes);
@@ -30,8 +36,16 @@ class CreateImpressionViewHolder extends ImpressionViewHolder {
         });
         ImageView voice = (ImageView) itemView.findViewById(R.id.voiceImpression);
         voice.setOnClickListener(v -> Toast.makeText(itemView.getContext(), "voice", Toast.LENGTH_SHORT).show());
+
         ImageView media = (ImageView) itemView.findViewById(R.id.mediaImpression);
-        media.setOnClickListener(v -> Toast.makeText(itemView.getContext(), "photo", Toast.LENGTH_SHORT).show());
+        media.setOnClickListener(
+                v -> {
+                    Intent intent = new Intent(v.getContext(), ImpressionController.class);
+                    intent.putExtra("locationId", impressionRecyclerViewAdapter.location.id);
+                    intent.putExtra("type", "image");
+                    v.getContext().startActivity(intent);
+                });
+
         media.setOnLongClickListener(v -> {
             Toast.makeText(itemView.getContext(), "video", Toast.LENGTH_SHORT).show();
             return true;
@@ -42,5 +56,11 @@ class CreateImpressionViewHolder extends ImpressionViewHolder {
 
     @Override
     public void bind(AbstractImpression impression) {
+    }
+
+    public void setNumberOfImpressions(int count) {
+        if (numberOfImpressions != null && count > 0) {
+            numberOfImpressions.setText(Integer.toString(count) + " Impressions");
+        }
     }
 }

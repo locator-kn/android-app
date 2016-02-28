@@ -23,8 +23,9 @@ public class ImpressionRecyclerViewAdapter
     final int numberOfAdditionalInfoTypes = 3;
 
     List<AbstractImpression> impressions = new LinkedList<>();
-    LocatorLocation location = null;
+    public LocatorLocation location = null;
     LocationInfoViewHolder locationInfo = null;
+    CreateImpressionViewHolder createImpressionViewHolder = null;
     final List<AbstractImpression.ImpressionType> supportedImpressionTypes =
             Arrays.asList(ImpressionType.IMAGE, ImpressionType.VIDEO, ImpressionType.TEXT);
 
@@ -35,6 +36,9 @@ public class ImpressionRecyclerViewAdapter
 
     public void setImpressions(List<AbstractImpression> impressions) {
         this.impressions = impressions;
+        if (createImpressionViewHolder != null) {
+            createImpressionViewHolder.setNumberOfImpressions(impressions.size());
+        }
         notifyDataSetChanged();
     }
 
@@ -46,9 +50,12 @@ public class ImpressionRecyclerViewAdapter
     @Override
     public ImpressionViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == createNewImpressionViewType) {
-            final int cardId = R.layout.card_new_impression;
-            View v = LayoutInflater.from(parent.getContext()).inflate(cardId, parent, false);
-            return new CreateImpressionViewHolder(this, v);
+            if (createImpressionViewHolder == null) {
+                final int cardId = R.layout.card_new_impression;
+                View v = LayoutInflater.from(parent.getContext()).inflate(cardId, parent, false);
+                createImpressionViewHolder = new CreateImpressionViewHolder(this, v);
+            }
+            return createImpressionViewHolder;
         } else if (viewType == locationDescriptionViewType) {
             final int cardId = R.layout.card_location_description;
             View v = LayoutInflater.from(parent.getContext()).inflate(cardId, parent, false);

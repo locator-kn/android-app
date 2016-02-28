@@ -42,10 +42,14 @@ public class LocationSuggestions extends AppCompatActivity implements SearchResu
                                             .findFragmentById(R.id.searchFragment);
         gpsService = new GpsService(this);
         gpsService.getCurLocation()
-                .subscribe((location -> {
-                    searchResultsFragment.search(location.getLongitude(),
-                                                 location.getLatitude());
-                }));
+                .subscribe(
+                        (location) -> {
+                            searchResultsFragment.search(location.getLongitude(),
+                                    location.getLatitude());
+                        },
+                        (err) -> {
+                        }
+                );
     }
 
     @OnClick(R.id.no)

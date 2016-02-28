@@ -129,12 +129,18 @@
         <meta-data
             android:name="com.locator_app.locator.customglide.LocatorGlideModule"
             android:value="GlideModule" />
-
-        <activity android:name=".view.LocationDetailActivity" />
-        <activity android:name=".view.locationcreation.LocationSuggestions" />
-        <activity android:name=".view.locationcreation.NameLocation" />
-        <activity android:name=".view.ImageActivity"></activity>
-        <activity android:name=".view.locationcreation.ChooseCategories"></activity>
+        
+        <activity android:name=".view.LocationDetailActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".view.locationcreation.LocationSuggestions"
+            android:screenOrientation="portrait" />
+        <activity android:name=".view.locationcreation.NameLocation"
+            android:screenOrientation="portrait" />
+        <activity android:name=".view.ImageActivity"/>
+        <activity android:name=".view.impressions.ImpressionController"
+            android:screenOrientation="portrait" />
+        <activity android:name=".view.locationcreation.ChooseCategories"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

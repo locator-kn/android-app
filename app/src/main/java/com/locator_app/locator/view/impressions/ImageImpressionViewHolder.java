@@ -58,9 +58,7 @@ public class ImageImpressionViewHolder extends ImpressionViewHolder {
                                     }
                             );
                         },
-                        (error) -> {
-                            Toast.makeText(itemView.getContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
+                        (error) -> {}
                 );
         date.setText(DateConverter.toddMMyyyy(imageImpression.getCreateDate()));
         Glide.with(itemView.getContext())
