@@ -68,11 +68,6 @@ public class LocationsApiService {
         @POST(Api.version + "/locations/{locationId}/impressions/image")
         Observable<Response<EchoResponse>> postImageImpression(@Path("locationId") String locationId,
             @Part("file\"; filename=impression.png") RequestBody file);
-
-        @Multipart
-        @POST(Api.version + "/dev/test/formData")
-        Observable<Response<EchoResponse>> testFormData(
-                @Part("file\"; filename=\"impression.jpg\"") RequestBody file);
     }
 
     LocationsApi service = ServiceFactory.createService(LocationsApi.class);
