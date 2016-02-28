@@ -11,6 +11,7 @@ import java.util.List;
 import retrofit.Response;
 import retrofit.http.Body;
 import retrofit.http.GET;
+import retrofit.http.Headers;
 import retrofit.http.POST;
 import retrofit.http.Path;
 import rx.Observable;
@@ -31,6 +32,7 @@ public class UsersApiService {
         @POST(Api.version + "/users/register")
         Observable<Response<LoginResponse>> register(@Body RegistrationRequest registrationBodyRequest);
 
+        @Headers("Cache-Control: max-age=10")
         @GET(Api.version + "/users/{userId}?count=locations,followers")
         Observable<Response<User>> getUser(@Path("userId") String userId);
 
