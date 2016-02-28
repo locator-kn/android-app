@@ -11,7 +11,7 @@ import com.locator_app.locator.R;
 import com.locator_app.locator.controller.DeviceController;
 import com.locator_app.locator.controller.UserController;
 import com.locator_app.locator.service.RegistrationIntentService;
-import com.locator_app.locator.view.HomeActivity;
+import com.locator_app.locator.view.home.HomeActivity;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;

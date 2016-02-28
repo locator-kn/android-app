@@ -8,6 +8,7 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.locator_app.locator.R;
+import com.locator_app.locator.view.home.HomeActivity;
 import com.locator_app.locator.view.login.LoginCustomActionBar;
 
 import butterknife.Bind;

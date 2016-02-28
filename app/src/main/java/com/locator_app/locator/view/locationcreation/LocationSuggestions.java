@@ -9,7 +9,7 @@ import com.locator_app.locator.R;
 import com.locator_app.locator.model.GoogleLocation;
 import com.locator_app.locator.model.LocatorLocation;
 import com.locator_app.locator.util.GpsService;
-import com.locator_app.locator.view.HomeActivity;
+import com.locator_app.locator.view.home.HomeActivity;
 import com.locator_app.locator.view.fragments.SearchResultsFragment;
 
 import java.util.List;

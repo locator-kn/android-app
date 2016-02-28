@@ -3,29 +3,19 @@ package com.locator_app.locator.view.locationcreation;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.locator_app.locator.R;
-import com.locator_app.locator.model.GoogleLocation;
-import com.locator_app.locator.model.LocatorLocation;
-import com.locator_app.locator.util.GpsService;
-import com.locator_app.locator.view.HomeActivity;
+import com.locator_app.locator.view.home.HomeActivity;
 import com.locator_app.locator.view.LoadingSpinner;
-import com.locator_app.locator.view.fragments.SearchResultsFragment;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.OnTouch;
 
 public class ChooseCategories extends Activity {
     Bundle extras;
