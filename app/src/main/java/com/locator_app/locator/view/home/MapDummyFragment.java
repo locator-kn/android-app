@@ -7,10 +7,19 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.locator_app.locator.R;
+import com.locator_app.locator.view.bubble.BubbleController;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
 public class MapDummyFragment extends Fragment {
+
+    @Bind(R.id.loadingSpinner)
+    ImageView loadingSpinner;
 
     public MapDummyFragment() {
     }
@@ -23,7 +32,13 @@ public class MapDummyFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_map_dummy, container, false);
+        View view = inflater.inflate(R.layout.fragment_map_dummy, container, false);
+        ButterKnife.bind(this, view);
+        Glide.with(getContext()).load(R.drawable.preloader)
+                .asGif()
+                .into(loadingSpinner);
+
+        return view;
     }
 
     @Override

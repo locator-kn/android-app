@@ -99,6 +99,7 @@ public class LocationSuggestions extends AppCompatActivity implements SearchResu
             startActivity(intent);
         } else {
             uploadLoadingSpinner.showSpinner();
+            cancelButton.setVisibility(View.GONE);
             LocationController.getInstance().createImageImpression(location.id, (Bitmap) extras.get("picture"))
                     .subscribe(
                             (val) -> {
@@ -107,6 +108,7 @@ public class LocationSuggestions extends AppCompatActivity implements SearchResu
                                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                                 startActivity(intent);
                                 uploadLoadingSpinner.hideSpinner();
+                                cancelButton.setVisibility(View.VISIBLE);
                                 this.finish();
                             },
                             (err) -> {
