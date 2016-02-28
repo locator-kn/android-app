@@ -1,6 +1,7 @@
 package com.locator_app.locator.view;
 
 import android.app.Activity;
+import android.media.Image;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.AlphaAnimation;
@@ -14,18 +15,29 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.locator_app.locator.R;
 
 public class LoadingSpinner {
-    public static void showSpinner(Activity activity) {
-        ImageView loadingSpinner = (ImageView) activity.findViewById(R.id.loadingSpinner);
+
+    Activity activity;
+    ImageView loadingSpinner;
+    View content;
+
+    public LoadingSpinner(Activity a) {
+        activity = a;
+        loadingSpinner = (ImageView) activity.findViewById(R.id.loadingSpinner);
+        content = activity.findViewById(R.id.content);
         assert(loadingSpinner != null);
 
-        View content = activity.findViewById(R.id.content);
-        if (content != null) {
-            fadeOut(activity, content);
-        }
+        loadingSpinner.setVisibility(View.INVISIBLE);
 
         Glide.with(activity).load(R.drawable.preloader)
                 .asGif()
                 .into(loadingSpinner);
+    }
+
+    public void showSpinner() {
+        if (content != null) {
+            fadeOut(activity, content);
+        }
+        loadingSpinner.setVisibility(View.VISIBLE);
     }
 
     private static void fadeOut(Activity activity, View v) {

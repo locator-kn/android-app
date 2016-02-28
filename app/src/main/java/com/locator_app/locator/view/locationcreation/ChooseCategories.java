@@ -36,6 +36,8 @@ public class ChooseCategories extends Activity {
     @Bind(R.id.cancelButton)
     ImageView cancelButton;
 
+    LoadingSpinner loadingSpinner;
+
     private static final String NATURE_ID    = "nature";
     private static final String NIGHTLIFE_ID = "party";
     private static final String CULTURE_ID   = "culture";
@@ -52,6 +54,7 @@ public class ChooseCategories extends Activity {
         setContentView(R.layout.activity_choose_categories);
         ButterKnife.bind(this);
 
+        loadingSpinner = new LoadingSpinner(this);
         extras = getIntent().getExtras();
     }
 
@@ -106,7 +109,7 @@ public class ChooseCategories extends Activity {
 //            intent.putCharSequenceArrayListExtra("categories", selectedCategories);
 //            startActivity(intent);
             loading = true;
-            LoadingSpinner.showSpinner(this);
+            loadingSpinner.showSpinner();
             cancelButton.setVisibility(View.GONE);
             //upload location
         }
