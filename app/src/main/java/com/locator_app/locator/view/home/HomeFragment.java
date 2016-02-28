@@ -55,7 +55,6 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
-
         ButterKnife.bind(this, view);
         bubbleController = new BubbleController(bubbleLayout);
 
@@ -88,11 +87,6 @@ public class HomeFragment extends Fragment {
     boolean onSchoenHierBubbleLongClick() {
         LocationCreationController.createLocation(getActivity());
         return true;
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        LocationCreationController.onActivityResult(requestCode, resultCode, data, getActivity());
     }
 
     @OnClick(R.id.userProfileBubble)
@@ -140,9 +134,11 @@ public class HomeFragment extends Fragment {
     }
 
     public void onWindowFocusChanged(boolean hasFocus) {
-        bubbleController.initUserProfileBubble();
-        bubbleController.initSchoenHierBubble();
-        updateDashboard();
+        if (bubbleController != null) {
+            bubbleController.initUserProfileBubble();
+            bubbleController.initSchoenHierBubble();
+            updateDashboard();
+        }
     }
 
     private void updateDashboard() {

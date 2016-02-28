@@ -10,6 +10,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
 import com.locator_app.locator.R;
+import com.locator_app.locator.controller.LocationCreationController;
+import com.locator_app.locator.view.LoadingSpinner;
 import com.locator_app.locator.view.map.MapsActivity;
 
 import java.util.List;
@@ -53,15 +55,29 @@ public class HomeActivity extends AppCompatActivity {
         PagerAdapter adapter  = new HomePagerAdapter(super.getSupportFragmentManager(), fragments);
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+            private int currentPosition = 0;
+
             @Override
             public void onPageSelected(int position) {
-                if (position == 1) {
+                currentPosition = position;
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                if (state == ViewPager.SCROLL_STATE_IDLE &&
+                        currentPosition == 1) {
+                    LoadingSpinner.showSpinner(HomeActivity.this);
+                    viewPager.setPagingEnabled(false);
                     Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
                     startActivity(intent);
-                    viewPager.setPagingEnabled(false);
                 }
             }
         });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        LocationCreationController.onActivityResult(requestCode, resultCode, data, this);
     }
 
     public void onWindowFocusChanged(boolean hasFocus) {
