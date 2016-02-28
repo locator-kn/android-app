@@ -24,8 +24,6 @@ public class HomeActivity extends AppCompatActivity {
     @Bind(R.id.viewPager)
     ToggleableViewPager viewPager;
 
-    LoadingSpinner loadingSpinner;
-
     HomeFragment homeFragment;
 
     @Override
@@ -38,7 +36,6 @@ public class HomeActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.hide();
         }
-        loadingSpinner = new LoadingSpinner(this);
         setupViewPager();
     }
 
@@ -68,7 +65,6 @@ public class HomeActivity extends AppCompatActivity {
             public void onPageScrollStateChanged(int state) {
                 if (state == ViewPager.SCROLL_STATE_IDLE &&
                         currentPosition == 1) {
-                    loadingSpinner.showSpinner();
                     viewPager.setPagingEnabled(false);
                     Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
                     startActivity(intent);

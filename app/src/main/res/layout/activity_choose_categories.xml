@@ -264,5 +264,6 @@
         android:layout_height="50dp"
         android:id="@+id/loadingSpinner"
         android:layout_centerInParent="true"
-        android:adjustViewBounds="false" />
+        android:adjustViewBounds="false"
+        android:visibility="invisible" />
 </RelativeLayout>

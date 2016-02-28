@@ -7,12 +7,4 @@
 
     <!-- TODO: Update blank fragment layout -->
 
-    <ImageView
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:id="@+id/loadingSpinner"
-        android:layout_centerInParent="true"
-        android:adjustViewBounds="false"
-        android:layout_gravity="center" />
-
 </FrameLayout>

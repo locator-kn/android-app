@@ -24,10 +24,8 @@ public class LoadingSpinner {
         activity = a;
         loadingSpinner = (ImageView) activity.findViewById(R.id.loadingSpinner);
         content = activity.findViewById(R.id.content);
-        assert(loadingSpinner != null);
 
-        loadingSpinner.setVisibility(View.INVISIBLE);
-
+        hideSpinner();
         Glide.with(activity).load(R.drawable.preloader)
                 .asGif()
                 .into(loadingSpinner);
@@ -38,6 +36,13 @@ public class LoadingSpinner {
             fadeOut(activity, content);
         }
         loadingSpinner.setVisibility(View.VISIBLE);
+    }
+
+    public void hideSpinner() {
+        if (content != null) {
+            content.setVisibility(View.VISIBLE);
+        }
+        loadingSpinner.setVisibility(View.INVISIBLE);
     }
 
     private static void fadeOut(Activity activity, View v) {
