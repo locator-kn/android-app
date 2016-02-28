@@ -1,5 +1,6 @@
 package com.locator_app.locator.view.impressions;
 
+import android.content.Intent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -30,8 +31,16 @@ class CreateImpressionViewHolder extends ImpressionViewHolder {
         });
         ImageView voice = (ImageView) itemView.findViewById(R.id.voiceImpression);
         voice.setOnClickListener(v -> Toast.makeText(itemView.getContext(), "voice", Toast.LENGTH_SHORT).show());
+
         ImageView media = (ImageView) itemView.findViewById(R.id.mediaImpression);
-        media.setOnClickListener(v -> Toast.makeText(itemView.getContext(), "photo", Toast.LENGTH_SHORT).show());
+        media.setOnClickListener(
+                v -> {
+                    Intent intent = new Intent(v.getContext(), ImpressionController.class);
+                    intent.putExtra("locationId", impressionRecyclerViewAdapter.location.id);
+                    intent.putExtra("type", "image");
+                    v.getContext().startActivity(intent);
+                });
+
         media.setOnLongClickListener(v -> {
             Toast.makeText(itemView.getContext(), "video", Toast.LENGTH_SHORT).show();
             return true;
