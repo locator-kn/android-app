@@ -18,16 +18,16 @@
             android:layout_width="fill_parent"
             android:layout_height="270dp">
 
-            <VideoView
+            <ImageView
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:id="@+id/videoView"
+                android:id="@+id/videoPreview"
                 android:layout_gravity="center"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentRight="true"
-                />
+                android:src="@drawable/ic_play_light" />
 
         </RelativeLayout>
 
