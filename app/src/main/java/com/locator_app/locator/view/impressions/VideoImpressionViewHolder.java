@@ -67,9 +67,7 @@ class VideoImpressionViewHolder extends ImpressionViewHolder {
                                     }
                             );
                         },
-                        (err) -> {
-
-                        }
+                        (err) -> { }
                 );
         date.setText(DateConverter.toddMMyyyy(videoImpression.getCreateDate()));
     }
