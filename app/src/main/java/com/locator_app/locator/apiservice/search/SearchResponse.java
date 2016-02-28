@@ -1,6 +1,7 @@
 package com.locator_app.locator.apiservice.search;
 
 import com.google.gson.annotations.SerializedName;
+import com.locator_app.locator.apiservice.locations.LocationsNearbyResponse;
 import com.locator_app.locator.model.GoogleLocation;
 import com.locator_app.locator.model.LocatorLocation;
 import com.locator_app.locator.model.SchoenHier;
@@ -13,5 +14,5 @@ public class SearchResponse {
     public List<GoogleLocation> googleLocations = new LinkedList<>();
 
     @SerializedName("locator")
-    public List<LocatorLocation> locatorLocations = new LinkedList<>();
+    public List<LocationsNearbyResponse.Result> locatorLocations = new LinkedList<>();
 }

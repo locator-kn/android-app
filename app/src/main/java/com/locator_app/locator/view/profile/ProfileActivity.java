@@ -15,14 +15,12 @@ import com.locator_app.locator.R;
 import com.locator_app.locator.controller.LocationController;
 import com.locator_app.locator.controller.UserController;
 import com.locator_app.locator.model.User;
-import com.locator_app.locator.view.HomeActivity;
-import com.locator_app.locator.view.map.MapsActivity;
+import com.locator_app.locator.view.home.HomeActivity;
 import com.locator_app.locator.view.bubble.BubbleView;
 import com.locator_app.locator.view.fragments.FragmentAdapter;
 import com.locator_app.locator.view.fragments.LocationsFragment;
 import com.locator_app.locator.view.fragments.UsersFragment;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -30,7 +28,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 public class ProfileActivity extends FragmentActivity {

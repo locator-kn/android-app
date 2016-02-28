@@ -73,7 +73,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".view.HomeActivity"
+            android:name=".view.home.HomeActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".view.login.LoginRegisterActivity"

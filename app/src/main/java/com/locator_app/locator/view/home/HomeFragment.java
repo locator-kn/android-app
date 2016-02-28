@@ -1,10 +1,14 @@
-package com.locator_app.locator.view;
+package com.locator_app.locator.view.home;
 
+import android.support.v4.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 
@@ -18,6 +22,7 @@ import com.locator_app.locator.util.GpsService;
 import com.locator_app.locator.view.bubble.BubbleController;
 import com.locator_app.locator.view.bubble.BubbleView;
 import com.locator_app.locator.view.bubble.RelativeBubbleLayout;
+import com.locator_app.locator.view.fragments.FragmentAdapter;
 import com.locator_app.locator.view.login.LoginRegisterStartActivity;
 import com.locator_app.locator.view.map.MapsActivity;
 import com.locator_app.locator.view.profile.ProfileActivity;
@@ -30,7 +35,7 @@ import butterknife.OnTouch;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class HomeActivity extends AppCompatActivity {
+public class HomeFragment extends Fragment {
 
     @Bind(R.id.bubbleLayout)
     RelativeBubbleLayout bubbleLayout;
@@ -45,25 +50,21 @@ public class HomeActivity extends AppCompatActivity {
 
     GpsService gpsService;
 
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
-        ButterKnife.bind(this);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_home, container, false);
+        ButterKnife.bind(this, view);
         bubbleController = new BubbleController(bubbleLayout);
 
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.hide();
-        }
-        gpsService = new GpsService(this);
+        return view;
     }
 
-
-    @OnClick(R.id.showMap)
-    void onShowMapClicked() {
-        Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
-        startActivity(intent);
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        gpsService = new GpsService(getActivity());
     }
 
     @OnTouch(R.id.schoenHierBubble)
@@ -80,19 +81,12 @@ public class HomeActivity extends AppCompatActivity {
     @OnClick(R.id.schoenHierBubble)
     void onSchoenHierBubbleClick() {
         SchoenHierController.getInstance().markCurPosAsSchoenHier(gpsService);
-        Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
-        startActivity(intent);
     }
 
     @OnLongClick(R.id.schoenHierBubble)
     boolean onSchoenHierBubbleLongClick() {
-        LocationCreationController.createLocation(this);
+        LocationCreationController.createLocation(getActivity());
         return true;
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        LocationCreationController.onActivityResult(requestCode, resultCode, data, this);
     }
 
     @OnClick(R.id.userProfileBubble)
@@ -115,7 +109,7 @@ public class HomeActivity extends AppCompatActivity {
                 .subscribe(
                         this::showUserProfile,
                         (error) -> {
-                            Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                 );
         /*User me = UserController.getInstance().me();
@@ -128,23 +122,23 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void showUserProfile(User user) {
-        Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
+        Intent intent = new Intent(getActivity(), ProfileActivity.class);
         intent.putExtra("profile", user);
         startActivity(intent);
     }
 
     private void jumpToLoginScreen() {
-        Intent intent = new Intent(getApplicationContext(), LoginRegisterStartActivity.class);
+        Intent intent = new Intent(getActivity(), LoginRegisterStartActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
-    
-    @Override
+
     public void onWindowFocusChanged(boolean hasFocus) {
-        super.onWindowFocusChanged(hasFocus);
-        bubbleController.initUserProfileBubble();
-        bubbleController.initSchoenHierBubble();
-        updateDashboard();
+        if (bubbleController != null) {
+            bubbleController.initUserProfileBubble();
+            bubbleController.initSchoenHierBubble();
+            updateDashboard();
+        }
     }
 
     private void updateDashboard() {
@@ -159,6 +153,6 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void handleBubbleScreenError(Throwable error) {
-        Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_SHORT).show();
     }
 }

@@ -19,6 +19,7 @@ import com.locator_app.locator.model.impressions.AbstractImpression;
 import com.locator_app.locator.model.impressions.ImageImpression;
 import com.locator_app.locator.util.GpsService;
 import com.locator_app.locator.view.fragments.ImageFragmentAdapter;
+import com.locator_app.locator.view.home.HomeActivity;
 import com.locator_app.locator.view.impressions.ImpressionRecyclerViewAdapter;
 
 import java.util.LinkedList;

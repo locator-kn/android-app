@@ -48,6 +48,7 @@ public class SearchResultsFragment extends Fragment {
             } else {
                 description.setText("Vorschlag von Locator");
             }
+            creationDate.setText("");
         });
 
         adapter.setLocationClickHandler((v, location) -> {
