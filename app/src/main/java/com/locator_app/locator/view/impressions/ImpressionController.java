@@ -64,7 +64,8 @@ public class ImpressionController extends Activity {
                                 },
                                 (err) -> {
                                     Toast.makeText(LocatorApplication.getAppContext(),
-                                            err.toString(), Toast.LENGTH_SHORT).show();
+                                            "Deine Impression konnte leider nicht hochgeladen werden :-(",
+                                            Toast.LENGTH_SHORT).show();
                                 }
                         );
             } catch (IOException e) {
