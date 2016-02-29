@@ -139,14 +139,15 @@ public class ChooseCategories extends Activity {
                 .subscribe((location) -> {
                             Intent intent = new Intent(this, LocationDetailActivity.class);
                             intent.putExtra("location", location);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                             startActivity(intent);
                             finish();
                         },
                         (error) -> {
                             loadingSpinner.hideSpinner();
                             cancelButton.setVisibility(View.VISIBLE);
+                            loading = false;
                             Toast.makeText(ChooseCategories.this, "Could not create location",
                                     Toast.LENGTH_SHORT).show();
                         }
