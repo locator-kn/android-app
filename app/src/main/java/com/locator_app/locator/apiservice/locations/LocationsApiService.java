@@ -68,6 +68,14 @@ public class LocationsApiService {
         @POST(Api.version + "/locations/{locationId}/impressions/image")
         Observable<Response<EchoResponse>> postImageImpression(@Path("locationId") String locationId,
             @Part("file\"; filename=impression.png") RequestBody file);
+
+        @Multipart
+        @POST(Api.version + "/locations")
+        Observable<Response<EchoResponse>> createLocation(@Part("title") String  title,
+                                                          @Part("long") double  lon,
+                                                          @Part("lat") double  lat,
+                                                          @Part("categories") String[]  categories,
+                                                          @Part("file\"; filename=image.png") RequestBody file);
     }
 
     LocationsApi service = ServiceFactory.createService(LocationsApi.class);
@@ -121,6 +129,31 @@ public class LocationsApiService {
             fos.close();
             RequestBody requestBody = RequestBody.create(MediaType.parse("image/png"), f);
             return GenericErrorHandler.wrapSingle(service.postImageImpression(locationId, requestBody));
+        } catch (IOException e) {
+            e.printStackTrace();
+            return Observable.error(e);
+        }
+    }
+
+    public Observable<EchoResponse> createLocation(String title,
+                                                   double  lon,
+                                                   double  lat,
+                                                   String[]  categories,
+                                                   Bitmap bitmap) {
+        File f = new File(LocatorApplication.getAppContext().getCacheDir(), "image.png");
+        try {
+            f.createNewFile();
+
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, bos);
+            byte[] bitmapdata = bos.toByteArray();
+
+            FileOutputStream fos = new FileOutputStream(f);
+            fos.write(bitmapdata);
+            fos.flush();
+            fos.close();
+            RequestBody requestBody = RequestBody.create(MediaType.parse("image/png"), f);
+            return GenericErrorHandler.wrapSingle(service.createLocation(title, lon, lat, categories, requestBody));
         } catch (IOException e) {
             e.printStackTrace();
             return Observable.error(e);

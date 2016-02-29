@@ -51,6 +51,16 @@ public class LocationController {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
+    public Observable<LocationsApiService.EchoResponse> createLocation(String title,
+                                                                       double  lon,
+                                                                       double  lat,
+                                                                       String[]  categories,
+                                                                       Bitmap bitmap) {
+        return locationService.createLocation(title, lon, lat, categories, bitmap)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
     private static LocationController instance;
     public static LocationController getInstance() {
         if (instance == null) {
