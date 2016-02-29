@@ -30,18 +30,26 @@ public class ImpressionController extends Activity {
         String type = getIntent().getStringExtra("type");
         if (type.equals("image")) {
             createImageImpression();
+        } else if (type.equals("video")) {
+            createVideoImpression();
         } else {
             finish();
         }
     }
 
-    public void createImageImpression() {
+    private void createImageImpression() {
         ContentValues values = new ContentValues();
         imageUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                 values);
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
         startActivityForResult(intent, IMAGE);
+    }
+
+    private void createVideoImpression() {
+        Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+        intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 3);
+        startActivityForResult(intent, VIDEO);
     }
 
     @Override
@@ -51,23 +59,33 @@ public class ImpressionController extends Activity {
             return;
         }
         if (requestCode == IMAGE) {
-            try {
-                Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
-                LocationController.getInstance().createImageImpression(locationId, imageBitmap)
-                        .subscribe(
-                                (val) -> {
-                                    notify(AbstractImpression.ImpressionType.IMAGE);
-                                },
-                                (err) -> {
-                                    notifyError(AbstractImpression.ImpressionType.IMAGE,
-                                            new Throwable("Dein Bild konnte leider nicht hochgeladen werden"));
-                                }
-                        );
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            doUploadImage();
+        } else if (requestCode == VIDEO) {
+            doUploadVideo();
         }
         finish();
+    }
+
+    private void doUploadImage() {
+        try {
+            Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
+            LocationController.getInstance().createImageImpression(locationId, imageBitmap)
+                    .subscribe(
+                            (val) -> {
+                                notify(AbstractImpression.ImpressionType.IMAGE);
+                            },
+                            (err) -> {
+                                notifyError(AbstractImpression.ImpressionType.IMAGE,
+                                        new Throwable("Dein Bild konnte leider nicht hochgeladen werden"));
+                            }
+                    );
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void doUploadVideo() {
+
     }
 
 
