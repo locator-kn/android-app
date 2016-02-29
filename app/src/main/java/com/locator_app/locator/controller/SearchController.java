@@ -1,10 +1,6 @@
 package com.locator_app.locator.controller;
 
-import android.widget.Toast;
-
-import com.locator_app.locator.LocatorApplication;
 import com.locator_app.locator.apiservice.search.SearchApiService;
-import com.locator_app.locator.apiservice.search.SearchResponse;
 import com.locator_app.locator.model.LocatorLocation;
 
 import java.util.List;

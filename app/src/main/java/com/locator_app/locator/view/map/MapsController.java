@@ -93,8 +93,6 @@ public class MapsController {
                     LocatorLocation location = markerToLocation.get(locationMarker);
 
                     LocationController.getInstance().getLocationById(location.id)
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(
                                     (newLocationFromServer) -> {
                                         Intent intent = new Intent(mapsActivity, LocationDetailActivity.class);
@@ -188,8 +186,6 @@ public class MapsController {
 
         LocationController.getInstance().getLocationsNearby(position.longitude, position.latitude,
                                                             loadableRadius(locationsLoadedRect), 100)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         newLocations::add,
                         (error) -> Toast.makeText(LocatorApplication.getAppContext(),

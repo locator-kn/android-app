@@ -111,8 +111,6 @@ public class ProfileActivity extends FragmentActivity {
         adapter.addFragment(fragment, "Locations");
 
         LocationController.getInstance().getLocationsByUserId(user._id)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
                 .toList()
                 .subscribe(
                         (locations -> {

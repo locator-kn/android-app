@@ -46,9 +46,8 @@ public class LoginRegisterStartActivity extends AppCompatActivity {
             Intent intent = new Intent(getApplicationContext(), RegistrationIntentService.class);
             startService(intent);
         } else {
-            UserController.getInstance().logInLastLoggedInUser()
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
+            UserController.getInstance()
+                    .logInLastLoggedInUser()
                     .subscribe(
                             (loginResponse -> jumpToHomeScreen()),
                             (err) -> {

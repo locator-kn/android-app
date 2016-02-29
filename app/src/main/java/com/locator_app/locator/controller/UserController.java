@@ -14,6 +14,8 @@ import com.locator_app.locator.apiservice.users.RegistrationRequest;
 import com.locator_app.locator.apiservice.users.UsersApiService;
 
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class UserController {
 
@@ -48,7 +50,9 @@ public class UserController {
             Couch.get().switchToDatabase(lastLoggedInUserEmail);
             Couch.get().restore(me);
             return userService.checkProtected()
-                    .doOnNext(this::handleLogin);
+                    .doOnNext(this::handleLogin)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread());
         }
     }
 

@@ -178,9 +178,8 @@ public class BubbleController {
 
     private void handleOnLocationBubbleClicked(Bubble bubble) {
         LocatorLocation location = (LocatorLocation) bubble.data;
-        LocationController.getInstance().getLocationById(location.id)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+        LocationController.getInstance()
+                .getLocationById(location.id)
                 .subscribe(
                         (result) -> {
                             Intent intent = new Intent(layout.getContext(), LocationDetailActivity.class);
