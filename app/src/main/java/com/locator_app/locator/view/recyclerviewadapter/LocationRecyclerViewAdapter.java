@@ -66,6 +66,9 @@ public class LocationRecyclerViewAdapter extends RecyclerView.Adapter<LocationRe
         TextView text = (TextView) view.findViewById(R.id.text);
         TextView desc = (TextView) view.findViewById(R.id.description);
 
+        CircleImageView civ = (CircleImageView) view.findViewById(R.id.bubbleView);
+        civ.setBorderColor(Color.RED);
+
         text.setTextColor(titleColor);
         desc.setTextColor(descrColor);
 

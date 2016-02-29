@@ -3,6 +3,7 @@ package com.locator_app.locator.view.recyclerviewadapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,6 +34,10 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
     public UserRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.default_list_item, parent, false);
+
+        CircleImageView civ = (CircleImageView) view.findViewById(R.id.bubbleView);
+        civ.setBorderColor(Color.LTGRAY);
+
         return new ViewHolder(view);
     }
 
@@ -69,6 +74,7 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
             imageView = (CircleImageView)view.findViewById(R.id.bubbleView);
 
             TextView bubbleInfo = (TextView) view.findViewById(R.id.bubble_info);
+            bubbleInfo.setVisibility(View.GONE);
             bubbleInfo.setText("");
         }
 
@@ -81,6 +87,7 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
             }
             Glide.with(LocatorApplication.getAppContext())
                     .load(user.thumbnailUri())
+                    .error(R.drawable.profile)
                     .dontAnimate()
                     .into(imageView);
         }

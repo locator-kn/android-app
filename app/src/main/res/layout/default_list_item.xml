@@ -21,17 +21,18 @@
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:id="@+id/bubble_info"
             android:textColor="@android:color/black"
-            android:gravity="center_vertical|center_horizontal"
-            android:layout_marginBottom="5dp" />
+            android:gravity="center_vertical|center_horizontal" />
 
         <de.hdodenhof.circleimageview.CircleImageView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/bubbleView"
             android:layout_width="match_parent"
-            android:layout_height="fill_parent"
-            android:src="@drawable/location_auf_map"
-            app:civ_border_width="10dp"
-            app:civ_border_color="#abc"
-            android:layout_marginBottom="10dp" />
+            android:layout_height="match_parent"
+            android:src="@drawable/com_facebook_profile_picture_blank_square"
+            app:civ_border_width="3dp"
+            app:civ_border_color="#FFFF00FF"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp" />
 
     </LinearLayout>
 
