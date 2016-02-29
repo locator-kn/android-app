@@ -34,6 +34,8 @@ import rx.schedulers.Schedulers;
 
 public class GpsService extends Fragment implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
+    private Activity activity;
+
     private GoogleApiClient googleApiClient;
 
     public GpsService(Activity activity) {
@@ -42,7 +44,7 @@ public class GpsService extends Fragment implements GoogleApiClient.ConnectionCa
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
                 .build();
-
+        this.activity = activity;
         activity.onAttachFragment(this);
     }
 
@@ -57,25 +59,6 @@ public class GpsService extends Fragment implements GoogleApiClient.ConnectionCa
     }
 
     private static final int PERMISSION_REQUEST_CODE = 69; // :D
-
-    @Override
-    public void onAttach(Context context) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (!(context instanceof Activity)) {
-                return;
-            }
-            Activity activity = (Activity) context;
-            if (activity.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
-                    != PackageManager.PERMISSION_GRANTED
-                && activity.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION)
-                    != PackageManager.PERMISSION_GRANTED) {
-                activity.requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                        PERMISSION_REQUEST_CODE);
-                return;
-            }
-        }
-        notifyObserversWithLocation();
-    }
 
     private void notifyObserversWithLocation() {
         Location location = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
@@ -106,6 +89,21 @@ public class GpsService extends Fragment implements GoogleApiClient.ConnectionCa
             }
         }
         notifyObserversWithError();
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (activity.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED
+                    && activity.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED) {
+                activity.requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        PERMISSION_REQUEST_CODE);
+                return;
+            }
+        }
+        notifyObserversWithLocation();
     }
 
     @Override
