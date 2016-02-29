@@ -41,8 +41,6 @@ public class ImageImpressionViewHolder extends ImpressionViewHolder {
     public void bind(AbstractImpression impression) {
         ImageImpression imageImpression = (ImageImpression) impression;
         UserController.getInstance().getUser(imageImpression.getUserId())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         (user) -> {
                             userName.setText(user.name);

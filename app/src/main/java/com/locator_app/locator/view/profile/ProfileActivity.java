@@ -131,8 +131,6 @@ public class ProfileActivity extends FragmentActivity {
         adapter.addFragment(fragment, "Followers");
 
         UserController.getInstance().getFollowers(user._id)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
                 .toList()
                 .subscribe(
                         (followers -> {
@@ -154,8 +152,6 @@ public class ProfileActivity extends FragmentActivity {
 
         Observable.from(user.following)
                 .flatMap(following -> UserController.getInstance().getUser(following))
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
                 .toList()
                 .subscribe(
                         (fragment.adapter::setUsers),
@@ -191,8 +187,6 @@ public class ProfileActivity extends FragmentActivity {
             followerIds.add(userController.me()._id);
             countFollowers.setText(Integer.toString(followerIds.size()));
             userController.followUser(user._id)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(
                             (res) -> {
                             },

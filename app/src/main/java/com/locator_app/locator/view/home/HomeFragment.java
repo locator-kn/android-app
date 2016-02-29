@@ -89,8 +89,6 @@ public class HomeFragment extends Fragment {
     void onUserProfileBubbleClick() {
         UserController controller = UserController.getInstance();
         controller.logout()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         (logoutResponse) -> jumpToLoginScreen(),
                         (error) -> jumpToLoginScreen()
@@ -100,8 +98,6 @@ public class HomeFragment extends Fragment {
     @OnLongClick(R.id.userProfileBubble)
     boolean onUserProfileBubbleLongClick() {
         UserController.getInstance().getUser("569e4a83a6e5bb503b838301")
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         this::showUserProfile,
                         (error) -> {
@@ -140,11 +136,9 @@ public class HomeFragment extends Fragment {
     private void updateDashboard() {
         MyController controller = MyController.getInstance();
         controller.getBubbleScreen()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        (response) -> bubbleController.onBubbleScreenUpdate(response),
-                        (error) -> handleBubbleScreenError(error)
+                        bubbleController::onBubbleScreenUpdate,
+                        this::handleBubbleScreenError
                 );
     }
 

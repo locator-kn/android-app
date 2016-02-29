@@ -16,7 +16,9 @@ public class SchoenHierController {
 
     public Observable<SchoenHiersNearbyResponse> schoenHiersNearby(double lon, double lat,
                                                                    double dist, int max) {
-        return schoenHierService.schoenHiersNearby(lon, lat, dist, max);
+        return schoenHierService.schoenHiersNearby(lon, lat, dist, max)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     public Observable<SchoenHiersResponse> markCurPosAsSchoenHier(GpsService gpsService) {

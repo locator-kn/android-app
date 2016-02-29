@@ -250,8 +250,6 @@ public class MapsController {
 
         SchoenHierController.getInstance().schoenHiersNearby(pos.longitude, pos.latitude,
                                                              loadableRadius(heatmapLoadedRect), 1000)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
                 .flatMapIterable(response -> response.results)
                 .subscribe(
                         (item) -> {

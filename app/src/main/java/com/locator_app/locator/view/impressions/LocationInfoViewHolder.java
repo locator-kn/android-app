@@ -27,8 +27,6 @@ class LocationInfoViewHolder extends ImpressionViewHolder {
         this.impressionRecyclerViewAdapter = impressionRecyclerViewAdapter;
         locatorName = (TextView) itemView.findViewById(R.id.locatorName);
         UserController.getInstance().getUser(impressionRecyclerViewAdapter.location.userId)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         (user) -> {
                             locatorName.setText(user.name);

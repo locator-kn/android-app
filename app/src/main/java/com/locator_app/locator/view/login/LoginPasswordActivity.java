@@ -59,8 +59,6 @@ public class LoginPasswordActivity extends AppCompatActivity {
         loginRequest.mail = mail;
         loginRequest.password = password;
         userController.login(loginRequest)
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         (loginResponse) -> {
                             Toast.makeText(context, "Hi " + loginResponse.name, Toast.LENGTH_SHORT).show();
