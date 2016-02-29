@@ -8,19 +8,12 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.widget.Toast;
 
-import com.locator_app.locator.LocatorApplication;
 import com.locator_app.locator.controller.LocationController;
 import com.locator_app.locator.model.impressions.AbstractImpression;
-import com.locator_app.locator.model.impressions.Impression;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 public class ImpressionController extends Activity {
@@ -44,8 +37,6 @@ public class ImpressionController extends Activity {
 
     public void createImageImpression() {
         ContentValues values = new ContentValues();
-        values.put(MediaStore.Images.Media.TITLE, "impression");
-        values.put(MediaStore.Images.Media.DESCRIPTION, "new image impression");
         imageUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                 values);
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -60,9 +51,8 @@ public class ImpressionController extends Activity {
             return;
         }
         if (requestCode == IMAGE) {
-            Bitmap imageBitmap = null;
             try {
-                imageBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
+                Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
                 LocationController.getInstance().createImageImpression(locationId, imageBitmap)
                         .subscribe(
                                 (val) -> {
@@ -77,7 +67,6 @@ public class ImpressionController extends Activity {
                 e.printStackTrace();
             }
         }
-
         finish();
     }
 

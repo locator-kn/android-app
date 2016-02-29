@@ -45,7 +45,7 @@ public class LocationController {
         return locationService.unfavorLocation(locationId);
     }
 
-    public Observable<LocationsApiService.EchoResponse> createImageImpression(String locationId, Bitmap image) {
+    public Observable<Object> createImageImpression(String locationId, Bitmap image) {
         return locationService.createImageImpression(locationId, image)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
