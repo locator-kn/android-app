@@ -18,7 +18,7 @@ public class GenericErrorHandler {
 
     public static <T> Observable<T> wrapSingle(Observable<Response<T>> observable) {
         return observable
-                .doOnError(throwable -> Log.d("GenericErrorHandler", throwable.getMessage()))
+                .doOnError(GenericErrorHandler::logErrorMessage)
                 .onErrorResumeNext(throwable -> {
                     Log.d("RequestError", throwable.getClass().toString());
                     return Observable.error(getRequestErrorFromThrowable(throwable));
@@ -31,6 +31,14 @@ public class GenericErrorHandler {
                     Log.d("Request", response.errorBody().toString());
                     return Observable.error(getHttpErrorFromResponse(response));
                 });
+    }
+
+    private static void logErrorMessage(Throwable throwable) {
+        if (throwable != null) {
+            Log.d("Exception occurred: ", throwable.getMessage());
+        } else {
+            Log.d("Exception occurred: ", "[throwable is null]");
+        }
     }
 
     public static <T> Observable<T> wrapList(Observable<Response<List<T>>> observable) {
