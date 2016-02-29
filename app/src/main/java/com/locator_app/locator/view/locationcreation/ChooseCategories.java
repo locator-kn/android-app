@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.locator_app.locator.R;
 import com.locator_app.locator.apiservice.locations.LocationsApiService;
 import com.locator_app.locator.controller.LocationController;
+import com.locator_app.locator.view.LocationDetailActivity;
 import com.locator_app.locator.view.home.HomeActivity;
 import com.locator_app.locator.view.LoadingSpinner;
 
@@ -111,23 +112,24 @@ public class ChooseCategories extends Activity {
     void onNextClicked() {
         synchronized (selectedCategories) {
             if (selectedCategories.size() > 0) {
-    //            Intent intent = new Intent(this, NameLocation.class);
-    //            intent.putExtras(extras);
-    //            intent.putCharSequenceArrayListExtra("categories", selectedCategories);
-    //            startActivity(intent);
                 loading = true;
                 loadingSpinner.showSpinner();
                 cancelButton.setVisibility(View.GONE);
                 String[] categories = new String[selectedCategories.size()];
                 selectedCategories.toArray(categories);
-                LocationController.getInstance().createLocation(extras.getString("title"),
+                LocationController.getInstance().createLocation(extras.getString("name"),
                         extras.getDouble("lon"),
                         extras.getDouble("lat"),
                         categories,
                         (Bitmap) extras.get("picture"))
-                .subscribe((result) -> {
+                .subscribe((location) -> {
+                            Intent intent = new Intent(this, LocationDetailActivity.class);
+                            intent.putExtra("location", location);
+                            startActivity(intent);
                         },
                         (error) -> {
+                            loadingSpinner.hideSpinner();
+                            cancelButton.setVisibility(View.VISIBLE);
                             Toast.makeText(ChooseCategories.this, "Could not create location",
                                     Toast.LENGTH_SHORT).show();
                         }

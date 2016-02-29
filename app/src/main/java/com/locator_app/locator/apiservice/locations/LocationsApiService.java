@@ -69,9 +69,9 @@ public class LocationsApiService {
 
         @Multipart
         @POST(Api.version + "/locations")
-        Observable<Response<Object>> createLocation(@Part("title") String  title,
-                                                    @Part("long") double  lon,
-                                                    @Part("lat") double  lat,
+        Observable<Response<LocatorLocation>> createLocation(@Part("title") RequestBody  title,
+                                                    @Part("long") RequestBody  lon,
+                                                    @Part("lat") RequestBody  lat,
                                                     @Part("categories") String[]  categories,
                                                     @Part("file\"; filename=image.jpg") RequestBody file);
     }
@@ -112,28 +112,20 @@ public class LocationsApiService {
         return GenericErrorHandler.wrapSingle(service.postImageImpression(locationId, requestBody));
     }
 
-    public Observable<Object> createLocation(String title,
+    public Observable<LocatorLocation> createLocation(String title,
                                                    double  lon,
                                                    double  lat,
                                                    String[]  categories,
                                                    Bitmap bitmap) {
-        File f = new File(LocatorApplication.getAppContext().getCacheDir(), "image.png");
-        try {
-            f.createNewFile();
-
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, bos);
-            byte[] bitmapdata = bos.toByteArray();
-
-            FileOutputStream fos = new FileOutputStream(f);
-            fos.write(bitmapdata);
-            fos.flush();
-            fos.close();
-            RequestBody requestBody = RequestBody.create(MediaType.parse("image/png"), f);
-            return GenericErrorHandler.wrapSingle(service.createLocation(title, lon, lat, categories, requestBody));
-        } catch (IOException e) {
-            e.printStackTrace();
-            return Observable.error(e);
+        File jpgFile = BitmapHelper.toJpgFile(bitmap);
+        if (jpgFile == null) {
+            return Observable.error(new Throwable("could not store image"));
         }
+        RequestBody titleBody = RequestBody.create(MediaType.parse("text/plain"), title);
+        RequestBody lonBody   = RequestBody.create(MediaType.parse("text/plain"), Double.toString(lon));
+        RequestBody latBody   = RequestBody.create(MediaType.parse("text/plain"), Double.toString(lat));
+        RequestBody imgBody   = RequestBody.create(MediaType.parse("image/jpg"), jpgFile);
+        return GenericErrorHandler.wrapSingle(service.createLocation(titleBody, lonBody, latBody,
+                                                                     categories, imgBody));
     }
 }

@@ -8,6 +8,8 @@ import com.locator_app.locator.model.LocatorLocation;
 import com.locator_app.locator.apiservice.locations.LocationsApiService;
 import com.locator_app.locator.model.impressions.AbstractImpression;
 
+import org.xml.sax.Locator;
+
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -62,7 +64,7 @@ public class LocationController {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public Observable<Object> createLocation(String title,
+    public Observable<LocatorLocation> createLocation(String title,
                                              double  lon,
                                              double  lat,
                                              String[]  categories,

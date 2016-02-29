@@ -27,6 +27,7 @@ public class HomeActivity extends AppCompatActivity {
     ToggleableViewPager viewPager;
 
     HomeFragment homeFragment;
+    LocationCreationController locationCreationController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +39,7 @@ public class HomeActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.hide();
         }
+        locationCreationController = new LocationCreationController(this);
         setupViewPager();
     }
 
@@ -77,9 +79,13 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 
+    public void createLocation() {
+        locationCreationController.createLocation();
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        LocationCreationController.onActivityResult(requestCode, resultCode, data, this);
+        locationCreationController.onActivityResult(requestCode, resultCode, data);
     }
 
     public void onWindowFocusChanged(boolean hasFocus) {

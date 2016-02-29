@@ -51,8 +51,8 @@ public class NameLocation extends Activity {
     private boolean confirmInput() {
         if (checkUsernameLength()) {
             Intent intent = new Intent(this, ChooseCategories.class);
+            extras.putString("name", locationNameEdit.getText().toString());
             intent.putExtras(extras);
-            intent.putExtra("name", locationNameEdit.getText());
             startActivity(intent);
             return true;
         } else {

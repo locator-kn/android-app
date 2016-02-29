@@ -81,7 +81,7 @@ public class HomeFragment extends Fragment {
 
     @OnLongClick(R.id.schoenHierBubble)
     boolean onSchoenHierBubbleLongClick() {
-        LocationCreationController.createLocation(getActivity());
+        ((HomeActivity) getActivity()).createLocation();
         return true;
     }
 

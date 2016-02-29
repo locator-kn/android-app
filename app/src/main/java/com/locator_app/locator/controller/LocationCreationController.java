@@ -1,36 +1,49 @@
 package com.locator_app.locator.controller;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 
+import com.locator_app.locator.apiservice.locations.LocationsNearbyResponse;
+import com.locator_app.locator.model.impressions.AbstractImpression;
 import com.locator_app.locator.view.locationcreation.LocationSuggestions;
+
+import java.io.IOException;
 
 public class LocationCreationController {
     private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
-    private Intent intent;
+    private Activity activity;
+    private Uri imageUri;
 
-    static public void createLocation(Activity activity) {
+    public LocationCreationController(Activity activity) {
+        this.activity = activity;
+    }
+
+    public void createLocation() {
+        ContentValues values = new ContentValues();
+        imageUri = activity.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                values);
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
         activity.startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
     }
 
-    static public void onActivityResult(int requestCode, int resultCode, Intent data, Activity activity) {
-        if (resultCode == Activity.RESULT_OK) {
-            Bundle extras = data.getExtras();
-            Bitmap imageBitmap = (Bitmap) extras.get("data");
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == Activity.RESULT_OK &&
+                requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
+            try {
+                Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(activity.getContentResolver(), imageUri);
+                Intent intent = new Intent(activity, LocationSuggestions.class);
 
-            Intent intent = new Intent(activity, LocationSuggestions.class);
-
-            intent.putExtra("picture", imageBitmap);
-            activity.startActivity(intent);
+                intent.putExtra("picture", imageBitmap);
+                activity.startActivity(intent);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
-    }
-
-    static public void uploadLocation() {
-
     }
 }

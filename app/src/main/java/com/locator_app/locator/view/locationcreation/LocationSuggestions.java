@@ -97,8 +97,8 @@ public class LocationSuggestions extends AppCompatActivity implements SearchResu
     public void onLocationClicked(LocatorLocation location) {
         if (location instanceof GoogleLocation) {
             Intent intent = new Intent(this, ChooseCategories.class);
+            extras.putString("name", location.title);
             intent.putExtras(extras);
-            intent.putExtra("name", location.title);
             startActivity(intent);
         } else {
             uploadLoadingSpinner.showSpinner();
