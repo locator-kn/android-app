@@ -1,13 +1,10 @@
 package com.locator_app.locator.controller;
 
-import android.widget.Toast;
-
-import com.locator_app.locator.LocatorApplication;
 import com.locator_app.locator.apiservice.schoenhier.SchoenHierApiService;
 import com.locator_app.locator.apiservice.schoenhier.SchoenHierRequest;
 import com.locator_app.locator.apiservice.schoenhier.SchoenHiersNearbyResponse;
 import com.locator_app.locator.apiservice.schoenhier.SchoenHiersResponse;
-import com.locator_app.locator.util.GpsService;
+import com.locator_app.locator.service.GpsService;
 
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;

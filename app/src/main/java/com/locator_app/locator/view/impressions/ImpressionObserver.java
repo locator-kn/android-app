@@ -8,4 +8,5 @@ public interface ImpressionObserver {
     void onImpressionCreated(AbstractImpression.ImpressionType type);
 
     void onImpressionCreationFailed(AbstractImpression.ImpressionType type, Throwable error);
+
 }
