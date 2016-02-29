@@ -2,12 +2,16 @@ package com.locator_app.locator.view.locationcreation;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.locator_app.locator.R;
+import com.locator_app.locator.apiservice.locations.LocationsApiService;
+import com.locator_app.locator.controller.LocationController;
 import com.locator_app.locator.view.home.HomeActivity;
 import com.locator_app.locator.view.LoadingSpinner;
 
@@ -71,23 +75,25 @@ public class ChooseCategories extends Activity {
     @OnClick(R.id.holiday)
     void onHolidayClicked()   { toggleCategory(holiday, HOLIDAY_ID); }
 
-    private ArrayList<CharSequence> selectedCategories = new ArrayList<>();
+    private final ArrayList<String> selectedCategories = new ArrayList<>();
     private static final int MAX_CATEGORIES = 3;
 
     synchronized
     private void toggleCategory(View v, String category) {
-        if (selectedCategories.contains(category)) {
-            selectedCategories.remove(category);
-            toggleAlpha(v);
-        } else if (selectedCategories.size() < MAX_CATEGORIES){
-            selectedCategories.add(category);
-            toggleAlpha(v);
-        }
+        synchronized (selectedCategories) {
+            if (selectedCategories.contains(category)) {
+                selectedCategories.remove(category);
+                toggleAlpha(v);
+            } else if (selectedCategories.size() < MAX_CATEGORIES) {
+                selectedCategories.add(category);
+                toggleAlpha(v);
+            }
 
-        if (selectedCategories.size() == 1) {
-            next.setAlpha((float) 1);
-        } else if (selectedCategories.size() == 0) {
-            next.setAlpha((float) 0.3);
+            if (selectedCategories.size() == 1) {
+                next.setAlpha((float) 1);
+            } else if (selectedCategories.size() == 0) {
+                next.setAlpha((float) 0.3);
+            }
         }
     }
 
@@ -103,15 +109,30 @@ public class ChooseCategories extends Activity {
 
     @OnClick(R.id.next)
     void onNextClicked() {
-        if (selectedCategories.size() > 0) {
-//            Intent intent = new Intent(this, NameLocation.class);
-//            intent.putExtras(extras);
-//            intent.putCharSequenceArrayListExtra("categories", selectedCategories);
-//            startActivity(intent);
-            loading = true;
-            loadingSpinner.showSpinner();
-            cancelButton.setVisibility(View.GONE);
-            //upload location
+        synchronized (selectedCategories) {
+            if (selectedCategories.size() > 0) {
+    //            Intent intent = new Intent(this, NameLocation.class);
+    //            intent.putExtras(extras);
+    //            intent.putCharSequenceArrayListExtra("categories", selectedCategories);
+    //            startActivity(intent);
+                loading = true;
+                loadingSpinner.showSpinner();
+                cancelButton.setVisibility(View.GONE);
+                String[] categories = new String[selectedCategories.size()];
+                selectedCategories.toArray(categories);
+                LocationController.getInstance().createLocation(extras.getString("title"),
+                        extras.getDouble("lon"),
+                        extras.getDouble("lat"),
+                        categories,
+                        (Bitmap) extras.get("picture"))
+                .subscribe((result) -> {
+                        },
+                        (error) -> {
+                            Toast.makeText(ChooseCategories.this, "Could not create location",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                );
+            }
         }
     }
 

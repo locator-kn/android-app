@@ -69,10 +69,14 @@ public class LocationSuggestions extends AppCompatActivity implements SearchResu
         gpsService.getCurLocation()
                 .subscribe(
                         (location) -> {
+                            extras.putDouble("lon", location.getLongitude());
+                            extras.putDouble("lat", location.getLatitude());
                             searchResultsFragment.search(location.getLongitude(),
                                     location.getLatitude());
                         },
                         (err) -> {
+                            Toast.makeText(getApplicationContext(), err.getMessage(), Toast.LENGTH_SHORT).show();
+                            LocationSuggestions.this.finish();
                         }
                 );
     }

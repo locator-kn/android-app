@@ -62,6 +62,10 @@ public class GpsService extends Fragment implements GoogleApiClient.ConnectionCa
 
     private void notifyObserversWithLocation() {
         Location location = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
+        if (location == null) {
+            notifyObserversWithError();
+            return;
+        }
         for (Observer sub : currentLocationSubscribers) {
             sub.onNext(location);
             sub.onCompleted();
@@ -86,9 +90,10 @@ public class GpsService extends Fragment implements GoogleApiClient.ConnectionCa
             if (grantResults.length > 0
                     && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 notifyObserversWithLocation();
+                return;
             }
+            notifyObserversWithError();
         }
-        notifyObserversWithError();
     }
 
     @Override
