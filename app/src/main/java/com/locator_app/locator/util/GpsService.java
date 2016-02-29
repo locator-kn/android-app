@@ -23,6 +23,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.locator_app.locator.LocatorApplication;
 
+import java.net.ConnectException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -58,14 +59,18 @@ public class GpsService extends Fragment implements GoogleApiClient.ConnectionCa
     private static final int PERMISSION_REQUEST_CODE = 69; // :D
 
     @Override
-    public void onConnected(Bundle connectionHint) {
+    public void onAttach(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (getActivity().checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+            if (!(context instanceof Activity)) {
+                return;
+            }
+            Activity activity = (Activity) context;
+            if (activity.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
                     != PackageManager.PERMISSION_GRANTED
-                && getActivity().checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION)
+                && activity.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION)
                     != PackageManager.PERMISSION_GRANTED) {
-                getActivity().requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                                                     PERMISSION_REQUEST_CODE);
+                activity.requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        PERMISSION_REQUEST_CODE);
                 return;
             }
         }
