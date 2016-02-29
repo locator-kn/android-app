@@ -72,6 +72,7 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
             name = (TextView) view.findViewById(R.id.text);
             description = (TextView) view.findViewById(R.id.description);
             imageView = (CircleImageView)view.findViewById(R.id.bubbleView);
+            Glide.with(view.getContext()).load(R.drawable.profile).into(imageView);
 
             TextView bubbleInfo = (TextView) view.findViewById(R.id.bubble_info);
             bubbleInfo.setVisibility(View.GONE);
@@ -87,7 +88,10 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
             }
             Glide.with(LocatorApplication.getAppContext())
                     .load(user.thumbnailUri())
+                    .asBitmap()
+                    .placeholder(R.drawable.facebook_logo)
                     .error(R.drawable.profile)
+                    .dontTransform()
                     .dontAnimate()
                     .into(imageView);
         }

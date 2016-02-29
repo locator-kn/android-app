@@ -38,10 +38,10 @@
         android:id="@+id/impressionTypes">
 
         <ImageView
+            android:id="@+id/textImpression"
             android:layout_width="0dp"
             android:layout_height="fill_parent"
-            android:id="@+id/voiceImpression"
-            android:src="@drawable/small_gray_sound_record"
+            android:src="@drawable/small_gray_chat"
             android:adjustViewBounds="false"
             android:layout_weight="1"
             android:layout_marginTop="20dp"
@@ -52,7 +52,7 @@
         <ImageView
             android:layout_width="0dp"
             android:layout_height="fill_parent"
-            android:id="@+id/mediaImpression"
+            android:id="@+id/imageImpression"
             android:src="@drawable/small_gray_photo"
             android:adjustViewBounds="false"
             android:layout_weight="1"
@@ -64,8 +64,8 @@
         <ImageView
             android:layout_width="0dp"
             android:layout_height="fill_parent"
-            android:id="@+id/textImpression"
-            android:src="@drawable/small_gray_chat"
+            android:id="@+id/videoImpression"
+            android:src="@drawable/small_gray_video"
             android:adjustViewBounds="false"
             android:layout_weight="1"
             android:layout_marginTop="20dp"

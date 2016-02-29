@@ -34,21 +34,20 @@ class CreateImpressionViewHolder extends ImpressionViewHolder {
                 impressionTypes.setVisibility(View.GONE);
             }
         });
-        ImageView voice = (ImageView) itemView.findViewById(R.id.voiceImpression);
-        voice.setOnClickListener(v -> Toast.makeText(itemView.getContext(), "voice", Toast.LENGTH_SHORT).show());
+        ImageView image = (ImageView) itemView.findViewById(R.id.imageImpression);
+        image.setOnClickListener(v -> {
+            Intent intent = new Intent(v.getContext(), ImpressionController.class);
+            intent.putExtra("locationId", impressionRecyclerViewAdapter.location.id);
+            intent.putExtra("type", "image");
+            v.getContext().startActivity(intent);
+        });
 
-        ImageView media = (ImageView) itemView.findViewById(R.id.mediaImpression);
-        media.setOnClickListener(
-                v -> {
-                    Intent intent = new Intent(v.getContext(), ImpressionController.class);
-                    intent.putExtra("locationId", impressionRecyclerViewAdapter.location.id);
-                    intent.putExtra("type", "image");
-                    v.getContext().startActivity(intent);
-                });
-
-        media.setOnLongClickListener(v -> {
-            Toast.makeText(itemView.getContext(), "video", Toast.LENGTH_SHORT).show();
-            return true;
+        ImageView video = (ImageView) itemView.findViewById(R.id.videoImpression);
+        video.setOnClickListener(v -> {
+            Intent intent = new Intent(v.getContext(), ImpressionController.class);
+            intent.putExtra("locationId", impressionRecyclerViewAdapter.location.id);
+            intent.putExtra("type", "video");
+            v.getContext().startActivity(intent);
         });
         ImageView text = (ImageView) itemView.findViewById(R.id.textImpression);
         text.setOnClickListener(v -> Toast.makeText(itemView.getContext(), "text", Toast.LENGTH_SHORT).show());

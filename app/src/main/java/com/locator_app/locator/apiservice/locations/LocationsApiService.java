@@ -69,6 +69,11 @@ public class LocationsApiService {
         @POST(Api.version + "/locations/{locationId}/impressions/image")
         Observable<Response<Object>> postImageImpression(@Path("locationId") String locationId,
             @Part("file\"; filename=impression.jpg") RequestBody file);
+
+        @Multipart
+        @POST(Api.version + "/locations/{locationId}/impressions/video")
+        Observable<Response<Object>> postVideoImpression(@Path("locationId") String locationId,
+             @Part("file\"; filename=impression.mp4") RequestBody file);
     }
 
     LocationsApi service = ServiceFactory.createService(LocationsApi.class);
@@ -106,4 +111,6 @@ public class LocationsApiService {
         RequestBody requestBody = RequestBody.create(MediaType.parse("image/jpg"), jpgFile);
         return GenericErrorHandler.wrapSingle(service.postImageImpression(locationId, requestBody));
     }
+
+    //public Observable<Object> createVideoImpression()
 }
