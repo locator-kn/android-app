@@ -139,7 +139,10 @@ public class ChooseCategories extends Activity {
                 .subscribe((location) -> {
                             Intent intent = new Intent(this, LocationDetailActivity.class);
                             intent.putExtra("location", location);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             startActivity(intent);
+                            finish();
                         },
                         (error) -> {
                             loadingSpinner.hideSpinner();

@@ -113,7 +113,7 @@ public class LocationSuggestions extends AppCompatActivity implements SearchResu
                         Toast.LENGTH_SHORT).show();
                 return;
             }
-            
+
             LocationController.getInstance().createImageImpression(location.id, imageBitmap)
                     .subscribe(
                             (val) -> {
