@@ -67,7 +67,7 @@ public class LocationsApiService {
         @Multipart
         @POST(Api.version + "/locations/{locationId}/impressions/image")
         Observable<Response<EchoResponse>> postImageImpression(@Path("locationId") String locationId,
-            @Part("file\"; filename=impression.png") RequestBody file);
+            @Part("file\"; filename=impression.jpg") RequestBody file);
     }
 
     LocationsApi service = ServiceFactory.createService(LocationsApi.class);
@@ -107,19 +107,19 @@ public class LocationsApiService {
     }
 
     public Observable<EchoResponse> createImageImpression(String locationId, Bitmap bitmap) {
-        File f = new File(LocatorApplication.getAppContext().getCacheDir(), "impression.png");
+        File f = new File(LocatorApplication.getAppContext().getCacheDir(), "impression.jpg");
         try {
             f.createNewFile();
 
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, bos);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 75, bos);
             byte[] bitmapdata = bos.toByteArray();
 
             FileOutputStream fos = new FileOutputStream(f);
             fos.write(bitmapdata);
             fos.flush();
             fos.close();
-            RequestBody requestBody = RequestBody.create(MediaType.parse("image/png"), f);
+            RequestBody requestBody = RequestBody.create(MediaType.parse("image/jpg"), f);
             return GenericErrorHandler.wrapSingle(service.postImageImpression(locationId, requestBody));
         } catch (IOException e) {
             e.printStackTrace();
