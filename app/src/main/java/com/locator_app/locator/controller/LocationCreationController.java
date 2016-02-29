@@ -38,7 +38,7 @@ public class LocationCreationController {
                 requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
             try {
                 Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(activity.getContentResolver(), imageUri);
-                BitmapHelper.toJpgFile(imageBitmap)
+                BitmapHelper.toJpgFile(imageBitmap);
                 Intent intent = new Intent(activity, LocationSuggestions.class);
 
                 intent.putExtra("picture", imageBitmap);
