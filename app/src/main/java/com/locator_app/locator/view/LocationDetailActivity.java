@@ -20,6 +20,8 @@ import com.locator_app.locator.model.impressions.ImageImpression;
 import com.locator_app.locator.util.GpsService;
 import com.locator_app.locator.view.fragments.ImageFragmentAdapter;
 import com.locator_app.locator.view.home.HomeActivity;
+import com.locator_app.locator.view.impressions.ImpressionController;
+import com.locator_app.locator.view.impressions.ImpressionObserver;
 import com.locator_app.locator.view.impressions.ImpressionRecyclerViewAdapter;
 
 import java.util.LinkedList;
@@ -32,7 +34,7 @@ import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class LocationDetailActivity extends FragmentActivity {
+public class LocationDetailActivity extends FragmentActivity implements ImpressionObserver {
 
     @Bind(R.id.goBack)
     ImageView goBack;
@@ -60,6 +62,7 @@ public class LocationDetailActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_location_detail);
         ButterKnife.bind(this);
+        ImpressionController.addImpressionObserver(this);
 
         location = (LocatorLocation) getIntent().getSerializableExtra("location");
 
@@ -75,6 +78,12 @@ public class LocationDetailActivity extends FragmentActivity {
 
         loadImpressions();
         setupLocationInformation();
+    }
+
+    @Override
+    protected void onDestroy() {
+        ImpressionController.removeImpressionObserver(this);
+        super.onDestroy();
     }
 
     @OnClick(R.id.heart)
@@ -159,7 +168,8 @@ public class LocationDetailActivity extends FragmentActivity {
                 .toList()
                 .subscribe(
                         imageFragmentAdapter::setImages,
-                        (err) -> { }
+                        (err) -> {
+                        }
                 );
     }
 
@@ -203,5 +213,16 @@ public class LocationDetailActivity extends FragmentActivity {
 
                         }
                 );
+    }
+
+    @Override
+    public void onImpressionCreated(AbstractImpression.ImpressionType type) {
+        Toast.makeText(this, "Impression wurde hinzugefügt :-)", Toast.LENGTH_SHORT).show();
+        loadImpressions();
+    }
+
+    @Override
+    public void onImpressionCreationFailed(AbstractImpression.ImpressionType type, Throwable error) {
+        Toast.makeText(this, error.toString(), Toast.LENGTH_SHORT).show();
     }
 }

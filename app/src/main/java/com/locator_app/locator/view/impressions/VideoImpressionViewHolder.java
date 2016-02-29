@@ -4,9 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.MediaController;
 import android.widget.TextView;
-import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
 import com.locator_app.locator.R;
@@ -24,7 +22,7 @@ class VideoImpressionViewHolder extends ImpressionViewHolder {
     ImageView userImage;
     TextView date;
     TextView userName;
-    VideoView videoView;
+    ImageView videoPreview;
 
     public VideoImpressionViewHolder(View itemView) {
         super(itemView);
@@ -34,20 +32,12 @@ class VideoImpressionViewHolder extends ImpressionViewHolder {
         userImage = (ImageView) itemView.findViewById(R.id.userThumbnail);
         date = (TextView) itemView.findViewById(R.id.date);
         userName = (TextView) itemView.findViewById(R.id.userName);
-
-        videoView = (VideoView) itemView.findViewById(R.id.videoView);
-        MediaController mc = new MediaController(itemView.getContext());
-        mc.setMediaPlayer(videoView);
-        videoView.setMediaController(mc);
+        videoPreview = (ImageView) itemView.findViewById(R.id.videoPreview);
     }
 
     @Override
     public void bind(AbstractImpression impression) {
         VideoImpression videoImpression = (VideoImpression) impression;
-        Uri uri = Uri.parse(videoImpression.getVideoUri());
-        videoView.setVideoURI(uri);
-        videoView.start();
-        videoView.pause();
 
         UserController.getInstance().getUser(videoImpression.getUserId())
                 .subscribeOn(Schedulers.io())
@@ -70,5 +60,11 @@ class VideoImpressionViewHolder extends ImpressionViewHolder {
                         (err) -> { }
                 );
         date.setText(DateConverter.toddMMyyyy(videoImpression.getCreateDate()));
+
+        videoPreview.setOnClickListener(v -> {
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setDataAndType(Uri.parse(videoImpression.getVideoUri()), "video/*");
+            v.getContext().startActivity(intent);
+        });
     }
 }

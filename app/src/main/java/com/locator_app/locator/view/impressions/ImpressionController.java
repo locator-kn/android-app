@@ -12,9 +12,16 @@ import android.widget.Toast;
 
 import com.locator_app.locator.LocatorApplication;
 import com.locator_app.locator.controller.LocationController;
+import com.locator_app.locator.model.impressions.AbstractImpression;
 import com.locator_app.locator.model.impressions.Impression;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class ImpressionController extends Activity {
 
@@ -59,13 +66,11 @@ public class ImpressionController extends Activity {
                 LocationController.getInstance().createImageImpression(locationId, imageBitmap)
                         .subscribe(
                                 (val) -> {
-                                    Toast.makeText(LocatorApplication.getAppContext(),
-                                            "created image-impression", Toast.LENGTH_SHORT).show();
+                                    notify(AbstractImpression.ImpressionType.IMAGE);
                                 },
                                 (err) -> {
-                                    Toast.makeText(LocatorApplication.getAppContext(),
-                                            "Deine Impression konnte leider nicht hochgeladen werden :-(",
-                                            Toast.LENGTH_SHORT).show();
+                                    notifyError(AbstractImpression.ImpressionType.IMAGE,
+                                            new Throwable("Dein Bild konnte leider nicht hochgeladen werden"));
                                 }
                         );
             } catch (IOException e) {
@@ -74,5 +79,27 @@ public class ImpressionController extends Activity {
         }
 
         finish();
+    }
+
+
+    private static Set<ImpressionObserver> observers = new HashSet<>();
+    public static void addImpressionObserver(ImpressionObserver obs) {
+        observers.add(obs);
+    }
+
+    public static void removeImpressionObserver(ImpressionObserver obs) {
+        observers.remove(obs);
+    }
+
+    private static void notify(AbstractImpression.ImpressionType type) {
+        for (ImpressionObserver obs: observers) {
+            obs.onImpressionCreated(type);
+        }
+    }
+
+    private static void notifyError(AbstractImpression.ImpressionType type, Throwable error) {
+        for (ImpressionObserver obs: observers) {
+            obs.onImpressionCreationFailed(type, error);
+        }
     }
 }
