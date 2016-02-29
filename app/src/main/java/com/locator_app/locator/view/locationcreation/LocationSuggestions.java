@@ -2,7 +2,9 @@ package com.locator_app.locator.view.locationcreation;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -103,7 +105,16 @@ public class LocationSuggestions extends AppCompatActivity implements SearchResu
         } else {
             uploadLoadingSpinner.showSpinner();
             cancelButton.setVisibility(View.GONE);
-            LocationController.getInstance().createImageImpression(location.id, (Bitmap) extras.get("picture"))
+            Bitmap imageBitmap;
+            try {
+                imageBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), (Uri) extras.get("imageUri"));
+            } catch (Exception e) {
+                Toast.makeText(this, "Could not find Image file",
+                        Toast.LENGTH_SHORT).show();
+                return;
+            }
+            
+            LocationController.getInstance().createImageImpression(location.id, imageBitmap)
                     .subscribe(
                             (val) -> {
                                 Intent intent = new Intent(this, LocationDetailActivity.class);

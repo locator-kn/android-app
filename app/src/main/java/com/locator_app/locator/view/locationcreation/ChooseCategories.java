@@ -3,7 +3,9 @@ package com.locator_app.locator.view.locationcreation;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -12,10 +14,12 @@ import android.widget.Toast;
 import com.locator_app.locator.R;
 import com.locator_app.locator.apiservice.locations.LocationsApiService;
 import com.locator_app.locator.controller.LocationController;
+import com.locator_app.locator.util.BitmapHelper;
 import com.locator_app.locator.view.LocationDetailActivity;
 import com.locator_app.locator.view.home.HomeActivity;
 import com.locator_app.locator.view.LoadingSpinner;
 
+import java.security.spec.ECField;
 import java.util.ArrayList;
 
 import butterknife.Bind;
@@ -117,11 +121,21 @@ public class ChooseCategories extends Activity {
                 cancelButton.setVisibility(View.GONE);
                 String[] categories = new String[selectedCategories.size()];
                 selectedCategories.toArray(categories);
+
+                Bitmap imageBitmap;
+                try {
+                    imageBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), (Uri) extras.get("imageUri"));
+                } catch (Exception e) {
+                    Toast.makeText(ChooseCategories.this, "Could not find Image file",
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 LocationController.getInstance().createLocation(extras.getString("name"),
                         extras.getDouble("lon"),
                         extras.getDouble("lat"),
                         categories,
-                        (Bitmap) extras.get("picture"))
+                        imageBitmap)
                 .subscribe((location) -> {
                             Intent intent = new Intent(this, LocationDetailActivity.class);
                             intent.putExtra("location", location);

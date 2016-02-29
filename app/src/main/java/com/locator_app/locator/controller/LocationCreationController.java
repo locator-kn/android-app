@@ -36,16 +36,10 @@ public class LocationCreationController {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK &&
                 requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
-            try {
-                Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(activity.getContentResolver(), imageUri);
-                BitmapHelper.toJpgFile(imageBitmap);
-                Intent intent = new Intent(activity, LocationSuggestions.class);
+            Intent intent = new Intent(activity, LocationSuggestions.class);
 
-                intent.putExtra("picture", imageBitmap);
-                activity.startActivity(intent);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            intent.putExtra("imageUri", imageUri);
+            activity.startActivity(intent);
         }
     }
 }
