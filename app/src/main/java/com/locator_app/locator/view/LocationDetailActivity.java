@@ -17,7 +17,7 @@ import com.locator_app.locator.controller.UserController;
 import com.locator_app.locator.model.LocatorLocation;
 import com.locator_app.locator.model.impressions.AbstractImpression;
 import com.locator_app.locator.model.impressions.ImageImpression;
-import com.locator_app.locator.util.GpsService;
+import com.locator_app.locator.service.GpsService;
 import com.locator_app.locator.view.fragments.ImageFragmentAdapter;
 import com.locator_app.locator.view.home.HomeActivity;
 import com.locator_app.locator.view.impressions.ImpressionController;
@@ -102,8 +102,6 @@ public class LocationDetailActivity extends FragmentActivity implements Impressi
 
     private void doFavorLocation() {
         LocationController.getInstance().favorLocation(location.id)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         (result) -> {
                             location.favorites.add(UserController.getInstance().me()._id);
@@ -118,8 +116,6 @@ public class LocationDetailActivity extends FragmentActivity implements Impressi
 
     private void doUnfavorLocation() {
         LocationController.getInstance().unfavorLocation(location.id)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         (result) -> {
                             location.favorites.remove(UserController.getInstance().me()._id);
@@ -139,8 +135,6 @@ public class LocationDetailActivity extends FragmentActivity implements Impressi
 
     private void loadImpressions() {
         LocationController.getInstance().getImpressionsByLocationId(location.id)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
                 .toList()
                 .subscribe(
                         this::handleImpressions,

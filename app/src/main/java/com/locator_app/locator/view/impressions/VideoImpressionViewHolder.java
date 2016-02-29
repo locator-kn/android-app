@@ -40,8 +40,6 @@ class VideoImpressionViewHolder extends ImpressionViewHolder {
         VideoImpression videoImpression = (VideoImpression) impression;
 
         UserController.getInstance().getUser(videoImpression.getUserId())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         (user) -> {
                             userName.setText(user.name);

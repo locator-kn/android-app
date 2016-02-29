@@ -6,6 +6,18 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 
+import com.locator_app.locator.LocatorApplication;
+import com.locator_app.locator.apiservice.errorhandling.GenericErrorHandler;
+import com.squareup.okhttp.MediaType;
+import com.squareup.okhttp.RequestBody;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
+import rx.Observable;
+
 
 public class BitmapHelper {
 
@@ -23,5 +35,33 @@ public class BitmapHelper {
         canvas.drawBitmap(bitmap, 0, 0, paint);
 
         return output;
+    }
+
+    public static File toJpgFile(Bitmap bitmap, String filename, int quality) {
+        File f = new File(LocatorApplication.getAppContext().getCacheDir(), filename);
+        try {
+            f.createNewFile();
+
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, quality, bos);
+
+            FileOutputStream fos = new FileOutputStream(f);
+            fos.write(bos.toByteArray());
+            fos.flush();
+            fos.close();
+            return f;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static File toJpgFile(Bitmap bitmap, String filename) {
+        return toJpgFile(bitmap, filename, 75);
+    }
+
+    public static File toJpgFile(Bitmap bitmap) {
+        String filename = "pic" + Long.toString(System.currentTimeMillis()) + ".jpg";
+        return toJpgFile(bitmap, filename);
     }
 }

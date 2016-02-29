@@ -14,6 +14,8 @@ import com.locator_app.locator.apiservice.users.RegistrationRequest;
 import com.locator_app.locator.apiservice.users.UsersApiService;
 
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class UserController {
 
@@ -27,16 +29,22 @@ public class UserController {
 
     public Observable<LoginResponse> register(RegistrationRequest registrationRequest) {
         return userService.register(registrationRequest)
-                .doOnNext(this::handleLogin);
+                .doOnNext(this::handleLogin)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     public Observable<LoginResponse> login(LoginRequest loginRequest) {
         return userService.login(loginRequest)
-                .doOnNext(this::handleLogin);
+                .doOnNext(this::handleLogin)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     public Observable<User> followUser(String userId) {
-        return userService.followUser(userId);
+        return userService.followUser(userId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     public Observable<LoginResponse> logInLastLoggedInUser() {
@@ -48,7 +56,9 @@ public class UserController {
             Couch.get().switchToDatabase(lastLoggedInUserEmail);
             Couch.get().restore(me);
             return userService.checkProtected()
-                    .doOnNext(this::handleLogin);
+                    .doOnNext(this::handleLogin)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread());
         }
     }
 
@@ -71,7 +81,9 @@ public class UserController {
 
     public Observable<LogoutResponse> logout() {
         return userService.logout()
-                .doOnNext(this::handleLogout);
+                .doOnNext(this::handleLogout)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     private void handleLogout(LogoutResponse logoutResponse) {
@@ -87,11 +99,15 @@ public class UserController {
 
 
     public Observable<User> getUser(String userId) {
-        return userService.getUser(userId);
+        return userService.getUser(userId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     public Observable<User> getFollowers(String userId) {
-        return userService.getFollowers(userId);
+        return userService.getFollowers(userId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     private static UserController instance;

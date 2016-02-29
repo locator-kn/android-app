@@ -75,8 +75,6 @@ public class MarkerInfoWindow extends Fragment {
         if (!currentUserId.equals(userId)) {
             currentUserId = userId;
             UserController.getInstance().getUser(userId)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(
                             (user) -> {
                                 nameTextView.setText(user.name);

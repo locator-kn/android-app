@@ -11,6 +11,7 @@ import com.locator_app.locator.apiservice.errorhandling.GenericErrorHandler;
 import com.locator_app.locator.model.LocatorLocation;
 import com.locator_app.locator.model.impressions.AbstractImpression;
 import com.locator_app.locator.model.impressions.Impression;
+import com.locator_app.locator.util.BitmapHelper;
 import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.MultipartBuilder;
 import com.squareup.okhttp.RequestBody;
@@ -63,16 +64,16 @@ public class LocationsApiService {
 
         @Multipart
         @POST(Api.version + "/locations/{locationId}/impressions/image")
-        Observable<Response<EchoResponse>> postImageImpression(@Path("locationId") String locationId,
-                                                               @Part("file\"; filename=impression.jpg") RequestBody file);
+        Observable<Response<Object>> postImageImpression(@Path("locationId") String locationId,
+                                                       @Part("file\"; filename=impression.jpg") RequestBody file);
 
         @Multipart
         @POST(Api.version + "/locations")
-        Observable<Response<EchoResponse>> createLocation(@Part("title") String  title,
-                                                          @Part("long") double  lon,
-                                                          @Part("lat") double  lat,
-                                                          @Part("categories") String[]  categories,
-                                                          @Part("file\"; filename=image.jpg") RequestBody file);
+        Observable<Response<Object>> createLocation(@Part("title") String  title,
+                                                    @Part("long") double  lon,
+                                                    @Part("lat") double  lat,
+                                                    @Part("categories") String[]  categories,
+                                                    @Part("file\"; filename=image.jpg") RequestBody file);
     }
 
     LocationsApi service = ServiceFactory.createService(LocationsApi.class);
@@ -102,37 +103,16 @@ public class LocationsApiService {
         return GenericErrorHandler.wrapSingle(service.unfavorLocation(locationId));
     }
 
-    public class EchoResponse {
-        /*
-        @SerializedName("headers")
-        public String headers;
-
-        @SerializedName("payload")
-        public String payload;*/
-    }
-
-    public Observable<EchoResponse> createImageImpression(String locationId, Bitmap bitmap) {
-        File f = new File(LocatorApplication.getAppContext().getCacheDir(), "impression.jpg");
-        try {
-            f.createNewFile();
-
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 75, bos);
-            byte[] bitmapdata = bos.toByteArray();
-
-            FileOutputStream fos = new FileOutputStream(f);
-            fos.write(bitmapdata);
-            fos.flush();
-            fos.close();
-            RequestBody requestBody = RequestBody.create(MediaType.parse("image/jpg"), f);
-            return GenericErrorHandler.wrapSingle(service.postImageImpression(locationId, requestBody));
-        } catch (IOException e) {
-            e.printStackTrace();
-            return Observable.error(e);
+    public Observable<Object> createImageImpression(String locationId, Bitmap bitmap) {
+        File jpgFile = BitmapHelper.toJpgFile(bitmap);
+        if (jpgFile == null) {
+            return Observable.error(new Throwable("could not store image"));
         }
+        RequestBody requestBody = RequestBody.create(MediaType.parse("image/jpg"), jpgFile);
+        return GenericErrorHandler.wrapSingle(service.postImageImpression(locationId, requestBody));
     }
 
-    public Observable<EchoResponse> createLocation(String title,
+    public Observable<Object> createLocation(String title,
                                                    double  lon,
                                                    double  lat,
                                                    String[]  categories,

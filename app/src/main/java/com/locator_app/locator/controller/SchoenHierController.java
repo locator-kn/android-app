@@ -1,13 +1,10 @@
 package com.locator_app.locator.controller;
 
-import android.widget.Toast;
-
-import com.locator_app.locator.LocatorApplication;
 import com.locator_app.locator.apiservice.schoenhier.SchoenHierApiService;
 import com.locator_app.locator.apiservice.schoenhier.SchoenHierRequest;
 import com.locator_app.locator.apiservice.schoenhier.SchoenHiersNearbyResponse;
 import com.locator_app.locator.apiservice.schoenhier.SchoenHiersResponse;
-import com.locator_app.locator.util.GpsService;
+import com.locator_app.locator.service.GpsService;
 
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -19,7 +16,9 @@ public class SchoenHierController {
 
     public Observable<SchoenHiersNearbyResponse> schoenHiersNearby(double lon, double lat,
                                                                    double dist, int max) {
-        return schoenHierService.schoenHiersNearby(lon, lat, dist, max);
+        return schoenHierService.schoenHiersNearby(lon, lat, dist, max)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     public Observable<SchoenHiersResponse> markCurPosAsSchoenHier(GpsService gpsService) {

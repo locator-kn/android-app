@@ -177,8 +177,6 @@ public class RegisterProfilePictureActivity extends AppCompatActivity {
         request.password = registerValues.get("password");
         request.residence = registerValues.get("residence");
         controller.register(request)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 (loginResponse) -> {
                     Intent intent = new Intent(context, OnBoardingChoiceActivity.class);

@@ -38,8 +38,6 @@ public class TextImpressionViewHolder extends ImpressionViewHolder {
     public void bind(AbstractImpression impression) {
         TextImpression textImpression = (TextImpression) impression;
         UserController.getInstance().getUser(textImpression.getUserId())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         (user) -> {
                             userName.setText(user.name);

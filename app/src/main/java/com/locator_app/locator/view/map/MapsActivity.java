@@ -23,7 +23,7 @@ import com.google.maps.android.heatmaps.HeatmapTileProvider;
 import com.locator_app.locator.LocatorApplication;
 import com.locator_app.locator.R;
 import com.locator_app.locator.controller.SchoenHierController;
-import com.locator_app.locator.util.GpsService;
+import com.locator_app.locator.service.GpsService;
 
 import java.util.List;
 

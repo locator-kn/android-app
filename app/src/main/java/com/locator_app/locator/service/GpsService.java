@@ -1,4 +1,4 @@
-package com.locator_app.locator.util;
+package com.locator_app.locator.service;
 
 
 import android.Manifest;

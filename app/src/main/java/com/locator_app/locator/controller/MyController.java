@@ -7,6 +7,8 @@ import com.locator_app.locator.apiservice.my.BubbleScreenResponse;
 import com.locator_app.locator.apiservice.my.MyApiService;
 
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class MyController {
 
@@ -14,7 +16,9 @@ public class MyController {
 
     public Observable<BubbleScreenResponse> getBubbleScreen() {
         return myService.bubbleScreen()
-                .doOnError(this::onBubbleScreenError);
+                .doOnError(this::onBubbleScreenError)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     private void onBubbleScreenError(Throwable throwable) {

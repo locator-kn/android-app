@@ -3,8 +3,6 @@ package com.locator_app.locator.view.home;
 import android.support.v4.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -18,13 +16,11 @@ import com.locator_app.locator.controller.MyController;
 import com.locator_app.locator.controller.SchoenHierController;
 import com.locator_app.locator.controller.UserController;
 import com.locator_app.locator.model.User;
-import com.locator_app.locator.util.GpsService;
+import com.locator_app.locator.service.GpsService;
 import com.locator_app.locator.view.bubble.BubbleController;
 import com.locator_app.locator.view.bubble.BubbleView;
 import com.locator_app.locator.view.bubble.RelativeBubbleLayout;
-import com.locator_app.locator.view.fragments.FragmentAdapter;
 import com.locator_app.locator.view.login.LoginRegisterStartActivity;
-import com.locator_app.locator.view.map.MapsActivity;
 import com.locator_app.locator.view.profile.ProfileActivity;
 
 import butterknife.Bind;
@@ -93,8 +89,6 @@ public class HomeFragment extends Fragment {
     void onUserProfileBubbleClick() {
         UserController controller = UserController.getInstance();
         controller.logout()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         (logoutResponse) -> jumpToLoginScreen(),
                         (error) -> jumpToLoginScreen()
@@ -104,8 +98,6 @@ public class HomeFragment extends Fragment {
     @OnLongClick(R.id.userProfileBubble)
     boolean onUserProfileBubbleLongClick() {
         UserController.getInstance().getUser("569e4a83a6e5bb503b838301")
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         this::showUserProfile,
                         (error) -> {
@@ -144,11 +136,9 @@ public class HomeFragment extends Fragment {
     private void updateDashboard() {
         MyController controller = MyController.getInstance();
         controller.getBubbleScreen()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        (response) -> bubbleController.onBubbleScreenUpdate(response),
-                        (error) -> handleBubbleScreenError(error)
+                        bubbleController::onBubbleScreenUpdate,
+                        this::handleBubbleScreenError
                 );
     }
 
