@@ -117,7 +117,6 @@ public class LocationsApiService {
         return GenericErrorHandler.wrapSingle(service.postImageImpression(locationId, requestBody));
     }
 
-<<<<<<< HEAD
     public Observable<LocatorLocation> createLocation(String title,
                                                    double  lon,
                                                    double  lat,
@@ -134,7 +133,4 @@ public class LocationsApiService {
         return GenericErrorHandler.wrapSingle(service.createLocation(titleBody, lonBody, latBody,
                                                                      categories, imgBody));
     }
-=======
-    //public Observable<Object> createVideoImpression()
->>>>>>> 3a5e4aed1d158b28d5be49a477b76b27dd9b9cec
 }
