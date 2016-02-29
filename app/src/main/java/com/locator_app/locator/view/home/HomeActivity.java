@@ -2,6 +2,7 @@ package com.locator_app.locator.view.home;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -11,6 +12,7 @@ import android.widget.Toast;
 
 import com.locator_app.locator.R;
 import com.locator_app.locator.controller.LocationCreationController;
+import com.locator_app.locator.view.ImageActivity;
 import com.locator_app.locator.view.LoadingSpinner;
 import com.locator_app.locator.view.map.MapsActivity;
 
@@ -66,8 +68,10 @@ public class HomeActivity extends AppCompatActivity {
                 if (state == ViewPager.SCROLL_STATE_IDLE &&
                         currentPosition == 1) {
                     viewPager.setPagingEnabled(false);
-                    Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
-                    startActivity(intent);
+                    new Handler().postDelayed(() -> {
+                        Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
+                        startActivity(intent);
+                    }, 3000);
                 }
             }
         });
