@@ -117,6 +117,10 @@ public class LocationsApiService {
         return GenericErrorHandler.wrapSingle(service.postImageImpression(locationId, requestBody));
     }
 
+    public Observable<Object> createVideoImpression(String locationId) {
+        return null;
+    }
+
     public Observable<LocatorLocation> createLocation(String title,
                                                    double  lon,
                                                    double  lat,

@@ -10,9 +10,6 @@ import android.widget.Toast;
 import com.locator_app.locator.R;
 import com.locator_app.locator.model.impressions.AbstractImpression;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
-
 class CreateImpressionViewHolder extends ImpressionViewHolder {
 
     TextView numberOfImpressions;
