@@ -142,7 +142,9 @@ public class RegisterProfilePictureActivity extends AppCompatActivity {
                 Bitmap roundedBitmap = BitmapHelper.getRoundBitmap(thePic, 500);
                 profilePicture.setImageBitmap(roundedBitmap);
                 profilePictureText.setText(getResources().getString(R.string.your_profile_picture));
-                //TODO: replace "no"-image with "continue"-image or something
+
+                Glide.with(this).load(R.drawable.continue_white)
+                        .into(profileNo);
             }
         }
     }
