@@ -46,6 +46,9 @@ public class SearchResultsFragment extends Fragment {
                 creationDate.setVisibility(View.INVISIBLE);
                 imageView.setVisibility(View.INVISIBLE);
             } else {
+                title.setVisibility(View.VISIBLE);
+                description.setVisibility(View.VISIBLE);
+                imageView.setVisibility(View.VISIBLE);
                 title.setText(location.title);
                 Glide.with(LocatorApplication.getAppContext())
                         .load(location.thumbnailUri())
@@ -58,7 +61,6 @@ public class SearchResultsFragment extends Fragment {
                     description.setText("Vorschlag von Locator");
                 }
                 creationDate.setText("");
-
             }
         });
 
