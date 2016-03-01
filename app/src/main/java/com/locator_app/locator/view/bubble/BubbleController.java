@@ -2,10 +2,15 @@ package com.locator_app.locator.view.bubble;
 
 import android.content.Intent;
 import android.graphics.Point;
+import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
 import android.widget.Toast;
 
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.locator_app.locator.R;
 import com.locator_app.locator.apiservice.my.BubbleScreenResponse;
 import com.locator_app.locator.controller.LocationController;
@@ -16,6 +21,7 @@ import com.locator_app.locator.view.LocationDetailActivity;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -342,5 +348,27 @@ public class BubbleController {
 
     private int color(int id) {
         return ContextCompat.getColor(layout.getContext(), id);
+    }
+
+    public void animateBubbles() {
+        hideBubbleAnimation();
+    }
+
+    private void hideBubbleAnimation() {
+        List<BubbleView> bubblesToAnimate = Observable.from(bubbles)
+                                                .filter(b -> b.priority != -1)
+                                                .map(b -> b.view)
+                                                .toList().toBlocking().single();
+        Random random = new Random();
+        final int minDelay = 100;
+        final int maxDelay = 1000;
+        final int duration = 700;
+        for (BubbleView bubble: bubblesToAnimate) {
+            int delay = random.nextInt(maxDelay - minDelay) + minDelay;
+            YoYo.with(Techniques.Hinge)
+                    .duration(duration)
+                    .delay(delay)
+                    .playOn(bubble);
+        }
     }
 }
