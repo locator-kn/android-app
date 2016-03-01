@@ -48,7 +48,7 @@ public class ChooseCategories extends Activity {
     LoadingSpinner loadingSpinner;
 
     private static final String NATURE_ID    = "nature";
-    private static final String NIGHTLIFE_ID = "party";
+    private static final String NIGHTLIFE_ID = "nightlife";
     private static final String CULTURE_ID   = "culture";
     private static final String SECRET_ID    = "secret";
     private static final String GASTRO_ID    = "gastro";
