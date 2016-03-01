@@ -38,22 +38,6 @@ public class LoginRegisterStartActivity extends AppCompatActivity {
         setCustomActionBar();
         setupEventBus();
         loadImages();
-        registerDeviceAndLogin();
-    }
-
-    private void registerDeviceAndLogin() {
-        if (!DeviceController.getInstance().isDeviceAlreadyRegistered()) {
-            Intent intent = new Intent(getApplicationContext(), RegistrationIntentService.class);
-            startService(intent);
-        } else {
-            UserController.getInstance()
-                    .logInLastLoggedInUser()
-                    .subscribe(
-                            (loginResponse -> jumpToHomeScreen()),
-                            (err) -> {
-                            }
-                    );
-        }
     }
 
     private void setupEventBus() {
