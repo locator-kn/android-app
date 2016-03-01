@@ -56,14 +56,16 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="match_parent">
 
                 <fragment
                     android:layout_width="match_parent"
                     android:layout_height="306dp"
                     android:name="com.locator_app.locator.view.fragments.SearchResultsFragment"
                     android:id="@+id/searchFragment"
-                    android:layout_gravity="center_horizontal" />
+                    android:layout_gravity="center_horizontal"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentTop="true" />
 
                 <ImageView
                     android:layout_width="50dp"
@@ -72,11 +74,17 @@
                     android:adjustViewBounds="false"
                     android:layout_centerVertical="true"
                     android:layout_centerHorizontal="true" />
-            </RelativeLayout>
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                <ImageView
+                    android:id="@+id/blackCircle"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_weight="2"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="20dp"
+                    android:src="@drawable/circle" />
 
                 <ImageView
                     android:id="@+id/no"
@@ -89,6 +97,7 @@
                     android:layout_centerHorizontal="true"
                     android:layout_marginBottom="20dp" />
             </RelativeLayout>
+
         </LinearLayout>
     </LinearLayout>
 
