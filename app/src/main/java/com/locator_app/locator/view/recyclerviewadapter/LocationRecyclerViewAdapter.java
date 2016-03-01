@@ -42,7 +42,6 @@ public class LocationRecyclerViewAdapter extends RecyclerView.Adapter<LocationRe
 
     private ListItemFiller listItemFiller = (title, description, creationDate, imageView, location) -> {
         title.setText(location.title);
-        description.setText(location.description);
         Glide.with(LocatorApplication.getAppContext())
                 .load(location.thumbnailUri())
                 .dontAnimate()

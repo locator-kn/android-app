@@ -30,9 +30,6 @@ public class LocatorLocation implements LocatorObject, Serializable {
     @SerializedName("title")
     public String title;
 
-    @SerializedName("description")
-    public String description;
-
     @SerializedName("city")
     public City city = new City();
 
