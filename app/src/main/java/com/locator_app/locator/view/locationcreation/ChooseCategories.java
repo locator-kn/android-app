@@ -117,11 +117,6 @@ public class ChooseCategories extends Activity {
     void onNextClicked() {
         synchronized (selectedCategories) {
             if (selectedCategories.size() > 0) {
-                loading = true;
-                loadingSpinner.showSpinner();
-                cancelButton.setVisibility(View.GONE);
-                String[] categories = new String[selectedCategories.size()];
-                selectedCategories.toArray(categories);
 
                 Bitmap imageBitmap;
                 try {
@@ -131,6 +126,12 @@ public class ChooseCategories extends Activity {
                             Toast.LENGTH_SHORT).show();
                     return;
                 }
+
+                loading = true;
+                loadingSpinner.showSpinner();
+                cancelButton.setVisibility(View.GONE);
+                String[] categories = new String[selectedCategories.size()];
+                selectedCategories.toArray(categories);
 
                 LocationController.getInstance().createLocation(extras.getString("name"),
                         extras.getDouble("lon"),

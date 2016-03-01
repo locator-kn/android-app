@@ -18,9 +18,8 @@ public class ImpressionRecyclerViewAdapter
         extends RecyclerView.Adapter<ImpressionViewHolder>{
 
     final int locationInformationViewType = 100;
-    final int locationDescriptionViewType = 200;
-    final int createNewImpressionViewType = 300;
-    final int numberOfAdditionalInfoTypes = 3;
+    final int createNewImpressionViewType = 200;
+    final int numberOfAdditionalInfoTypes = 2;
 
     List<AbstractImpression> impressions = new LinkedList<>();
     public LocatorLocation location = null;
@@ -56,10 +55,6 @@ public class ImpressionRecyclerViewAdapter
                 createImpressionViewHolder = new CreateImpressionViewHolder(this, v);
             }
             return createImpressionViewHolder;
-        } else if (viewType == locationDescriptionViewType) {
-            final int cardId = R.layout.card_location_description;
-            View v = LayoutInflater.from(parent.getContext()).inflate(cardId, parent, false);
-            return new LocationDescriptionViewHolder(this, v);
         } else if (viewType == locationInformationViewType) {
             if (locationInfo == null) {
                 final int cardId = R.layout.card_location_information;
@@ -102,9 +97,7 @@ public class ImpressionRecyclerViewAdapter
     public int getItemViewType(int position) {
         if (position == 0) { // show location information card
             return locationInformationViewType;
-        } else if (position == 1) { // show location description card
-            return locationDescriptionViewType;
-        } else if (position == 2) { // create new impression card
+        } else if (position == 1) { // create new impression card
             return createNewImpressionViewType;
         }
         ImpressionType type = impressions.get(position - numberOfAdditionalInfoTypes).type();
