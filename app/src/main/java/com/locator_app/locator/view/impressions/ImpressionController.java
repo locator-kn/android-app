@@ -22,6 +22,7 @@ public class ImpressionController extends Activity {
     public static final int VIDEO = 200;
     private String locationId;
     private Uri imageUri;
+    private Uri videoUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +48,9 @@ public class ImpressionController extends Activity {
     }
 
     private void createVideoImpression() {
+        ContentValues values = new ContentValues();
+        videoUri = getContentResolver().insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
+                values);
         Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
         intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 3);
         startActivityForResult(intent, VIDEO);
