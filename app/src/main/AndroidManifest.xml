@@ -146,8 +146,8 @@
         <activity
             android:name=".view.locationcreation.ChooseCategories"
             android:screenOrientation="portrait" />
-        <activity android:name=".view.ShowMyBubbleActivity" >
-        </activity>
+        <activity android:name=".view.WelcomeActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>
