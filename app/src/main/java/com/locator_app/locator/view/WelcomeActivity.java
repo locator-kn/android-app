@@ -18,6 +18,7 @@ import com.locator_app.locator.controller.DeviceController;
 import com.locator_app.locator.controller.UserController;
 import com.locator_app.locator.view.home.HomeActivity;
 import com.locator_app.locator.view.login.LoginRegisterActivity;
+import com.locator_app.locator.view.login.LoginRegisterStartActivity;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -85,7 +86,7 @@ public class WelcomeActivity extends Activity {
     }
 
     private void jumpToLoginRegisterActivity() {
-        Intent intent = new Intent(getApplicationContext(), LoginRegisterActivity.class);
+        Intent intent = new Intent(getApplicationContext(), LoginRegisterStartActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }

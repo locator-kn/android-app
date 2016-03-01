@@ -59,7 +59,8 @@ public class HomeActivity extends AppCompatActivity {
         gpsService = new GpsService(this);
 
         ShakeDetector.create(this, () -> {
-            Toast.makeText(this, "shake", Toast.LENGTH_SHORT).show();
+            bubbleController.animateBubbles();
+            //Toast.makeText(this, "shake", Toast.LENGTH_SHORT).show();
         });
     }
 
