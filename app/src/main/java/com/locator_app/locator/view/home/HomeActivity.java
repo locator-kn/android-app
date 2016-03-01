@@ -2,18 +2,12 @@ package com.locator_app.locator.view.home;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.v4.app.Fragment;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.github.tbouron.shakedetector.library.ShakeDetector;
 import com.locator_app.locator.R;
 import com.locator_app.locator.controller.LocationCreationController;
 import com.locator_app.locator.controller.MyController;
@@ -21,17 +15,11 @@ import com.locator_app.locator.controller.SchoenHierController;
 import com.locator_app.locator.controller.UserController;
 import com.locator_app.locator.model.User;
 import com.locator_app.locator.service.GpsService;
-import com.locator_app.locator.view.ImageActivity;
-import com.locator_app.locator.view.LoadingSpinner;
 import com.locator_app.locator.view.bubble.BubbleController;
 import com.locator_app.locator.view.bubble.BubbleView;
 import com.locator_app.locator.view.bubble.RelativeBubbleLayout;
 import com.locator_app.locator.view.login.LoginRegisterStartActivity;
-import com.locator_app.locator.view.map.MapsActivity;
 import com.locator_app.locator.view.profile.ProfileActivity;
-
-import java.util.List;
-import java.util.Vector;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -69,6 +57,28 @@ public class HomeActivity extends AppCompatActivity {
             actionBar.hide();
         }
         gpsService = new GpsService(this);
+
+        ShakeDetector.create(this, () -> {
+            Toast.makeText(this, "shake", Toast.LENGTH_SHORT).show();
+        });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ShakeDetector.start();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        ShakeDetector.stop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ShakeDetector.destroy();
     }
 
     @Override
