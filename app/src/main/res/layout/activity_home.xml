@@ -1,25 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.locator_app.locator.view.home.HomeActivity">
+    android:background="@drawable/homescreen_background"
+    tools:context="com.locator_app.locator.view.home.HomeFragment">
 
-    <android.support.design.widget.CoordinatorLayout
+    <LinearLayout
+        android:id="@+id/header"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginTop="10dp">
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"/>
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:src="@drawable/locator_logo"
+            android:adjustViewBounds="true" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+    <com.locator_app.locator.view.bubble.RelativeBubbleLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         xmlns:custom="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/bubbleLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="0dp"
+        android:layout_weight="12"
+        tools:context=".MainActivity">
 
-        <com.locator_app.locator.view.home.ToggleableViewPager
-            android:id="@+id/viewPager"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            android:background="@drawable/homescreen_background" />
+        <com.locator_app.locator.view.bubble.BubbleView
+            android:id="@+id/schoenHierBubble"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            custom:shadowWidth="10"
+            custom:strokeWidth="0" />
 
-    </android.support.design.widget.CoordinatorLayout>
+        <com.locator_app.locator.view.bubble.BubbleView
+            android:id="@+id/userProfileBubble"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            custom:shadowWidth="10"
+            custom:strokeWidth="0" />
 
+    </com.locator_app.locator.view.bubble.RelativeBubbleLayout>
 
-</RelativeLayout>
+</LinearLayout>
