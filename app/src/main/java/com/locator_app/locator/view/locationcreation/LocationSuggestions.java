@@ -143,6 +143,7 @@ public class LocationSuggestions extends AppCompatActivity implements SearchResu
             startActivity(intent);
             this.finish();
         } else {
+            searchResult.add(searchResult.size(), new SearchResultsFragment.DummyLocation());
             searchLoadingSpinner.hideSpinner();
         }
     }
