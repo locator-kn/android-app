@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.locator_app.locator.LocatorApplication;
 import com.locator_app.locator.R;
 import com.locator_app.locator.controller.LocationController;
+import com.locator_app.locator.controller.LocationCreationController;
 import com.locator_app.locator.model.GoogleLocation;
 import com.locator_app.locator.model.LocatorLocation;
 import com.locator_app.locator.service.GpsService;
@@ -86,13 +87,15 @@ public class LocationSuggestions extends AppCompatActivity implements SearchResu
     void onNoClicked() {
         Intent intent = new Intent(this, NameLocation.class);
         intent.putExtras(extras);
-        startActivity(intent);
+        startActivityForResult(intent, LocationCreationController.LOCATION_CREATION_REQUEST);
     }
 
     @OnClick(R.id.cancelButton)
     void onCancelButtonClicked() {
         Intent intent = new Intent(this, HomeActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
+        finish();
     }
 
     @Override
@@ -101,7 +104,7 @@ public class LocationSuggestions extends AppCompatActivity implements SearchResu
             Intent intent = new Intent(this, ChooseCategories.class);
             extras.putString("name", location.title);
             intent.putExtras(extras);
-            startActivity(intent);
+            startActivityForResult(intent, LocationCreationController.LOCATION_CREATION_REQUEST);
         } else {
             uploadLoadingSpinner.showSpinner();
             cancelButton.setVisibility(View.GONE);
@@ -145,6 +148,14 @@ public class LocationSuggestions extends AppCompatActivity implements SearchResu
         } else {
             searchResult.add(searchResult.size(), new SearchResultsFragment.DummyLocation());
             searchLoadingSpinner.hideSpinner();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent){
+        if (resultCode == LocationCreationController.LOCATION_CREATED) {
+            super.onActivityResult(requestCode, resultCode, intent);
+            finish();
         }
     }
 }

@@ -42,4 +42,8 @@ public class LocationCreationController {
             activity.startActivity(intent);
         }
     }
+
+    public static final int LOCATION_CREATED = 500;
+
+    public static final int LOCATION_CREATION_REQUEST = 12;
 }

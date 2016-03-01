@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.locator_app.locator.R;
+import com.locator_app.locator.controller.LocationCreationController;
 import com.locator_app.locator.view.home.HomeActivity;
 
 import butterknife.Bind;
@@ -53,7 +54,7 @@ public class NameLocation extends Activity {
             Intent intent = new Intent(this, ChooseCategories.class);
             extras.putString("name", locationNameEdit.getText().toString());
             intent.putExtras(extras);
-            startActivity(intent);
+            startActivityForResult(intent, LocationCreationController.LOCATION_CREATION_REQUEST);
             return true;
         } else {
             Toast.makeText(getApplicationContext(),
@@ -66,10 +67,21 @@ public class NameLocation extends Activity {
     @OnClick(R.id.cancelButton)
     void onCancelButtonClicked() {
         Intent intent = new Intent(this, HomeActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
+        finish();
     }
 
     private boolean checkUsernameLength() {
         return locationNameEdit.getText().length() >= MIN_NAME_LENGTH;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent){
+        if (resultCode == LocationCreationController.LOCATION_CREATED) {
+            super.onActivityResult(requestCode, resultCode, intent);
+            setResult(LocationCreationController.LOCATION_CREATED, intent);
+            finish();
+        }
     }
 }
