@@ -61,14 +61,14 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         ButterKnife.bind(this);
+        bubbleController = new BubbleController(bubbleLayout);
+        locationCreationController = new LocationCreationController(this);
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.hide();
         }
         gpsService = new GpsService(this);
-        bubbleController = new BubbleController(bubbleLayout);
-        locationCreationController = new LocationCreationController(this);
     }
 
     @Override
