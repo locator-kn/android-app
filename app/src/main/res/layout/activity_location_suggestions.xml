@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal">
@@ -40,6 +40,16 @@
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:id="@+id/content">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="0dp"
+                android:layout_marginRight="0dp"
+                android:weightSum="1"
+                app:layout_scrollFlags="scroll|snap">
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -53,6 +63,8 @@
                 android:layout_marginRight="60dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="30dp" />
+
+            </LinearLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
