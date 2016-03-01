@@ -97,7 +97,7 @@ public class ImpressionRecyclerViewAdapter
     public int getItemViewType(int position) {
         if (position == 0) { // show location information card
             return locationInformationViewType;
-        } else if (position == 2) { // create new impression card
+        } else if (position == 1) { // create new impression card
             return createNewImpressionViewType;
         }
         ImpressionType type = impressions.get(position - numberOfAdditionalInfoTypes).type();
