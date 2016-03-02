@@ -1,14 +1,11 @@
 package com.locator_app.locator.view.locationcreation;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -16,7 +13,7 @@ import android.widget.Toast;
 import com.locator_app.locator.LocatorApplication;
 import com.locator_app.locator.R;
 import com.locator_app.locator.controller.LocationController;
-import com.locator_app.locator.controller.LocationCreationController;
+import com.locator_app.locator.service.LocationCreationController;
 import com.locator_app.locator.model.GoogleLocation;
 import com.locator_app.locator.model.LocatorLocation;
 import com.locator_app.locator.service.GpsService;
@@ -48,6 +45,8 @@ public class LocationSuggestions extends FragmentActivity implements SearchResul
     @Bind(R.id.cancelButton)
     ImageView cancelButton;
 
+    boolean hasCoordiantes = false;
+
     LoadingSpinner searchLoadingSpinner;
     LoadingSpinner uploadLoadingSpinner;
 
@@ -69,6 +68,7 @@ public class LocationSuggestions extends FragmentActivity implements SearchResul
         gpsService.getCurLocation()
                 .subscribe(
                         (location) -> {
+                            hasCoordiantes = true;
                             extras.putDouble("lon", location.getLongitude());
                             extras.putDouble("lat", location.getLatitude());
                             searchResultsFragment.search(location.getLongitude(),
@@ -83,9 +83,13 @@ public class LocationSuggestions extends FragmentActivity implements SearchResul
 
     @OnClick(R.id.no)
     void onNoClicked() {
-        Intent intent = new Intent(this, NameLocation.class);
-        intent.putExtras(extras);
-        startActivityForResult(intent, LocationCreationController.LOCATION_CREATION_REQUEST);
+        if (hasCoordiantes) {
+            Intent intent = new Intent(this, NameLocation.class);
+            intent.putExtras(extras);
+            startActivityForResult(intent, LocationCreationController.LOCATION_CREATION_REQUEST);
+        } else {
+            Toast.makeText(this, "Versuch es nochmal mit GPS", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @OnClick(R.id.cancelButton)
@@ -157,6 +161,13 @@ public class LocationSuggestions extends FragmentActivity implements SearchResul
             finish();
         }
         gpsService.onActivityResult(requestCode, resultCode, intent);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String[] permissions,
+                                           int[] grantResults) {
+        gpsService.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
 }

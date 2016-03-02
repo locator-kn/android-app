@@ -1,6 +1,7 @@
 package com.locator_app.locator.view.home;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -9,7 +10,7 @@ import android.widget.Toast;
 
 import com.github.tbouron.shakedetector.library.ShakeDetector;
 import com.locator_app.locator.R;
-import com.locator_app.locator.controller.LocationCreationController;
+import com.locator_app.locator.service.LocationCreationController;
 import com.locator_app.locator.controller.MyController;
 import com.locator_app.locator.controller.SchoenHierController;
 import com.locator_app.locator.controller.UserController;
@@ -88,6 +89,14 @@ public class HomeActivity extends AppCompatActivity {
         gpsService.onActivityResult(requestCode, resultCode, data);
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String[] permissions,
+                                           int[] grantResults) {
+        locationCreationController.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        gpsService.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
         bubbleController.initUserProfileBubble();
@@ -113,7 +122,7 @@ public class HomeActivity extends AppCompatActivity {
 
     @OnLongClick(R.id.schoenHierBubble)
     boolean onSchoenHierBubbleLongClick() {
-        locationCreationController.createLocation();
+        locationCreationController.startLocationCreation();
         return true;
     }
 

@@ -218,6 +218,13 @@ public class LocationDetailActivity extends FragmentActivity implements Impressi
     }
 
     @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String[] permissions,
+                                           int[] grantResults) {
+        gpsService.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    @Override
     public void onImpressionCreated(AbstractImpression.ImpressionType type) {
         Toast.makeText(this, "Impression wurde hinzugefügt :-)", Toast.LENGTH_SHORT).show();
         loadImpressions();

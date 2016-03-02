@@ -85,6 +85,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         gpsService.onActivityResult(requestCode, resultCode, data);
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String[] permissions,
+                                           int[] grantResults) {
+        gpsService.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
     @OnClick(R.id.schoenHierButton)
     void onschoenHierButtonClick() {
         SchoenHierController.getInstance().markCurPosAsSchoenHier(gpsService)

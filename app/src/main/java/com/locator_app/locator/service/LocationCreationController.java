@@ -1,4 +1,4 @@
-package com.locator_app.locator.controller;
+package com.locator_app.locator.service;
 
 import android.app.Activity;
 import android.content.ContentValues;
@@ -16,31 +16,34 @@ import com.locator_app.locator.view.locationcreation.LocationSuggestions;
 import java.io.IOException;
 
 public class LocationCreationController {
-    private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
     private Activity activity;
     private Uri imageUri;
+    private CameraService cameraService;
 
     public LocationCreationController(Activity activity) {
         this.activity = activity;
+        cameraService = new CameraService(activity);
     }
 
-    public void createLocation() {
-        ContentValues values = new ContentValues();
-        imageUri = activity.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                values);
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-        activity.startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+    public void startLocationCreation() {
+        cameraService.takePhoto().subscribe((uri) -> imageUri = uri,
+                                            (error) -> {});
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK &&
-                requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
+                requestCode == CameraService.CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
             Intent intent = new Intent(activity, LocationSuggestions.class);
 
             intent.putExtra("imageUri", imageUri);
             activity.startActivity(intent);
         }
+    }
+
+    public void onRequestPermissionsResult(int requestCode,
+                                           String[] permissions,
+                                           int[] grantResults) {
+        cameraService.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     public static final int LOCATION_CREATED = 500;
