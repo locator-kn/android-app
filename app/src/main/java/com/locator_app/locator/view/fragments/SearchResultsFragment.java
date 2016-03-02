@@ -19,6 +19,7 @@ import com.locator_app.locator.model.GoogleLocation;
 import com.locator_app.locator.model.LocatorLocation;
 import com.locator_app.locator.util.DateConverter;
 import com.locator_app.locator.view.DividerItemDecoration;
+import com.locator_app.locator.view.locationcreation.LocationSuggestions;
 import com.locator_app.locator.view.recyclerviewadapter.LocationRecyclerViewAdapter;
 
 import java.util.LinkedList;
@@ -32,23 +33,35 @@ public class SearchResultsFragment extends Fragment {
     private LocationRecyclerViewAdapter adapter = new LocationRecyclerViewAdapter();
     private RecyclerView view;
 
+    public static class DummyLocation extends LocatorLocation{}
+
     public SearchResultsFragment() {
         adapter.setItemBackgroundColor(Color.TRANSPARENT);
         adapter.setTitleColor(Color.WHITE);
         adapter.setDescrColor(Color.WHITE);
         adapter.setListItemFiller((title, description, creationDate, imageView, location) -> {
-            title.setText(location.title);
-            Glide.with(LocatorApplication.getAppContext())
-                    .load(location.thumbnailUri())
-                    .dontAnimate()
-                    .into(imageView);
-
-            if (location instanceof GoogleLocation) {
-                description.setText("Vorschlag von Google");
+            if (location instanceof DummyLocation) {
+                title.setVisibility(View.INVISIBLE);
+                description.setVisibility(View.INVISIBLE);
+                creationDate.setVisibility(View.INVISIBLE);
+                imageView.setVisibility(View.INVISIBLE);
             } else {
-                description.setText("Vorschlag von Locator");
+                title.setVisibility(View.VISIBLE);
+                description.setVisibility(View.VISIBLE);
+                imageView.setVisibility(View.VISIBLE);
+                title.setText(location.title);
+                Glide.with(LocatorApplication.getAppContext())
+                        .load(location.thumbnailUri())
+                        .dontAnimate()
+                        .into(imageView);
+
+                if (location instanceof GoogleLocation) {
+                    description.setText("Vorschlag von Google");
+                } else {
+                    description.setText("Vorschlag von Locator");
+                }
+                creationDate.setText("");
             }
-            creationDate.setText("");
         });
 
         adapter.setLocationClickHandler((v, location) -> {

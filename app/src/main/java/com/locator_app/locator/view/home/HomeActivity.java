@@ -112,7 +112,7 @@ public class HomeActivity extends AppCompatActivity {
 
     @OnLongClick(R.id.schoenHierBubble)
     boolean onSchoenHierBubbleLongClick() {
-        locationCreationController.createLocation();;
+        locationCreationController.createLocation();
         return true;
     }
 

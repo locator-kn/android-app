@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.locator_app.locator.R;
 import com.locator_app.locator.apiservice.locations.LocationsApiService;
 import com.locator_app.locator.controller.LocationController;
+import com.locator_app.locator.controller.LocationCreationController;
 import com.locator_app.locator.util.BitmapHelper;
 import com.locator_app.locator.view.LocationDetailActivity;
 import com.locator_app.locator.view.home.HomeActivity;
@@ -140,8 +141,7 @@ public class ChooseCategories extends Activity {
                 .subscribe((location) -> {
                             Intent intent = new Intent(this, LocationDetailActivity.class);
                             intent.putExtra("location", location);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                            setResult(LocationCreationController.LOCATION_CREATED, intent);
                             startActivity(intent);
                             finish();
                         },
@@ -167,6 +167,8 @@ public class ChooseCategories extends Activity {
     @OnClick(R.id.cancelButton)
     void onCancelButtonClicked() {
         Intent intent = new Intent(this, HomeActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
+        finish();
     }
 }
