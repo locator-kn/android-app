@@ -56,8 +56,8 @@ public class ImpressionController extends Activity {
         videoFile = new File(getExternalCacheDir(), "videoimpression.mp4");
 
         Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-        intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 3);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(videoFile));
+        intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 10);
+        intent.setDataAndType(Uri.fromFile(videoFile), "video/mp4");
         startActivityForResult(intent, VIDEO);
     }
 
@@ -70,7 +70,7 @@ public class ImpressionController extends Activity {
         if (requestCode == IMAGE) {
             doUploadImage();
         } else if (requestCode == VIDEO) {
-            doUploadVideo(data.getData().toString());
+            doUploadVideo();
         }
         finish();
     }
@@ -93,8 +93,7 @@ public class ImpressionController extends Activity {
         }
     }
 
-    private void doUploadVideo(String videoPath) {
-        //File file = new File(videoPath);
+    private void doUploadVideo() {
         try {
             byte[] data = FileUtils.readFileToByteArray(videoFile);
             LocationController.getInstance().createVideoImpression(locationId, data)
