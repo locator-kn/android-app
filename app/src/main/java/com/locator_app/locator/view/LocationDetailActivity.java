@@ -190,7 +190,7 @@ public class LocationDetailActivity extends FragmentActivity implements Impressi
     }
 
     private boolean userFavorsLocation() {
-        return location.favorites.contains(UserController.getInstance().me().id);
+        return UserController.getInstance().loggedIn() && location.favorites.contains(UserController.getInstance().me().id);
     }
 
     private void showDistanceToLocation() {
