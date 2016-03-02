@@ -85,6 +85,7 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         locationCreationController.onActivityResult(requestCode, resultCode, data);
+        gpsService.onActivityResult(requestCode, resultCode, data);
     }
 
     public void onWindowFocusChanged(boolean hasFocus) {

@@ -1,10 +1,12 @@
 package com.locator_app.locator.view.locationcreation;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -29,7 +31,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class LocationSuggestions extends AppCompatActivity implements SearchResultsFragment.SearchInteractionListener {
+public class LocationSuggestions extends FragmentActivity implements SearchResultsFragment.SearchInteractionListener {
     SearchResultsFragment searchResultsFragment;
     Bundle extras;
     GpsService gpsService;
@@ -54,10 +56,6 @@ public class LocationSuggestions extends AppCompatActivity implements SearchResu
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_location_suggestions);
         ButterKnife.bind(this);
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.hide();
-        }
 
         uploadLoadingSpinner = new LoadingSpinner(this, uploadSpinnerView, fadeOutLayout);
         searchLoadingSpinner = new LoadingSpinner(this, searchSpinnerView);
@@ -157,5 +155,7 @@ public class LocationSuggestions extends AppCompatActivity implements SearchResu
             super.onActivityResult(requestCode, resultCode, intent);
             finish();
         }
+        gpsService.onActivityResult(requestCode, resultCode, intent);
     }
+
 }

@@ -1,6 +1,7 @@
 package com.locator_app.locator.view.map;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -77,6 +78,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment = (MapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        gpsService.onActivityResult(requestCode, resultCode, data);
     }
 
     @OnClick(R.id.schoenHierButton)
