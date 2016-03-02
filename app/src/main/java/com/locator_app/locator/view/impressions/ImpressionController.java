@@ -27,6 +27,7 @@ public class ImpressionController extends Activity {
     public static final int VIDEO = 200;
     private String locationId;
     private Uri imageUri;
+    File videoFile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +53,7 @@ public class ImpressionController extends Activity {
     }
 
     private void createVideoImpression() {
-        File videoFile = new File(getExternalCacheDir(), "videoimpression.mp4");
+        videoFile = new File(getExternalCacheDir(), "videoimpression.mp4");
 
         Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
         intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 3);
@@ -93,9 +94,9 @@ public class ImpressionController extends Activity {
     }
 
     private void doUploadVideo(String videoPath) {
-        File file = new File(videoPath);
+        //File file = new File(videoPath);
         try {
-            byte[] data = FileUtils.readFileToByteArray(file);
+            byte[] data = FileUtils.readFileToByteArray(videoFile);
             LocationController.getInstance().createVideoImpression(locationId, data)
                     .subscribe(
                             (val) -> {
