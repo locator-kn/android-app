@@ -128,6 +128,7 @@ public class LocationSuggestions extends FragmentActivity implements SearchResul
                             },
                             (err) -> {
                                 uploadLoadingSpinner.hideSpinner();
+                                cancelButton.setVisibility(View.VISIBLE);
                                 Toast.makeText(LocatorApplication.getAppContext(),
                                         "Deine Impression konnte leider nicht hochgeladen werden :-(",
                                         Toast.LENGTH_SHORT).show();
