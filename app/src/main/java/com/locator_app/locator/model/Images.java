@@ -9,31 +9,31 @@ import java.io.Serializable;
 public class Images implements Serializable {
 
     @SerializedName("googlemap")
-    public String googlemap;
+    public String googlemap = "";
     public String getGooglemap() {
         return get(googlemap);
     }
 
     @SerializedName("xlarge")
-    public String xlarge;
+    public String xlarge = "";
     public String getXLarge() {
         return get(xlarge);
     }
 
     @SerializedName("large")
-    public String large;
+    public String large = "";
     public String getLarge() {
         return get(large);
     }
 
     @SerializedName("normal")
-    public String normal;
+    public String normal = "";
     public String getNormal() {
         return get(normal);
     }
 
     @SerializedName("small")
-    public String small;
+    public String small = "";
     public String getSmall() {
         return get(small);
     }
