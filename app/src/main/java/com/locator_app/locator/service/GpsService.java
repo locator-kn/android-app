@@ -63,12 +63,9 @@ public class GpsService extends Fragment implements GoogleApiClient.ConnectionCa
                 .addApi(LocationServices.API)
                 .build();
         this.activity = activity;
-        activity.onAttachFragment(this);
 
         LocationRequest locationRequest = LocationRequest.create();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-//        locationRequest.setInterval(30 * 1000);
-//        locationRequest.setFastestInterval(5 * 1000);
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
                 .addLocationRequest(locationRequest);
 
@@ -76,7 +73,7 @@ public class GpsService extends Fragment implements GoogleApiClient.ConnectionCa
         settingsRequest = builder.build();
     }
 
-    List<Observer> currentLocationSubscribers = new LinkedList<>();
+    final List<Observer> currentLocationSubscribers = new LinkedList<>();
     Observable<Location> currentLocationObservable = Observable.create(currentLocationSubscribers::add);
 
     public Observable<android.location.Location> getCurLocation() {
@@ -215,7 +212,7 @@ public class GpsService extends Fragment implements GoogleApiClient.ConnectionCa
         } else if (connectionResult.hasResolution()) {
             try {
                 resolvingError = true;
-                connectionResult.startResolutionForResult(getActivity(), REQUEST_RESOLVE_ERROR);
+                connectionResult.startResolutionForResult(activity, REQUEST_RESOLVE_ERROR);
             } catch (IntentSender.SendIntentException e) {
                 // There was an error with the resolution intent. Try again.
                 googleApiClient.connect();
@@ -234,22 +231,7 @@ public class GpsService extends Fragment implements GoogleApiClient.ConnectionCa
         Bundle args = new Bundle();
         args.putInt(DIALOG_ERROR, errorCode);
         dialogFragment.setArguments(args);
-        dialogFragment.show(getActivity().getFragmentManager(), "errordialog");
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
+        dialogFragment.show(activity.getFragmentManager(), "errordialog");
     }
 
     @Override
