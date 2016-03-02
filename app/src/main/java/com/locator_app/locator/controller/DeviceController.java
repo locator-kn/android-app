@@ -12,14 +12,14 @@ import com.locator_app.locator.apiservice.device.RegisterDeviceRequest;
 import com.locator_app.locator.apiservice.device.RegisterDeviceResponse;
 
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class DeviceController {
 
-    private static final String DEVICE_REGISTERED_FLAG = "device_registered";
-
     DeviceApiService service = new DeviceApiService();
 
-    public Observable<RegisterDeviceResponse> registerDevice(String pushToken) {
+    public Observable<Object> registerDevice(String pushToken) {
         RegisterDeviceRequest request = new RegisterDeviceRequest();
         request.version = Build.VERSION.RELEASE;
         request.deviceModel = Build.MODEL;
@@ -28,25 +28,18 @@ public class DeviceController {
             .getContentResolver(), Settings.Secure.ANDROID_ID);
         request.pushToken = pushToken;
         return service.registerDevice(request)
-                .doOnCompleted(this::setDeviceRegisteredFlag)
+                .doOnNext((registrationResponse) -> storePushToken(pushToken))
                 .doOnError((throwable) ->
                         Log.d("DeviceController",
-                              "Could not register device: " + throwable.getMessage()));
+                              "Could not register device: " + throwable.getMessage()))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public void setDeviceRegisteredFlag() {
-        SharedPreferences prefs = LocatorApplication.getSharedPreferences();
-        prefs.edit().putBoolean(DEVICE_REGISTERED_FLAG, true).commit();
-    }
-
-    public boolean isDeviceAlreadyRegistered() {
-        SharedPreferences prefs = LocatorApplication.getSharedPreferences();
-        return prefs.getBoolean(DEVICE_REGISTERED_FLAG, false);
-    }
-
-    public void clearDeviceRegisteredFlag() {
-        SharedPreferences prefs = LocatorApplication.getSharedPreferences();
-        prefs.edit().remove(DEVICE_REGISTERED_FLAG).commit();
+    private void storePushToken(String token) {
+        String SHARED_PREFERENCES_PUSH_TOKEN = "pushToken";
+        SharedPreferences sharedPreferences = LocatorApplication.getSharedPreferences();
+        sharedPreferences.edit().putString(SHARED_PREFERENCES_PUSH_TOKEN, token).apply();
     }
 
     private static DeviceController instance;

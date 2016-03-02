@@ -31,8 +31,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 public class LocationDetailActivity extends FragmentActivity implements ImpressionObserver {
 
@@ -104,7 +102,7 @@ public class LocationDetailActivity extends FragmentActivity implements Impressi
         LocationController.getInstance().favorLocation(location.id)
                 .subscribe(
                         (result) -> {
-                            location.favorites.add(UserController.getInstance().me()._id);
+                            location.favorites.add(UserController.getInstance().me().id);
                             impressionAdapter.updateFavorCounter();
                             updateFavorHeart();
                         },
@@ -118,7 +116,7 @@ public class LocationDetailActivity extends FragmentActivity implements Impressi
         LocationController.getInstance().unfavorLocation(location.id)
                 .subscribe(
                         (result) -> {
-                            location.favorites.remove(UserController.getInstance().me()._id);
+                            location.favorites.remove(UserController.getInstance().me().id);
                             impressionAdapter.updateFavorCounter();
                             updateFavorHeart();
                         },
@@ -192,7 +190,7 @@ public class LocationDetailActivity extends FragmentActivity implements Impressi
     }
 
     private boolean userFavorsLocation() {
-        return location.favorites.contains(UserController.getInstance().me()._id);
+        return location.favorites.contains(UserController.getInstance().me().id);
     }
 
     private void showDistanceToLocation() {

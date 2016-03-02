@@ -21,16 +21,16 @@ public class UsersApiService {
     public interface UsersApi {
 
         @POST(Api.version + "/users/login")
-        Observable<Response<LoginResponse>> login(@Body LoginRequest loginBodyRequest);
+        Observable<Response<User>> login(@Body LoginRequest loginBodyRequest);
 
         @GET(Api.version + "/users/logout")
         Observable<Response<LogoutResponse>> logout();
 
         @GET(Api.version + "/users/protected")
-        Observable<Response<LoginResponse>> requestProtected();
+        Observable<Response<User>> requestProtected();
 
         @POST(Api.version + "/users/register")
-        Observable<Response<LoginResponse>> register(@Body RegistrationRequest registrationBodyRequest);
+        Observable<Response<User>> register(@Body RegistrationRequest registrationBodyRequest);
 
         @Headers("Cache-Control: max-age=10")
         @GET(Api.version + "/users/{userId}?count=locations,followers")
@@ -45,7 +45,7 @@ public class UsersApiService {
 
     private UsersApi service = ServiceFactory.createService(UsersApi.class);
 
-    public Observable<LoginResponse> login(LoginRequest loginRequest) {
+    public Observable<User> login(LoginRequest loginRequest) {
         return GenericErrorHandler.wrapSingle(service.login(loginRequest));
     }
 
@@ -53,7 +53,7 @@ public class UsersApiService {
         return GenericErrorHandler.wrapSingle(service.logout());
     }
 
-    public Observable<LoginResponse> register(RegistrationRequest request) {
+    public Observable<User> register(RegistrationRequest request) {
         return GenericErrorHandler.wrapSingle(service.register(request));
     }
 
@@ -65,7 +65,7 @@ public class UsersApiService {
         return GenericErrorHandler.wrapList(service.getFollowers(userId));
     }
 
-    public Observable<LoginResponse> checkProtected() {
+    public Observable<User> checkProtected() {
         return GenericErrorHandler.wrapSingle(service.requestProtected());
     }
 

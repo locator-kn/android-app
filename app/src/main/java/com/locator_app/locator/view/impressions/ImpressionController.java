@@ -4,14 +4,19 @@ package com.locator_app.locator.view.impressions;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 
 import com.locator_app.locator.controller.LocationController;
 import com.locator_app.locator.model.impressions.AbstractImpression;
 
+import org.apache.commons.io.FileUtils;
+
+import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
@@ -22,7 +27,6 @@ public class ImpressionController extends Activity {
     public static final int VIDEO = 200;
     private String locationId;
     private Uri imageUri;
-    private Uri videoUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,11 +52,11 @@ public class ImpressionController extends Activity {
     }
 
     private void createVideoImpression() {
-        ContentValues values = new ContentValues();
-        videoUri = getContentResolver().insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
-                values);
+        File videoFile = new File(getExternalCacheDir(), "videoimpression.mp4");
+
         Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
         intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 3);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(videoFile));
         startActivityForResult(intent, VIDEO);
     }
 
@@ -65,7 +69,7 @@ public class ImpressionController extends Activity {
         if (requestCode == IMAGE) {
             doUploadImage();
         } else if (requestCode == VIDEO) {
-            doUploadVideo();
+            doUploadVideo(data.getData().toString());
         }
         finish();
     }
@@ -88,10 +92,24 @@ public class ImpressionController extends Activity {
         }
     }
 
-    private void doUploadVideo() {
-
+    private void doUploadVideo(String videoPath) {
+        File file = new File(videoPath);
+        try {
+            byte[] data = FileUtils.readFileToByteArray(file);
+            LocationController.getInstance().createVideoImpression(locationId, data)
+                    .subscribe(
+                            (val) -> {
+                                notify(AbstractImpression.ImpressionType.VIDEO);
+                            },
+                            (err) -> {
+                                notifyError(AbstractImpression.ImpressionType.VIDEO,
+                                        new Throwable("Dein Video konnte leider nicht hochgeladen werden"));
+                            }
+                    );
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
-
 
     private static Set<ImpressionObserver> observers = new HashSet<>();
     public static void addImpressionObserver(ImpressionObserver obs) {

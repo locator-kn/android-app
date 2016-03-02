@@ -10,13 +10,10 @@ import java.util.List;
 public class LocatorLocation implements LocatorObject, Serializable {
 
     @SerializedName("_id")
-    public String id;
+    public String id = "";
 
     @SerializedName("user_id")
-    public String userId;
-
-    @SerializedName("preLocation")
-    public boolean prelocation;
+    public String userId = "";
 
     @SerializedName("create_date")
     public String createDate;
@@ -28,19 +25,16 @@ public class LocatorLocation implements LocatorObject, Serializable {
     public List<String> tags = new LinkedList<>();
 
     @SerializedName("title")
-    public String title;
+    public String title = "";
 
     @SerializedName("city")
     public City city = new City();
-
-    @SerializedName("public")
-    public boolean isPublic;
 
     @SerializedName("geotag")
     public GeoTag geoTag;
 
     @SerializedName("delete")
-    public boolean deleted;
+    public boolean deleted = false;
 
     @SerializedName("images")
     public Images images = new Images();

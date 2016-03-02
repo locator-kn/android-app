@@ -14,7 +14,7 @@ public class SchoenHiersResponse {
     @SerializedName("modified_date")
     public String modifiedDate;
 
-    @SerializedName("_id")
+    @SerializedName("id")
     public String _id;
 
 }
