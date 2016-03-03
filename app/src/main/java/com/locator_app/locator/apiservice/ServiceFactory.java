@@ -7,6 +7,7 @@ import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
 import java.net.CookieStore;
+import java.util.concurrent.TimeUnit;
 
 import retrofit.GsonConverterFactory;
 import retrofit.Retrofit;
@@ -20,8 +21,10 @@ public class ServiceFactory {
         if (retrofit == null) {
 
             OkHttpClient client = new OkHttpClient();
+            client.setConnectTimeout(5, TimeUnit.MINUTES);
+            client.setReadTimeout(5, TimeUnit.MINUTES);
             HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-            interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+            interceptor.setLevel(HttpLoggingInterceptor.Level.HEADERS);
             client.interceptors().add(interceptor);
 
             CookieStore cookieStore = new PersistentCookieStore();
@@ -29,7 +32,7 @@ public class ServiceFactory {
             CookieHandler.setDefault(cookieManager);
 
             retrofit = new Retrofit.Builder()
-                    .baseUrl("https://locator-app.com")
+                    .baseUrl(Api.serverUrl)
                     .client(client)
                     .addConverterFactory(GsonConverterFactory.create())
                     .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
