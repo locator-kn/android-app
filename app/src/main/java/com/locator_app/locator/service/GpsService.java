@@ -193,6 +193,7 @@ public class GpsService implements GoogleApiClient.ConnectionCallbacks,
                 default:
                     break;
             }
+        } else if (requestCode == REQUEST_RESOLVE_ERROR) {
         }
     }
 
