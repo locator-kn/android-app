@@ -20,7 +20,7 @@ import com.locator_app.locator.R;
 import com.locator_app.locator.apiservice.users.RegistrationRequest;
 import com.locator_app.locator.controller.UserController;
 import com.locator_app.locator.util.BitmapHelper;
-import com.locator_app.locator.view.OnBoardingChoiceActivity;
+import com.locator_app.locator.view.home.HomeActivity;
 import com.locator_app.locator.view.login.LoginCustomActionBar;
 import com.locator_app.locator.view.login.LoginRegisterStartActivity;
 
@@ -171,18 +171,17 @@ public class RegisterProfilePictureActivity extends AppCompatActivity {
 
     private void register(HashMap<String, String> regValues) {
         final Context context = getApplicationContext();
-        HashMap<String, String> registerValues = regValues;
         UserController controller = UserController.getInstance();
         RegistrationRequest request = new RegistrationRequest();
-        request.mail = registerValues.get("mail");
-        request.name = registerValues.get("name");
-        request.password = registerValues.get("password");
-        request.residence = registerValues.get("residence");
+        request.mail = regValues.get("mail");
+        request.name = regValues.get("name");
+        request.password = regValues.get("password");
+        request.residence = regValues.get("residence");
         controller.register(request)
             .subscribe(
                 (loginResponse) -> {
-                    Intent intent = new Intent(context, OnBoardingChoiceActivity.class);
-                    intent.putExtra("name", loginResponse.name);
+                    Intent intent = new Intent(context, HomeActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                 },
                 (error) -> {
@@ -191,6 +190,10 @@ public class RegisterProfilePictureActivity extends AppCompatActivity {
                     startActivity(intent);
                 }
             );
+    }
+
+    @Override
+    public void onBackPressed() {
     }
 
     private void loadImages() {

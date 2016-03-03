@@ -93,9 +93,6 @@
             android:name=".view.register.RegisterProfilePictureActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".view.OnBoardingChoiceActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".view.login.FacebookLoginMailActivity"
             android:screenOrientation="portrait" />
         <activity
