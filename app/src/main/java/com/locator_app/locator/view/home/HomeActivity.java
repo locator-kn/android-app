@@ -169,30 +169,13 @@ public class HomeActivity extends AppCompatActivity {
 
     @OnClick(R.id.userProfileBubble)
     void onUserProfileBubbleClick() {
-        UserController controller = UserController.getInstance();
-        controller.logout()
-                .subscribe(
-                        (logoutResponse) -> jumpToLoginRegisterActivity(),
-                        (error) -> jumpToLoginRegisterActivity()
-                );
-    }
-
-    @OnLongClick(R.id.userProfileBubble)
-    boolean onUserProfileBubbleLongClick() {
-        UserController.getInstance().getUser("569e4a83a6e5bb503b838301")
-                .subscribe(
-                        this::showUserProfile,
-                        (error) -> {
-                            Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                );
-        /*User me = UserController.getInstance().me();
-        if (me.loggedIn) {
+        UserController userController = UserController.getInstance();
+        if (userController.loggedIn()) {
+            User me = userController.me();
             showUserProfile(me);
         } else {
-            jumpToLoginScreen();
-        }*/
-        return true;
+            jumpToLoginRegisterActivity();
+        }
     }
 
     private void showUserProfile(User user) {
