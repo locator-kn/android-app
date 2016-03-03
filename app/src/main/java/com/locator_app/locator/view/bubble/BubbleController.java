@@ -171,6 +171,7 @@ public class BubbleController {
         view.setStrokeColor(color(R.color.borderRed));
         view.setStrokeWidth(getStrokeWidthByPriority(priority));
         view.setImage(location.thumbnailUri());
+        //view.setImage(location.thumbnailUri(), R.drawable.facebook_logo);
 
         Bubble bubble = new Bubble();
         bubble.data = location;
