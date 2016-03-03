@@ -57,7 +57,7 @@ public class ImpressionController extends Activity {
 
         Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
         intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 10);
-        intent.setDataAndType(Uri.fromFile(videoFile), "video/mp4");
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, videoFile);
         startActivityForResult(intent, VIDEO);
     }
 
