@@ -181,7 +181,6 @@ public class RegisterProfilePictureActivity extends AppCompatActivity {
             .subscribe(
                 (loginResponse) -> {
                     Intent intent = new Intent(context, HomeActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                 },
                 (error) -> {

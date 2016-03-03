@@ -201,6 +201,11 @@ public class HomeActivity extends AppCompatActivity {
         jumpToLoginRegisterActivity();
     }
 
+    @Override
+    public void onBackPressed() {
+        moveTaskToBack(true);
+    }
+
     private void onUserIsLoggedIn(User user) {
         final int animationTime = 4500;
 
@@ -228,8 +233,6 @@ public class HomeActivity extends AppCompatActivity {
 
     private void jumpToLoginRegisterActivity() {
         Intent intent = new Intent(getApplicationContext(), LoginRegisterStartActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
-                        Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
 }
