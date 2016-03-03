@@ -2,13 +2,7 @@ package com.locator_app.locator.view.bubble;
 
 import android.content.Intent;
 import android.graphics.Point;
-import android.os.Handler;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
-import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
-import android.widget.Toast;
 
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
@@ -17,7 +11,6 @@ import com.locator_app.locator.apiservice.my.BubbleScreenResponse;
 import com.locator_app.locator.controller.LocationController;
 import com.locator_app.locator.model.LocatorLocation;
 import com.locator_app.locator.model.LocatorObject;
-import com.locator_app.locator.model.Message;
 import com.locator_app.locator.view.LocationDetailActivity;
 import com.nineoldandroids.animation.Animator;
 
@@ -26,8 +19,6 @@ import java.util.List;
 import java.util.Random;
 
 import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 
 public class BubbleController {
@@ -39,52 +30,123 @@ public class BubbleController {
         boolean positionFixed = false;
     }
 
+    Random random = new Random();
     private List<Bubble> bubbles = new LinkedList<>();
     private RelativeBubbleLayout layout;
     private Bubble schoenHierBubble;
     private Bubble userProfileBubble;
-    private boolean needGravityUpdate = false;
 
     public BubbleController(RelativeBubbleLayout layout) {
         this.layout = layout;
-
-        schoenHierBubble = new Bubble();
-        schoenHierBubble.priority = -1;
-        schoenHierBubble.positionFixed = true;
-        schoenHierBubble.view = (BubbleView)layout.findViewById(R.id.schoenHierBubble);
-
-        userProfileBubble = new Bubble();
-        userProfileBubble.priority = -1;
-        userProfileBubble.positionFixed = true;
-        userProfileBubble.view = (BubbleView)layout.findViewById(R.id.userProfileBubble);
     }
 
-    public void initSchoenHierBubble() {
-        int radius = getRadiusByPriority(schoenHierBubble.priority);
-        layout.setBubbleRadius(schoenHierBubble.view, radius);
-        layout.setBubbleCenter(schoenHierBubble.view, 0.5, 0.38);
-        schoenHierBubble.view.setImage(R.drawable.schoenhier);
+    private void initSchoenHierBubble() {
+        if (schoenHierBubble == null) {
+            schoenHierBubble = new Bubble();
+            schoenHierBubble.priority = -1;
+            schoenHierBubble.positionFixed = true;
+            schoenHierBubble.view = (BubbleView)layout.findViewById(R.id.schoenHierBubble);
+            int radius = getRadiusByPriority(schoenHierBubble.priority);
+            layout.setBubbleRadius(schoenHierBubble.view, radius);
+            layout.setBubbleCenter(schoenHierBubble.view, 0.5, 0.38);
+            schoenHierBubble.view.setImage(R.drawable.schoenhier);
+        }
     }
 
-    public void initUserProfileBubble() {
-        int radius = getRadiusByPriority(10);
-        layout.setBubbleRadius(userProfileBubble.view, radius);
-        layout.setBubbleCenter(userProfileBubble.view, 0.5, 0.89);
-        userProfileBubble.view.setImage(R.drawable.profile);
+    private void initUserProfileBubble() {
+        if (userProfileBubble == null) {
+            userProfileBubble = new Bubble();
+            userProfileBubble.priority = -1;
+            userProfileBubble.positionFixed = true;
+            userProfileBubble.view = (BubbleView)layout.findViewById(R.id.userProfileBubble);
+            int radius = getRadiusByPriority(10);
+            layout.setBubbleRadius(userProfileBubble.view, radius);
+            layout.setBubbleCenter(userProfileBubble.view, 0.5, 0.89);
+            userProfileBubble.view.setImage(R.drawable.profile);
+        }
     }
 
     public void onBubbleScreenUpdate(BubbleScreenResponse response) {
-        needGravityUpdate = false;
-        if (bubbles.isEmpty()) {
-            handleFirstScreenUpdate(response);
-            needGravityUpdate = true;
-        } else {
-            handleBubbleUpdate(response);
+
+        initUserProfileBubble();
+        initSchoenHierBubble();
+
+        for (Bubble b: bubbles) {
+            layout.removeView(b.view);
+            b.view = null;
         }
-        if (needGravityUpdate) {
-            simulateGravity();
-            simulateGravity();
-            simulateGravity();
+        bubbles.clear();
+
+        //hideBubblesWithAnimation();
+
+        int numberOfLocations = random.nextInt(4) + 10;
+
+        Observable.from(response.locations)
+                .take(numberOfLocations)
+                .map(locationResult -> {
+                    final int priority = getPriority(locationResult, response.locations);
+                    return makeLocationBubble(locationResult.location, priority);
+                })
+                .subscribe(
+                        bubbles::add,
+                        (err) -> {}
+                );
+
+        positionBubblesInDifferentQuadrants();
+
+        simulateGravity();
+        simulateGravity();
+        simulateGravity();
+
+        //showBubblesWithAnimation();
+    }
+
+    private void showBubblesWithAnimation() {
+        List<BubbleView> bubblesToAnimate = Observable.from(bubbles)
+                .filter(b -> b.priority != -1)
+                .map(b -> b.view)
+                .toList().toBlocking().single();
+        if (bubblesToAnimate.size() > 0) {
+            blobInBubble(bubblesToAnimate.get(0), bubblesToAnimate);
+        }
+    }
+
+    private void blobInBubble(BubbleView bubbleView, List<BubbleView> bubblesToAnimate) {
+        YoYo.with(Techniques.Landing)
+                .withListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        int currentIndex = bubblesToAnimate.indexOf(bubbleView);
+                        if (currentIndex == bubblesToAnimate.size() - 1) {
+                            return;
+                        }
+                        blobInBubble(bubblesToAnimate.get(currentIndex + 1), bubblesToAnimate);
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animation) {
+                    }
+                })
+                .duration(1000)
+                .playOn(bubbleView);
+
+    }
+
+    private void hideBubblesWithAnimation() {
+        final int duration = 1000;
+        while (!bubbles.isEmpty()) {
+            BubbleView bubbleView = bubbles.remove(0).view;
+            YoYo.with(Techniques.TakingOff)
+                    .duration(duration)
+                    .playOn(bubbleView);
         }
     }
 
@@ -124,45 +186,6 @@ public class BubbleController {
         return gravityObject;
     }
 
-    private void handleFirstScreenUpdate(final BubbleScreenResponse response) {
-        Observable<Bubble> locations = Observable.from(response.locations)
-                .take(10)
-                .map(locationResult -> {
-                    final int priority = getPriority(locationResult, response.locations);
-                    return makeLocationBubble(locationResult.location, priority);
-                });
-        Observable<Bubble> messages = Observable.from(response.messages)
-                .take(0)
-                .map(message -> {
-                    final int priority = getPriority(message, response.messages);
-                    return makeMessageBubble(message, priority);
-                });
-        Observable.merge(locations, messages)
-            .subscribe(
-                    bubbles::add,
-                    (error) -> {
-                        Log.d("BubbleController", error.getMessage());
-                    });
-        positionBubblesInDifferentQuadrants();
-    }
-
-    private Bubble makeMessageBubble(Message message, int priority) {
-        BubbleView view = new BubbleView(layout.getContext());
-        layout.addView(view);
-        layout.setBubbleRadius(view, getRadiusByPriority(priority));
-        view.setFillColor(color(R.color.innerYellow));
-        view.setStrokeColor(color(R.color.borderYellow));
-        view.setStrokeWidth(getStrokeWidthByPriority(priority));
-        view.setImage(R.drawable.message);
-
-        Bubble bubble = new Bubble();
-        bubble.data = message;
-        bubble.priority = priority;
-        bubble.view = view;
-        view.setOnClickListener(listener -> handleOnMessageBubbleClicked(bubble));
-        return bubble;
-    }
-
     private Bubble makeLocationBubble(LocatorLocation location, int priority) {
         BubbleView view = new BubbleView(layout.getContext());
         layout.addView(view);
@@ -171,7 +194,6 @@ public class BubbleController {
         view.setStrokeColor(color(R.color.borderRed));
         view.setStrokeWidth(getStrokeWidthByPriority(priority));
         view.setImage(location.thumbnailUri());
-        //view.setImage(location.thumbnailUri(), R.drawable.facebook_logo);
 
         Bubble bubble = new Bubble();
         bubble.data = location;
@@ -201,20 +223,12 @@ public class BubbleController {
                 );
     }
 
-    private void handleOnMessageBubbleClicked(Bubble bubble) {
-        Message message = (Message) bubble.data;
-        Toast.makeText(layout.getContext(), message.message, Toast.LENGTH_SHORT).show();
-    }
-
     private void positionBubblesInDifferentQuadrants() {
         int nextQuadrant = 0;
         int priority = 0;
-        while (true) {
+        while (nextQuadrant != -1) {
             nextQuadrant = positionBubbles(priority, nextQuadrant+1);
             priority++;
-            if (nextQuadrant == -1) {
-                break;
-            }
         }
     }
 
@@ -258,78 +272,6 @@ public class BubbleController {
         return new Point(x, y);
     }
 
-    private void handleBubbleUpdate(BubbleScreenResponse response) {
-        Observable<Bubble> locations = Observable.from(response.locations)
-                .map(locationResult -> {
-                    Bubble bubble = new Bubble();
-                    bubble.data = locationResult.location;
-                    bubble.priority = getPriority(locationResult, response.locations);
-                    return bubble;
-                });
-        Observable<Bubble> messages = Observable.from(response.messages)
-                .map(message -> {
-                    Bubble bubble = new Bubble();
-                    bubble.data = message;
-                    bubble.priority = getPriority(message, response.messages);
-                    return bubble;
-                });
-        Observable<Bubble> merged = Observable.merge(locations, messages);
-        Iterable<Bubble> newBubbles = merged.toBlocking().toIterable();
-        merged.forEach(bubble -> merge(bubble, newBubbles));
-    }
-
-    private void merge(Bubble newBubble, Iterable<Bubble> newBubbles) {
-
-        // this implementation works but looks really messy - cleanup!
-
-        Bubble correspondingBubble = Observable.from(bubbles)
-                                        .filter(bubble -> bubble.data.equals(newBubble.data))
-                                        .toBlocking()
-                                        .firstOrDefault(null);
-
-        if (correspondingBubble != null) {
-            merge(correspondingBubble, newBubble);
-        } else {
-            // find a bubble which can be replaced
-            Iterable<Bubble> candidates = Observable.from(bubbles)
-                    .filter(bubble -> bubble.data.getClass().equals(newBubble.data.getClass()))
-                    .toBlocking()
-                    .toIterable();
-            Iterable<Bubble> newBubblesWithTheSameType = Observable.from(newBubbles)
-                    .filter(bubble -> bubble.data.getClass().equals(newBubble.data.getClass()))
-                    .toBlocking()
-                    .toIterable();
-
-            for (Bubble candidate: candidates) {
-                boolean mayBeReplaced = true;
-                for (Bubble b: newBubblesWithTheSameType) {
-                    if (candidate.data.equals(b.data)) {
-                        mayBeReplaced = false;
-                        break;
-                    }
-                }
-                if (mayBeReplaced) {
-                    merge(candidate, newBubble);
-                    break;
-                }
-            }
-        }
-    }
-
-    private void merge(Bubble onScreen, Bubble newBubble) {
-        // priority may have changed
-        if (onScreen.priority != newBubble.priority) {
-            needGravityUpdate = true;
-            onScreen.priority = newBubble.priority;
-            int radius = getRadiusByPriority(onScreen.priority);
-            layout.setBubbleRadius(onScreen.view, radius);
-        }
-        // data may have changed
-        if (!onScreen.data.equals(newBubble.data)) {
-            onScreen.data = newBubble.data;
-            onScreen.view.setImage(onScreen.data.thumbnailUri());
-        }
-    }
 
     private int getRadiusByPriority(int priority) {
         double widthFactor = 0.09;
@@ -351,49 +293,5 @@ public class BubbleController {
 
     private int color(int id) {
         return ContextCompat.getColor(layout.getContext(), id);
-    }
-
-    public void animateBubbles() {
-        hideBubbleAnimation();
-    }
-
-    private void hideBubbleAnimation() {
-        List<BubbleView> bubblesToAnimate = Observable.from(bubbles)
-                                                .filter(b -> b.priority != -1)
-                                                .map(b -> b.view)
-                                                .toList().toBlocking().single();
-        Random random = new Random();
-        final int minDelay = 100;
-        final int maxDelay = 1200;
-        final int duration = 500;
-
-        for (BubbleView bubble: bubblesToAnimate) {
-            int delay = random.nextInt(maxDelay - minDelay) + minDelay;
-            YoYo.with(Techniques.Hinge)
-                    .withListener(new Animator.AnimatorListener() {
-                        @Override
-                        public void onAnimationStart(Animator animation) {
-
-                        }
-
-                        @Override
-                        public void onAnimationEnd(Animator animation) {
-
-                        }
-
-                        @Override
-                        public void onAnimationCancel(Animator animation) {
-
-                        }
-
-                        @Override
-                        public void onAnimationRepeat(Animator animation) {
-
-                        }
-                    })
-                    .duration(duration)
-                    .delay(delay)
-                    .playOn(bubble);
-        }
     }
 }
