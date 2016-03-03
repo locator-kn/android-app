@@ -172,16 +172,13 @@ public class HomeActivity extends AppCompatActivity {
         UserController userController = UserController.getInstance();
         if (userController.loggedIn()) {
             User me = userController.me();
-            showUserProfile(me);
+
+            Intent intent = new Intent(this, ProfileActivity.class);
+            intent.putExtra("profile", me);
+            startActivity(intent);
         } else {
             jumpToLoginRegisterActivity();
         }
-    }
-
-    private void showUserProfile(User user) {
-        Intent intent = new Intent(this, ProfileActivity.class);
-        intent.putExtra("profile", user);
-        startActivity(intent);
     }
 
     private void updateDashboard() {

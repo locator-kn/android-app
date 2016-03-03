@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.locator_app.locator" >
+    package="com.locator_app.locator">
 
     <uses-sdk
         android:minSdkVersion="9"
         android:targetSdkVersion="23"
         tools:overrideLibrary="com.facebook" />
 
-    <permission android:name="com.locator_app.locator.permission.C2D_MESSAGE"
+    <permission
+        android:name="com.locator_app.locator.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -20,7 +21,9 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
-    <uses-feature android:name="android.hardware.camera" android:required="true" />
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
 
     <application
         android:name=".LocatorApplication"
@@ -29,27 +32,28 @@
         android:label="@string/app_name"
         android:largeHeap="true"
         android:supportsRtl="true"
-        android:theme="@style/WelcomeActionBarTheme" >
+        android:theme="@style/WelcomeActionBarTheme">
         <receiver
             android:name="com.google.android.gms.gcm.GcmReceiver"
             android:exported="true"
-            android:permission="com.google.android.c2dm.permission.SEND" >
+            android:permission="com.google.android.c2dm.permission.SEND">
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+
                 <category android:name="com.locator_app.locator" />
             </intent-filter>
         </receiver>
 
         <service
             android:name=".service.MyGcmListenerService"
-            android:exported="false" >
+            android:exported="false">
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
             </intent-filter>
         </service>
         <service
             android:name=".service.MyInstanceIDListenerService"
-            android:exported="false" >
+            android:exported="false">
             <intent-filter>
                 <action android:name="com.google.android.gms.iid.InstanceID" />
             </intent-filter>
@@ -57,11 +61,13 @@
         <service
             android:name=".service.RegistrationIntentService"
             android:exported="false" />
+
         <activity
             android:name=".view.home.HomeActivity"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -136,6 +142,7 @@
         <activity
             android:name=".view.locationcreation.ChooseCategories"
             android:screenOrientation="portrait" />
+        <activity android:name=".view.profile.SettingsActivity"></activity>
     </application>
 
 </manifest>

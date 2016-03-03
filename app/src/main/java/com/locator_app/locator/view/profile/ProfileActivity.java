@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.locator_app.locator.R;
 import com.locator_app.locator.controller.LocationController;
 import com.locator_app.locator.controller.UserController;
@@ -61,6 +62,8 @@ public class ProfileActivity extends FragmentActivity {
 
     User user;
 
+    private boolean isSelf = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,8 +91,13 @@ public class ProfileActivity extends FragmentActivity {
         profileImageBubbleView.setImage(user.thumbnailUri());
         UserController userController = UserController.getInstance();
         if (userController.loggedIn() && user.id.equals(userController.me().id)) {
-            unFollowUser.setVisibility(View.INVISIBLE);
+            replaceFollowButtonWithSettings();
+            isSelf = true;
         }
+    }
+
+    private void replaceFollowButtonWithSettings() {
+        Glide.with(this).load(R.drawable.ic_setting_dark).asBitmap().into(unFollowUser);
     }
 
     private void setupTabLayout() {
@@ -117,7 +125,8 @@ public class ProfileActivity extends FragmentActivity {
                             fragment.adapter.setLocations(locations);
                             countLocations.setText(Integer.toString(locations.size()));
                         }),
-                        (error) -> { }
+                        (error) -> {
+                        }
                 );
     }
 
@@ -182,6 +191,16 @@ public class ProfileActivity extends FragmentActivity {
     }
 
     @OnClick(R.id.unFollowUser)
+    public void onUnFollowUserClicked() {
+        if (isSelf) {
+            Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
+            startActivity(intent);
+        } else {
+            unFollowUser();
+        }
+    }
+
+
     public void unFollowUser() {
         UserController userController = UserController.getInstance();
         if (!userController.loggedIn()) {
