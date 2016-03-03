@@ -56,8 +56,9 @@ public class ImpressionController extends Activity {
         videoFile = new File(getExternalCacheDir(), "videoimpression.mp4");
 
         Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(videoFile));
         intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 10);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, videoFile);
+        intent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, 6291456); // 6MB
         startActivityForResult(intent, VIDEO);
     }
 
@@ -72,7 +73,6 @@ public class ImpressionController extends Activity {
         } else if (requestCode == VIDEO) {
             doUploadVideo();
         }
-        finish();
     }
 
     private void doUploadImage() {
@@ -82,10 +82,12 @@ public class ImpressionController extends Activity {
                     .subscribe(
                             (val) -> {
                                 notify(AbstractImpression.ImpressionType.IMAGE);
+                                finish();
                             },
                             (err) -> {
                                 notifyError(AbstractImpression.ImpressionType.IMAGE,
                                         new Throwable("Dein Bild konnte leider nicht hochgeladen werden"));
+                                finish();
                             }
                     );
         } catch (IOException e) {
@@ -100,14 +102,17 @@ public class ImpressionController extends Activity {
                     .subscribe(
                             (val) -> {
                                 notify(AbstractImpression.ImpressionType.VIDEO);
+                                finish();
                             },
                             (err) -> {
                                 notifyError(AbstractImpression.ImpressionType.VIDEO,
                                         new Throwable("Dein Video konnte leider nicht hochgeladen werden"));
+                                finish();
                             }
                     );
         } catch (IOException e) {
             e.printStackTrace();
+            finish();
         }
     }
 

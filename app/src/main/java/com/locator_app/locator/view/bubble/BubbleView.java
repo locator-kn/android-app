@@ -17,6 +17,8 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.locator_app.locator.R;
 import com.locator_app.locator.util.BitmapHelper;
 
+import java.util.concurrent.ExecutionException;
+
 public class BubbleView extends View {
 
     private Point center = new Point(0, 0);
@@ -175,5 +177,15 @@ public class BubbleView extends View {
     public void setImage(int resourceId) {
         final String imageUri = "android.resource://" + getContext().getPackageName() + "/" + resourceId;
         setImage(imageUri);
+    }
+
+    public void setImage(String imageUri, int errorId) {
+        try {
+            Bitmap bitmap = Glide.with(getContext()).load(imageUri).asBitmap().into(-1, -1).get();
+            this.icon = BitmapHelper.getRoundBitmap(bitmap, bitmap.getWidth());
+        } catch (InterruptedException | ExecutionException e) {
+            setImage(errorId);
+            e.printStackTrace();
+        }
     }
 }
