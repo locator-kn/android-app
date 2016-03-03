@@ -5,8 +5,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -14,7 +13,7 @@ import android.widget.Toast;
 import com.locator_app.locator.LocatorApplication;
 import com.locator_app.locator.R;
 import com.locator_app.locator.controller.LocationController;
-import com.locator_app.locator.controller.LocationCreationController;
+import com.locator_app.locator.service.LocationCreationController;
 import com.locator_app.locator.model.GoogleLocation;
 import com.locator_app.locator.model.LocatorLocation;
 import com.locator_app.locator.service.GpsService;
@@ -29,7 +28,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class LocationSuggestions extends AppCompatActivity implements SearchResultsFragment.SearchInteractionListener {
+public class LocationSuggestions extends FragmentActivity implements SearchResultsFragment.SearchInteractionListener {
     SearchResultsFragment searchResultsFragment;
     Bundle extras;
     GpsService gpsService;
@@ -46,6 +45,8 @@ public class LocationSuggestions extends AppCompatActivity implements SearchResu
     @Bind(R.id.cancelButton)
     ImageView cancelButton;
 
+    boolean hasCoordiantes = false;
+
     LoadingSpinner searchLoadingSpinner;
     LoadingSpinner uploadLoadingSpinner;
 
@@ -54,10 +55,6 @@ public class LocationSuggestions extends AppCompatActivity implements SearchResu
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_location_suggestions);
         ButterKnife.bind(this);
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.hide();
-        }
 
         uploadLoadingSpinner = new LoadingSpinner(this, uploadSpinnerView, fadeOutLayout);
         searchLoadingSpinner = new LoadingSpinner(this, searchSpinnerView);
@@ -71,6 +68,7 @@ public class LocationSuggestions extends AppCompatActivity implements SearchResu
         gpsService.getCurLocation()
                 .subscribe(
                         (location) -> {
+                            hasCoordiantes = true;
                             extras.putDouble("lon", location.getLongitude());
                             extras.putDouble("lat", location.getLatitude());
                             searchResultsFragment.search(location.getLongitude(),
@@ -85,9 +83,13 @@ public class LocationSuggestions extends AppCompatActivity implements SearchResu
 
     @OnClick(R.id.no)
     void onNoClicked() {
-        Intent intent = new Intent(this, NameLocation.class);
-        intent.putExtras(extras);
-        startActivityForResult(intent, LocationCreationController.LOCATION_CREATION_REQUEST);
+        if (hasCoordiantes) {
+            Intent intent = new Intent(this, NameLocation.class);
+            intent.putExtras(extras);
+            startActivityForResult(intent, LocationCreationController.LOCATION_CREATION_REQUEST);
+        } else {
+            Toast.makeText(this, "Versuch es nochmal mit GPS", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @OnClick(R.id.cancelButton)
@@ -130,6 +132,7 @@ public class LocationSuggestions extends AppCompatActivity implements SearchResu
                             },
                             (err) -> {
                                 uploadLoadingSpinner.hideSpinner();
+                                cancelButton.setVisibility(View.VISIBLE);
                                 Toast.makeText(LocatorApplication.getAppContext(),
                                         "Deine Impression konnte leider nicht hochgeladen werden :-(",
                                         Toast.LENGTH_SHORT).show();
@@ -157,5 +160,14 @@ public class LocationSuggestions extends AppCompatActivity implements SearchResu
             super.onActivityResult(requestCode, resultCode, intent);
             finish();
         }
+        gpsService.onActivityResult(requestCode, resultCode, intent);
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String[] permissions,
+                                           int[] grantResults) {
+        gpsService.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
 }

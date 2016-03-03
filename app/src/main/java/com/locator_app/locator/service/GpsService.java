@@ -4,14 +4,22 @@ package com.locator_app.locator.service;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.os.Handler;
+import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -32,6 +40,7 @@ import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStates;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.locator_app.locator.LocatorApplication;
+import com.locator_app.locator.R;
 
 import java.net.ConnectException;
 import java.util.LinkedList;
@@ -42,13 +51,13 @@ import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class GpsService extends Fragment implements GoogleApiClient.ConnectionCallbacks,
+public class GpsService implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
     private Activity activity;
 
+    LocationSettingsRequest settingsRequest;
+
     private GoogleApiClient googleApiClient;
-    LocationRequest mLocationRequest;
-    LocationSettingsRequest.Builder builder;
 
     public GpsService(Activity activity) {
         googleApiClient = new GoogleApiClient.Builder(LocatorApplication.getAppContext())
@@ -57,20 +66,17 @@ public class GpsService extends Fragment implements GoogleApiClient.ConnectionCa
                 .addApi(LocationServices.API)
                 .build();
         this.activity = activity;
-        activity.onAttachFragment(this);
 
-        mLocationRequest = LocationRequest.create();
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        mLocationRequest.setInterval(30 * 1000);
-        mLocationRequest.setFastestInterval(5 * 1000);
+        LocationRequest locationRequest = LocationRequest.create();
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
+                .addLocationRequest(locationRequest);
 
-        builder = new LocationSettingsRequest.Builder()
-                .addLocationRequest(mLocationRequest);
-
-        builder.setNeedBle(true);
+        builder.setAlwaysShow(true);
+        settingsRequest = builder.build();
     }
 
-    List<Observer> currentLocationSubscribers = new LinkedList<>();
+    final List<Observer> currentLocationSubscribers = new LinkedList<>();
     Observable<Location> currentLocationObservable = Observable.create(currentLocationSubscribers::add);
 
     public Observable<android.location.Location> getCurLocation() {
@@ -83,35 +89,42 @@ public class GpsService extends Fragment implements GoogleApiClient.ConnectionCa
     private static final int PERMISSION_REQUEST_CODE = 69; // :D
 
     private void notifyObserversWithLocation() {
-        Location location = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
-        if (location == null) {
-            notifyObserversWithError();
-            return;
+        synchronized (currentLocationSubscribers) {
+            Location location = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
+            if (location == null) {
+                if (gpsShouldBeOn) {
+                    new Handler().postDelayed(() -> {
+                        onConnected(null);
+                    }, 2000);
+                }
+                return;
+            }
+            for (Observer sub : currentLocationSubscribers) {
+                sub.onNext(location);
+                sub.onCompleted();
+            }
+            googleApiClient.disconnect();
+            currentLocationSubscribers.clear();
         }
-        for (Observer sub : currentLocationSubscribers) {
-            sub.onNext(location);
-            sub.onCompleted();
-        }
-        googleApiClient.disconnect();
-        currentLocationSubscribers.clear();
     }
 
     private void notifyObserversWithError() {
-        for (Observer sub : currentLocationSubscribers) {
-            sub.onError(new Exception());
+        synchronized (currentLocationSubscribers) {
+            for (Observer sub : currentLocationSubscribers) {
+                sub.onError(new Exception());
+            }
+            googleApiClient.disconnect();
+            currentLocationSubscribers.clear();
         }
-        googleApiClient.disconnect();
-        currentLocationSubscribers.clear();
     }
 
-    @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String[] permissions,
                                            int[] grantResults) {
         if (requestCode == PERMISSION_REQUEST_CODE) {
             if (grantResults.length > 0
                     && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                notifyObserversWithLocation();
+                onConnected(null);
                 return;
             }
             notifyObserversWithError();
@@ -132,41 +145,56 @@ public class GpsService extends Fragment implements GoogleApiClient.ConnectionCa
         }
 
         PendingResult<LocationSettingsResult> result =
-                LocationServices.SettingsApi.checkLocationSettings(googleApiClient, builder.build());
-
-//        result.setResultCallback(new ResultCallback<LocationSettingsResult>() {
-//            @Override
-//            public void onResult(LocationSettingsResult result) {
-//                final Status status = result.getStatus();
-//                final LocationSettingsStates = result.getLocationSettingsStates();
-//                switch (status.getStatusCode()) {
-//                    case LocationSettingsStatusCodes.SUCCESS:
-//                        // All location settings are satisfied. The client can initialize location
-//                        // requests here.
-//                        ...
-//                        break;
-//                    case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
-//                        // Location settings are not satisfied. But could be fixed by showing the user
-//                        // a dialog.
-//                        try {
-//                            // Show the dialog by calling startResolutionForResult(),
-//                            // and check the result in onActivityResult().
-//                            status.startResolutionForResult(
-//                                    OuterClass.this,
-//                                    REQUEST_CHECK_SETTINGS);
-//                        } catch (IntentSender.SendIntentException e) {
-//                            // Ignore the error.
-//                        }
-//                        break;
-//                    case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
-//                        // Location settings are not satisfied. However, we have no way to fix the
-//                        // settings so we won't show the dialog.
-//                        ...
-//                        break;
-//                }
-//            }
+                LocationServices.SettingsApi.checkLocationSettings(googleApiClient, settingsRequest);
+        result.setResultCallback(settingsResult -> {
+            final Status status = settingsResult.getStatus();
+            switch (status.getStatusCode()) {
+                case LocationSettingsStatusCodes.SUCCESS:
+                    gpsShouldBeOn = true;
+                    notifyObserversWithLocation();
+                    break;
+                case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+                    gpsShouldBeOn = false;
+                    // Location settings are not satisfied. But could be fixed by showing the user
+                    // a dialog.
+                    try {
+                        // Show the dialog by calling startResolutionForResult(),
+                        // and check the result in onActivityResult().
+                        status.startResolutionForResult(
+                                activity, REQUEST_CHECK_SETTINGS);
+                    } catch (IntentSender.SendIntentException e) {
+                        // Ignore the error.
+                    }
+                    break;
+                case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                    gpsShouldBeOn = false;
+                    notifyObserversWithError();
+                    break;
+            }
+        });
 
         notifyObserversWithLocation();
+    }
+
+    private final static int REQUEST_CHECK_SETTINGS = 1000;
+    boolean gpsShouldBeOn = false;
+
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        if (requestCode == REQUEST_CHECK_SETTINGS) {
+            switch (resultCode) {
+                case Activity.RESULT_OK:
+                    gpsShouldBeOn = true;
+                    notifyObserversWithLocation();
+                    break;
+                case Activity.RESULT_CANCELED:
+                    gpsShouldBeOn = false;
+                    notifyObserversWithError();
+                    break;
+                default:
+                    break;
+            }
+        } else if (requestCode == REQUEST_RESOLVE_ERROR) {
+        }
     }
 
     @Override
@@ -186,7 +214,7 @@ public class GpsService extends Fragment implements GoogleApiClient.ConnectionCa
         } else if (connectionResult.hasResolution()) {
             try {
                 resolvingError = true;
-                connectionResult.startResolutionForResult(getActivity(), REQUEST_RESOLVE_ERROR);
+                connectionResult.startResolutionForResult(activity, REQUEST_RESOLVE_ERROR);
             } catch (IntentSender.SendIntentException e) {
                 // There was an error with the resolution intent. Try again.
                 googleApiClient.connect();
@@ -205,28 +233,6 @@ public class GpsService extends Fragment implements GoogleApiClient.ConnectionCa
         Bundle args = new Bundle();
         args.putInt(DIALOG_ERROR, errorCode);
         dialogFragment.setArguments(args);
-        dialogFragment.show(getActivity().getFragmentManager(), "errordialog");
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return new View(LocatorApplication.getAppContext());
+        dialogFragment.show(activity.getFragmentManager(), "errordialog");
     }
 }

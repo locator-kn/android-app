@@ -52,6 +52,8 @@ public class LocationDetailActivity extends FragmentActivity implements Impressi
     ImageFragmentAdapter imageFragmentAdapter;
     ImpressionRecyclerViewAdapter impressionAdapter;
 
+    GpsService gpsService;
+
     LocatorLocation location;
     List<AbstractImpression> impressions = new LinkedList<>();
 
@@ -73,6 +75,8 @@ public class LocationDetailActivity extends FragmentActivity implements Impressi
         impressionsRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         impressionsRecyclerView.addItemDecoration(new DividerItemDecoration(getApplicationContext(), null));
         impressionsRecyclerView.setAdapter(impressionAdapter);
+
+         gpsService = new GpsService(this);
 
         loadImpressions();
         setupLocationInformation();
@@ -194,8 +198,7 @@ public class LocationDetailActivity extends FragmentActivity implements Impressi
     }
 
     private void showDistanceToLocation() {
-        GpsService service = new GpsService(this);
-        service.getCurLocation()
+        gpsService.getCurLocation()
                 .subscribe(
                         (location) -> {
                             //double distance = DistanceCalculator.distanceInKm();
@@ -205,6 +208,18 @@ public class LocationDetailActivity extends FragmentActivity implements Impressi
 
                         }
                 );
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        gpsService.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String[] permissions,
+                                           int[] grantResults) {
+        gpsService.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     @Override
