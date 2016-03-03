@@ -1,10 +1,7 @@
 package com.locator_app.locator.apiservice.locations;
 
-import android.app.DownloadManager;
 import android.graphics.Bitmap;
 
-import com.google.gson.annotations.SerializedName;
-import com.locator_app.locator.LocatorApplication;
 import com.locator_app.locator.apiservice.Api;
 import com.locator_app.locator.apiservice.ServiceFactory;
 import com.locator_app.locator.apiservice.errorhandling.GenericErrorHandler;
@@ -13,26 +10,16 @@ import com.locator_app.locator.model.impressions.AbstractImpression;
 import com.locator_app.locator.model.impressions.Impression;
 import com.locator_app.locator.util.BitmapHelper;
 import com.squareup.okhttp.MediaType;
-import com.squareup.okhttp.MultipartBuilder;
 import com.squareup.okhttp.RequestBody;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.nio.Buffer;
-import java.nio.ByteBuffer;
 import java.util.List;
 
 import retrofit.Response;
-import retrofit.http.Body;
 import retrofit.http.GET;
-import retrofit.http.Headers;
 import retrofit.http.Multipart;
 import retrofit.http.POST;
 import retrofit.http.Part;
-import retrofit.http.PartMap;
 import retrofit.http.Path;
 import retrofit.http.Query;
 import rx.Observable;
@@ -117,8 +104,9 @@ public class LocationsApiService {
         return GenericErrorHandler.wrapSingle(service.postImageImpression(locationId, requestBody));
     }
 
-    public Observable<Object> createVideoImpression(String locationId) {
-        return null;
+    public Observable<Object> createVideoImpression(String locationId, byte[] videoData) {
+        RequestBody requestBody = RequestBody.create(MediaType.parse("video/mp4"), videoData);
+        return GenericErrorHandler.wrapSingle(service.postVideoImpression(locationId, requestBody));
     }
 
     public Observable<LocatorLocation> createLocation(String title,

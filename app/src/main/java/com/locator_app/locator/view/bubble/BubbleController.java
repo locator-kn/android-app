@@ -5,6 +5,7 @@ import android.graphics.Point;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.widget.Toast;
@@ -18,6 +19,7 @@ import com.locator_app.locator.model.LocatorLocation;
 import com.locator_app.locator.model.LocatorObject;
 import com.locator_app.locator.model.Message;
 import com.locator_app.locator.view.LocationDetailActivity;
+import com.nineoldandroids.animation.Animator;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -361,11 +363,33 @@ public class BubbleController {
                                                 .toList().toBlocking().single();
         Random random = new Random();
         final int minDelay = 100;
-        final int maxDelay = 1000;
-        final int duration = 700;
+        final int maxDelay = 1200;
+        final int duration = 500;
+
         for (BubbleView bubble: bubblesToAnimate) {
             int delay = random.nextInt(maxDelay - minDelay) + minDelay;
             YoYo.with(Techniques.Hinge)
+                    .withListener(new Animator.AnimatorListener() {
+                        @Override
+                        public void onAnimationStart(Animator animation) {
+
+                        }
+
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+
+                        }
+
+                        @Override
+                        public void onAnimationCancel(Animator animation) {
+
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animator animation) {
+
+                        }
+                    })
                     .duration(duration)
                     .delay(delay)
                     .playOn(bubble);

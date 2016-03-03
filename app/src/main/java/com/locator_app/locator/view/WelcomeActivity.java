@@ -4,20 +4,16 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.locator_app.locator.R;
-import com.locator_app.locator.apiservice.users.LoginResponse;
-import com.locator_app.locator.controller.DeviceController;
 import com.locator_app.locator.controller.UserController;
+import com.locator_app.locator.model.User;
 import com.locator_app.locator.view.home.HomeActivity;
-import com.locator_app.locator.view.login.LoginRegisterActivity;
 import com.locator_app.locator.view.login.LoginRegisterStartActivity;
 
 import butterknife.Bind;
@@ -40,31 +36,22 @@ public class WelcomeActivity extends Activity {
         setContentView(R.layout.activity_welcome);
         ButterKnife.bind(this);
 
-        loginLastLoggedInUser();
-    }
-
-    private void loginLastLoggedInUser() {
-        if (!DeviceController.getInstance().isDeviceAlreadyRegistered()) {
-            jumpToLoginRegisterActivity();
-        } else {
-            UserController.getInstance()
-                    .logInLastLoggedInUser()
-                    .subscribe(
-                            this::onLoginResponse,
-                            this::handleLoginError
-                    );
-        }
+        UserController.getInstance().checkProtected()
+                .subscribe(
+                        this::onUserIsLoggedIn,
+                        this::handleLoginError
+                );
     }
 
     private void handleLoginError(Throwable throwable) {
         jumpToLoginRegisterActivity();
     }
 
-    private void onLoginResponse(LoginResponse loginResponse) {
+    private void onUserIsLoggedIn(User user) {
 
         final int animationTime = 4500;
 
-        ahoiName.setText(String.format("Ahoi %s!", loginResponse.name));
+        ahoiName.setText(String.format("Ahoi %s!", user.name));
 
         final Animation fadeInAnimation = new AlphaAnimation(0.2f, 1.0f);
         final Animation moveLeftAnimation = new TranslateAnimation(100, -100, 0, 0);

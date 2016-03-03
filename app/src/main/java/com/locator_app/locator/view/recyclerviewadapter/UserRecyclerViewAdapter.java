@@ -81,11 +81,6 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
 
         public void update(User user) {
             title.setText(user.name);
-            if (user.description.isEmpty()) {
-                description.setVisibility(View.GONE);
-            } else {
-                description.setText(user.description);
-            }
             Glide.with(LocatorApplication.getAppContext())
                     .load(user.thumbnailUri())
                     .asBitmap()

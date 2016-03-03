@@ -64,6 +64,12 @@ public class LocationController {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
+    public Observable<Object> createVideoImpression(String locationId, byte[] videoData) {
+        return locationService.createVideoImpression(locationId, videoData)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
     public Observable<LocatorLocation> createLocation(String title,
                                              double  lon,
                                              double  lat,

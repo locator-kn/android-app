@@ -1,7 +1,6 @@
 package com.locator_app.locator.model;
 
 import com.google.gson.annotations.SerializedName;
-import com.locator_app.locator.R;
 import com.locator_app.locator.apiservice.Api;
 
 import java.io.Serializable;
@@ -11,22 +10,13 @@ import java.util.List;
 public class User implements LocatorObject, Serializable {
 
     @SerializedName("_id")
-    public String _id = "";
-
-    @SerializedName("birthdate")
-    public String birthdate = "";
+    public String id = "";
 
     @SerializedName("residence")
     public String residence = "";
 
-    @SerializedName("description")
-    public String description = "";
-
     @SerializedName("mail")
     public String mail = "";
-
-    @SerializedName("surname")
-    public String surname = "";
 
     @SerializedName("name")
     public String name = "";
@@ -41,10 +31,10 @@ public class User implements LocatorObject, Serializable {
     public List<String> following = new LinkedList<>();
 
     @SerializedName("location_count")
-    public int locationCount;
+    public int locationCount = 0;
 
     @SerializedName("follower_count")
-    public int followerCount;
+    public int followerCount = 0;
 
     @Override
     public String thumbnailUri() {
@@ -53,6 +43,6 @@ public class User implements LocatorObject, Serializable {
 
     @Override
     public boolean equals(Object other) {
-        return other instanceof User && ((User) other)._id.equals(_id);
+        return other instanceof User && ((User) other).id.equals(id);
     }
 }

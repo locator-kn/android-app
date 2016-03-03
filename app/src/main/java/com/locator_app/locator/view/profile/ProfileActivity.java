@@ -27,8 +27,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 public class ProfileActivity extends FragmentActivity {
 
@@ -87,7 +85,7 @@ public class ProfileActivity extends FragmentActivity {
         residence.setText(user.residence);
         profileImageBubbleView.setImage(user.thumbnailUri());
         UserController userController = UserController.getInstance();
-        if (userController.loggedIn() && user._id.equals(userController.me()._id)) {
+        if (userController.loggedIn() && user.id.equals(userController.me().id)) {
             unFollowUser.setVisibility(View.INVISIBLE);
         }
     }
@@ -110,7 +108,7 @@ public class ProfileActivity extends FragmentActivity {
         LocationsFragment fragment = new LocationsFragment();
         adapter.addFragment(fragment, "Locations");
 
-        LocationController.getInstance().getLocationsByUserId(user._id)
+        LocationController.getInstance().getLocationsByUserId(user.id)
                 .toList()
                 .subscribe(
                         (locations -> {
@@ -130,7 +128,7 @@ public class ProfileActivity extends FragmentActivity {
         UsersFragment fragment = new UsersFragment();
         adapter.addFragment(fragment, "Followers");
 
-        UserController.getInstance().getFollowers(user._id)
+        UserController.getInstance().getFollowers(user.id)
                 .toList()
                 .subscribe(
                         (followers -> {
@@ -138,7 +136,7 @@ public class ProfileActivity extends FragmentActivity {
                             countFollowers.setText(Integer.toString(followers.size()));
 
                             followerIds = Observable.from(followers)
-                                            .map(follower -> follower._id)
+                                            .map(follower -> follower.id)
                                             .toList().toBlocking().single();
                         }),
                         (error -> {
@@ -183,15 +181,15 @@ public class ProfileActivity extends FragmentActivity {
             return;
         }
 
-        if (!followerIds.contains(userController.me()._id)) {
-            followerIds.add(userController.me()._id);
-            countFollowers.setText(Integer.toString(followerIds.size()));
-            userController.followUser(user._id)
+        if (!followerIds.contains(userController.me().id)) {
+            followerIds.add(userController.me().id);
+            countFollowers.setText(String.format("%d", followerIds.size()));
+            userController.followUser(user.id)
                     .subscribe(
                             (res) -> {
                             },
                             (err) -> {
-                                followerIds.remove(userController.me()._id);
+                                followerIds.remove(userController.me().id);
                                 countFollowers.setText(Integer.toString(followerIds.size()));
                                 Toast.makeText(getApplicationContext(),
                                         "uups, das hat leider nicht geklappt", Toast.LENGTH_SHORT).show();

@@ -14,12 +14,12 @@ public class DeviceApiService {
 
     interface DeviceApi {
         @POST(Api.version + "/device/register")
-        Observable<Response<RegisterDeviceResponse>> registerDevice(@Body RegisterDeviceRequest request);
+        Observable<Response<Object>> registerDevice(@Body RegisterDeviceRequest request);
     }
 
     DeviceApi service = ServiceFactory.createService(DeviceApi.class);
 
-    public Observable<RegisterDeviceResponse> registerDevice(RegisterDeviceRequest request) {
+    public Observable<Object> registerDevice(RegisterDeviceRequest request) {
         return GenericErrorHandler.wrapSingle(service.registerDevice(request));
     }
 
