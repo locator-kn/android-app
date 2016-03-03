@@ -3,9 +3,17 @@ package com.locator_app.locator.view.home;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
+import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.TranslateAnimation;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.tbouron.shakedetector.library.ShakeDetector;
@@ -41,15 +49,44 @@ public class HomeActivity extends AppCompatActivity {
     @Bind(R.id.userProfileBubble)
     BubbleView userProfileBubble;
 
+    @Bind(R.id.welcomeScreen)
+    View welcomeScreen;
+
+    @Bind(R.id.ahoiName)
+    TextView ahoiName;
+
+    @Bind(R.id.ahoi)
+    TextView ahoi;
+
+    @Bind(R.id.welcomeBack)
+    TextView welcomeBack;
+
+    @Bind(R.id.locatorLogo)
+    ImageView locatorLogo;
+
     BubbleController bubbleController;
 
     GpsService gpsService;
+
+    private static boolean isFirstTime = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         ButterKnife.bind(this);
+
+        if (isFirstTime) {
+            welcomeScreen.setVisibility(View.VISIBLE);
+
+            UserController.getInstance().checkProtected()
+                    .subscribe(
+                            this::onUserIsLoggedIn,
+                            this::handleLoginError
+                    );
+            isFirstTime = false;
+        }
+
         bubbleController = new BubbleController(bubbleLayout);
         locationCreationController = new LocationCreationController(this);
 
@@ -118,8 +155,10 @@ public class HomeActivity extends AppCompatActivity {
     @OnClick(R.id.schoenHierBubble)
     void onSchoenHierBubbleClick() {
         SchoenHierController.getInstance().markCurPosAsSchoenHier(gpsService)
-                .subscribe((response) -> {},
-                        (error) -> {});
+                .subscribe((response) -> {
+                        },
+                        (error) -> {
+                        });
     }
 
     @OnLongClick(R.id.schoenHierBubble)
@@ -179,5 +218,40 @@ public class HomeActivity extends AppCompatActivity {
 
     private void handleBubbleScreenError(Throwable error) {
         Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show();
+    }
+
+    private void handleLoginError(Throwable throwable) {
+        jumpToLoginRegisterActivity();
+    }
+
+    private void onUserIsLoggedIn(User user) {
+        final int animationTime = 4500;
+
+        ahoiName.setText(String.format("%s!", user.name));
+
+        final Animation fadeInAnimation = new AlphaAnimation(0.4f, 1.0f);
+        final Animation moveLeftAnimation = new TranslateAnimation(0, -200, 0, 0);
+        final Animation moveRightAnimation = new TranslateAnimation(0, -80, 0, 0);
+
+        moveRightAnimation.setDuration(animationTime);
+        moveLeftAnimation.setDuration(animationTime);
+        fadeInAnimation.setDuration(animationTime);
+
+        ahoi.startAnimation(fadeInAnimation);
+        ahoiName.startAnimation(fadeInAnimation);
+        welcomeBack.startAnimation(moveRightAnimation);
+        locatorLogo.startAnimation(moveLeftAnimation);
+
+        new Handler().postDelayed(() -> {
+            Animation animationFadeOut = AnimationUtils.loadAnimation(this, R.anim.fadeout);
+            welcomeScreen.startAnimation(animationFadeOut);
+            welcomeScreen.setVisibility(View.INVISIBLE);
+        }, 2000);
+    }
+
+    private void jumpToLoginRegisterActivity() {
+        Intent intent = new Intent(getApplicationContext(), LoginRegisterStartActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
     }
 }
