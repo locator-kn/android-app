@@ -117,7 +117,9 @@ public class HomeActivity extends AppCompatActivity {
 
     @OnClick(R.id.schoenHierBubble)
     void onSchoenHierBubbleClick() {
-        SchoenHierController.getInstance().markCurPosAsSchoenHier(gpsService);
+        SchoenHierController.getInstance().markCurPosAsSchoenHier(gpsService)
+                .subscribe((response) -> {},
+                        (error) -> {});
     }
 
     @OnLongClick(R.id.schoenHierBubble)
