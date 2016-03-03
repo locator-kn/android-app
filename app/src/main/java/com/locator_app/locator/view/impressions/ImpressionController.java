@@ -73,7 +73,6 @@ public class ImpressionController extends Activity {
         } else if (requestCode == VIDEO) {
             doUploadVideo();
         }
-        finish();
     }
 
     private void doUploadImage() {
@@ -83,10 +82,12 @@ public class ImpressionController extends Activity {
                     .subscribe(
                             (val) -> {
                                 notify(AbstractImpression.ImpressionType.IMAGE);
+                                finish();
                             },
                             (err) -> {
                                 notifyError(AbstractImpression.ImpressionType.IMAGE,
                                         new Throwable("Dein Bild konnte leider nicht hochgeladen werden"));
+                                finish();
                             }
                     );
         } catch (IOException e) {
@@ -101,14 +102,17 @@ public class ImpressionController extends Activity {
                     .subscribe(
                             (val) -> {
                                 notify(AbstractImpression.ImpressionType.VIDEO);
+                                finish();
                             },
                             (err) -> {
                                 notifyError(AbstractImpression.ImpressionType.VIDEO,
                                         new Throwable("Dein Video konnte leider nicht hochgeladen werden"));
+                                finish();
                             }
                     );
         } catch (IOException e) {
             e.printStackTrace();
+            finish();
         }
     }
 
