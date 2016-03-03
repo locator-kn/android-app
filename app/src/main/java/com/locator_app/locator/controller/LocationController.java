@@ -40,6 +40,12 @@ public class LocationController {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
+    public Observable<LocatorLocation> getFavoritedLocations(String userId) {
+        return locationService.getFavoritedLocations(userId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
     public Observable<AbstractImpression> getImpressionsByLocationId(String locationId) {
         return locationService.getImpressionsByLocationId(locationId)
                 .subscribeOn(Schedulers.io())

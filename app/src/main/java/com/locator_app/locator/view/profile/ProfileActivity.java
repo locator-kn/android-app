@@ -1,6 +1,7 @@
 package com.locator_app.locator.view.profile;
 
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -15,6 +16,7 @@ import com.locator_app.locator.R;
 import com.locator_app.locator.controller.LocationController;
 import com.locator_app.locator.controller.UserController;
 import com.locator_app.locator.model.User;
+import com.locator_app.locator.view.fragments.FavoritesFragment;
 import com.locator_app.locator.view.home.HomeActivity;
 import com.locator_app.locator.view.bubble.BubbleView;
 import com.locator_app.locator.view.fragments.FragmentAdapter;
@@ -120,8 +122,23 @@ public class ProfileActivity extends FragmentActivity {
     }
 
     private void addJourneysFragment(FragmentAdapter adapter) {
-        Fragment fragment = new Fragment();
-        adapter.addFragment(fragment, "Journeys");
+        FavoritesFragment fragment = new FavoritesFragment();
+        adapter.addFragment(fragment, "Favorites");
+
+        LocationController.getInstance().getFavoritedLocations(user.id)
+                .toList()
+                .subscribe(
+                        (favorites -> {
+                            fragment.adapter.setLocations(favorites);
+                            countFollowers.setText(Integer.toString(favorites.size()));
+
+                            followerIds = Observable.from(favorites)
+                                    .map(follower -> follower.id)
+                                    .toList().toBlocking().single();
+                        }),
+                        (error -> {
+                        })
+                );
     }
 
     private void addFollowerAdapter(FragmentAdapter adapter) {
@@ -134,10 +151,6 @@ public class ProfileActivity extends FragmentActivity {
                         (followers -> {
                             fragment.adapter.setUsers(followers);
                             countFollowers.setText(Integer.toString(followers.size()));
-
-                            followerIds = Observable.from(followers)
-                                            .map(follower -> follower.id)
-                                            .toList().toBlocking().single();
                         }),
                         (error -> {
                         })
