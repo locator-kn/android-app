@@ -172,8 +172,8 @@ public class HomeActivity extends AppCompatActivity {
         UserController controller = UserController.getInstance();
         controller.logout()
                 .subscribe(
-                        (logoutResponse) -> jumpToLoginScreen(),
-                        (error) -> jumpToLoginScreen()
+                        (logoutResponse) -> jumpToLoginRegisterActivity(),
+                        (error) -> jumpToLoginRegisterActivity()
                 );
     }
 
@@ -198,12 +198,6 @@ public class HomeActivity extends AppCompatActivity {
     private void showUserProfile(User user) {
         Intent intent = new Intent(this, ProfileActivity.class);
         intent.putExtra("profile", user);
-        startActivity(intent);
-    }
-
-    private void jumpToLoginScreen() {
-        Intent intent = new Intent(this, LoginRegisterStartActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
 
@@ -251,7 +245,8 @@ public class HomeActivity extends AppCompatActivity {
 
     private void jumpToLoginRegisterActivity() {
         Intent intent = new Intent(getApplicationContext(), LoginRegisterStartActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
+                        Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
 }
