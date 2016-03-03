@@ -1,7 +1,6 @@
 package com.locator_app.locator.view.home;
 
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBar;
@@ -96,10 +95,22 @@ public class HomeActivity extends AppCompatActivity {
         }
         gpsService = new GpsService(this);
 
-        ShakeDetector.create(this, () -> {
-            bubbleController.animateBubbles();
-            //Toast.makeText(this, "shake", Toast.LENGTH_SHORT).show();
-        });
+        ShakeDetector.create(this, this::loadBubbleScreen);
+        loadBubbleScreen();
+    }
+
+    private void loadBubbleScreen() {
+        MyController.getInstance().getBubbleScreen()
+                .subscribe(
+                        bubbleController::onBubbleScreenUpdate,
+                        (err) -> { }
+                );
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        //loadBubbleScreen();
     }
 
     @Override
@@ -134,13 +145,6 @@ public class HomeActivity extends AppCompatActivity {
         gpsService.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
-    public void onWindowFocusChanged(boolean hasFocus) {
-        super.onWindowFocusChanged(hasFocus);
-        bubbleController.initUserProfileBubble();
-        bubbleController.initSchoenHierBubble();
-        updateDashboard();
-    }
-
     @OnTouch(R.id.schoenHierBubble)
     boolean onSchoenHierBubbleTouch(MotionEvent arg1) {
         if (arg1.getAction()== MotionEvent.ACTION_DOWN) {
@@ -155,10 +159,10 @@ public class HomeActivity extends AppCompatActivity {
     @OnClick(R.id.schoenHierBubble)
     void onSchoenHierBubbleClick() {
         SchoenHierController.getInstance().markCurPosAsSchoenHier(gpsService)
-                .subscribe((response) -> {
-                        },
-                        (error) -> {
-                        });
+                .subscribe(
+                        (response) -> {},
+                        (error) -> {}
+                );
     }
 
     @OnLongClick(R.id.schoenHierBubble)
@@ -179,19 +183,6 @@ public class HomeActivity extends AppCompatActivity {
         } else {
             jumpToLoginRegisterActivity();
         }
-    }
-
-    private void updateDashboard() {
-        MyController controller = MyController.getInstance();
-        controller.getBubbleScreen()
-                .subscribe(
-                        bubbleController::onBubbleScreenUpdate,
-                        this::handleBubbleScreenError
-                );
-    }
-
-    private void handleBubbleScreenError(Throwable error) {
-        Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show();
     }
 
     private void handleLoginError(Throwable throwable) {
@@ -232,4 +223,5 @@ public class HomeActivity extends AppCompatActivity {
         Intent intent = new Intent(getApplicationContext(), LoginRegisterStartActivity.class);
         startActivity(intent);
     }
+
 }
