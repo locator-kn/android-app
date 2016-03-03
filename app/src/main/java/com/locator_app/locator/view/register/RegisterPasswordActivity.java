@@ -52,4 +52,6 @@ public class RegisterPasswordActivity extends AppCompatActivity {
         customActionBar.setCrossButtonJumpScreen(LoginRegisterStartActivity.class);
         customActionBar.setColor(R.color.colorRegister);
     }
+
+    //todo: password mind.3 max 30
 }

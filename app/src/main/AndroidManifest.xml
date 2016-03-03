@@ -57,18 +57,14 @@
         <service
             android:name=".service.RegistrationIntentService"
             android:exported="false" />
-
         <activity
-            android:name=".view.WelcomeActivity"
+            android:name=".view.home.HomeActivity"
             android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".view.home.HomeActivity"
-            android:screenOrientation="portrait" />
         <activity
             android:name=".view.login.LoginRegisterActivity"
             android:screenOrientation="portrait" />
