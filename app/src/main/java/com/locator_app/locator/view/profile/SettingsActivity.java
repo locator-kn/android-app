@@ -8,6 +8,7 @@ import com.locator_app.locator.R;
 import com.locator_app.locator.controller.UserController;
 import com.locator_app.locator.view.login.LoginRegisterStartActivity;
 
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class SettingsActivity extends Activity {
@@ -15,6 +16,7 @@ public class SettingsActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+        ButterKnife.bind(this);
     }
 
     @OnClick(R.id.changeImage)
@@ -24,7 +26,8 @@ public class SettingsActivity extends Activity {
 
     @OnClick(R.id.changePassword)
     public void onChangePasswordClick() {
-
+        Intent intent = new Intent(this, ChangePasswordActivity.class);
+        startActivity(intent);
     }
 
     @OnClick(R.id.logOut)
@@ -36,7 +39,7 @@ public class SettingsActivity extends Activity {
     }
 
     private void logOut() {
-        Intent intent = new Intent(getApplicationContext(), LoginRegisterStartActivity.class);
+        Intent intent = new Intent(this, LoginRegisterStartActivity.class);
         startActivity(intent);
     }
 }

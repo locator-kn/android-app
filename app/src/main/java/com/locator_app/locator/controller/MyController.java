@@ -25,6 +25,12 @@ public class MyController {
         Log.d("MyController", throwable.getMessage());
     }
 
+    public Observable<Object> changePassword(String oldPassword, String newPassword) {
+        return myService.changePassword(oldPassword, newPassword)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
     private static MyController instance;
     public static MyController getInstance() {
         if (instance == null) {

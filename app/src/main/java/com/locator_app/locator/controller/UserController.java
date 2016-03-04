@@ -53,7 +53,10 @@ public class UserController {
                 ((HttpError) error).getErrorCode() == HttpError.HttpErrorCode.unauthorized) {
             return;
         }
-        logout();
+        logout().subscribe(
+                (res)->{},
+                (err)-> {}
+        );
     }
 
     private void handleLogin(User user) {

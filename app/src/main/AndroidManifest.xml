@@ -142,7 +142,8 @@
         <activity
             android:name=".view.locationcreation.ChooseCategories"
             android:screenOrientation="portrait" />
-        <activity android:name=".view.profile.SettingsActivity"></activity>
+        <activity android:name=".view.profile.SettingsActivity" />
+        <activity android:name=".view.profile.ChangePasswordActivity"></activity>
     </application>
 
 </manifest>
