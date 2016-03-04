@@ -25,6 +25,7 @@ public class ImpressionController extends Activity {
 
     public static final int IMAGE = 100;
     public static final int VIDEO = 200;
+    public static final int TEXT = 300;
     private String locationId;
     private Uri imageUri;
     File videoFile;
@@ -32,15 +33,24 @@ public class ImpressionController extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         locationId = getIntent().getStringExtra("locationId");
         String type = getIntent().getStringExtra("type");
         if (type.equals("image")) {
             createImageImpression();
         } else if (type.equals("video")) {
             createVideoImpression();
+        } else if (type.equals("text")) {
+            createTextImpression();
         } else {
             finish();
         }
+    }
+
+    private void createTextImpression() {
+        Intent intent = new Intent(this, TextImpressionActivity.class);
+        intent.putExtra("locationId", locationId);
+        startActivityForResult(intent, TEXT);
     }
 
     private void createImageImpression() {
@@ -72,7 +82,19 @@ public class ImpressionController extends Activity {
             doUploadImage();
         } else if (requestCode == VIDEO) {
             doUploadVideo();
+        } else if (requestCode == TEXT) {
+            checkTextImpressionActivityResult(resultCode);
         }
+    }
+
+    private void checkTextImpressionActivityResult(int resultCode) {
+        if (resultCode == TextImpressionActivity.textImpressionUploadSuccess) {
+            notify(AbstractImpression.ImpressionType.TEXT);
+        } else {
+            notifyError(AbstractImpression.ImpressionType.IMAGE,
+                    new Throwable("Dein Kommentar konnte leider nicht hochgeladen werden"));
+        }
+        finish();
     }
 
     private void doUploadImage() {

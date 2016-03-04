@@ -47,7 +47,12 @@ class CreateImpressionViewHolder extends ImpressionViewHolder {
             v.getContext().startActivity(intent);
         });
         ImageView text = (ImageView) itemView.findViewById(R.id.textImpression);
-        text.setOnClickListener(v -> Toast.makeText(itemView.getContext(), "text", Toast.LENGTH_SHORT).show());
+        text.setOnClickListener(v -> {
+            Intent intent = new Intent(v.getContext(), ImpressionController.class);
+            intent.putExtra("locationId", impressionRecyclerViewAdapter.location.id);
+            intent.putExtra("type", "text");
+            v.getContext().startActivity(intent);
+        });
     }
 
     @Override
