@@ -173,46 +173,25 @@ public class HomeActivity extends AppCompatActivity {
 
     @OnClick(R.id.userProfileBubble)
     void onUserProfileBubbleClick() {
-        UserController controller = UserController.getInstance();
-        controller.logout()
-                .subscribe(
-                        (logoutResponse) -> jumpToLoginScreen(),
-                        (error) -> jumpToLoginScreen()
-                );
-    }
+        UserController userController = UserController.getInstance();
+        if (userController.loggedIn()) {
+            User me = userController.me();
 
-    @OnLongClick(R.id.userProfileBubble)
-    boolean onUserProfileBubbleLongClick() {
-        UserController.getInstance().getUser("569e4a83a6e5bb503b838301")
-                .subscribe(
-                        this::showUserProfile,
-                        (error) -> {
-                            Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                );
-        /*User me = UserController.getInstance().me();
-        if (me.loggedIn) {
-            showUserProfile(me);
+            Intent intent = new Intent(this, ProfileActivity.class);
+            intent.putExtra("profile", me);
+            startActivity(intent);
         } else {
-            jumpToLoginScreen();
-        }*/
-        return true;
-    }
-
-    private void showUserProfile(User user) {
-        Intent intent = new Intent(this, ProfileActivity.class);
-        intent.putExtra("profile", user);
-        startActivity(intent);
-    }
-
-    private void jumpToLoginScreen() {
-        Intent intent = new Intent(this, LoginRegisterStartActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
+            jumpToLoginRegisterActivity();
+        }
     }
 
     private void handleLoginError(Throwable throwable) {
         jumpToLoginRegisterActivity();
+    }
+
+    @Override
+    public void onBackPressed() {
+        moveTaskToBack(true);
     }
 
     private void onUserIsLoggedIn(User user) {
@@ -242,7 +221,6 @@ public class HomeActivity extends AppCompatActivity {
 
     private void jumpToLoginRegisterActivity() {
         Intent intent = new Intent(getApplicationContext(), LoginRegisterStartActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
 

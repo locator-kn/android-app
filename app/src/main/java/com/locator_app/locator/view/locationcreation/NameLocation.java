@@ -67,7 +67,6 @@ public class NameLocation extends Activity {
     @OnClick(R.id.cancelButton)
     void onCancelButtonClicked() {
         Intent intent = new Intent(this, HomeActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         finish();
     }

@@ -40,6 +40,9 @@ public class LocationsApiService {
         @GET(Api.version + "/locations/users/{userId}")
         Observable<Response<List<LocatorLocation>>> getLocationsByUser(@Path("userId") String userId);
 
+        @GET(Api.version + "/locations/users/{userId}/favored")
+        Observable<Response<List<LocatorLocation>>> getFavoritedLocations(@Path("userId") String userId);
+
         @GET(Api.version + "/locations/{locationId}/impressions")
         Observable<Response<List<Impression>>> getImpressionsByLocationId(@Path("locationId") String locationId);
 
@@ -84,6 +87,10 @@ public class LocationsApiService {
 
     public Observable<LocatorLocation> getLocationsByUser(String userId) {
         return GenericErrorHandler.wrapList(service.getLocationsByUser(userId));
+    }
+
+    public Observable<LocatorLocation> getFavoritedLocations(String userId) {
+        return GenericErrorHandler.wrapList(service.getFavoritedLocations(userId));
     }
 
     public Observable<AbstractImpression> getImpressionsByLocationId(String locationId) {

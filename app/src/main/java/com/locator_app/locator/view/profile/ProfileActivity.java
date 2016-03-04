@@ -1,6 +1,7 @@
 package com.locator_app.locator.view.profile;
 
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -11,10 +12,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.locator_app.locator.R;
 import com.locator_app.locator.controller.LocationController;
 import com.locator_app.locator.controller.UserController;
 import com.locator_app.locator.model.User;
+import com.locator_app.locator.view.fragments.FavoritesFragment;
 import com.locator_app.locator.view.home.HomeActivity;
 import com.locator_app.locator.view.bubble.BubbleView;
 import com.locator_app.locator.view.fragments.FragmentAdapter;
@@ -59,6 +62,8 @@ public class ProfileActivity extends FragmentActivity {
 
     User user;
 
+    private boolean isSelf = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,8 +91,13 @@ public class ProfileActivity extends FragmentActivity {
         profileImageBubbleView.setImage(user.thumbnailUri());
         UserController userController = UserController.getInstance();
         if (userController.loggedIn() && user.id.equals(userController.me().id)) {
-            unFollowUser.setVisibility(View.INVISIBLE);
+            replaceFollowButtonWithSettings();
+            isSelf = true;
         }
+    }
+
+    private void replaceFollowButtonWithSettings() {
+        Glide.with(this).load(R.drawable.ic_setting_dark).asBitmap().into(unFollowUser);
     }
 
     private void setupTabLayout() {
@@ -115,13 +125,29 @@ public class ProfileActivity extends FragmentActivity {
                             fragment.adapter.setLocations(locations);
                             countLocations.setText(Integer.toString(locations.size()));
                         }),
-                        (error) -> { }
+                        (error) -> {
+                        }
                 );
     }
 
     private void addJourneysFragment(FragmentAdapter adapter) {
-        Fragment fragment = new Fragment();
-        adapter.addFragment(fragment, "Journeys");
+        FavoritesFragment fragment = new FavoritesFragment();
+        adapter.addFragment(fragment, "Favorites");
+
+        LocationController.getInstance().getFavoritedLocations(user.id)
+                .toList()
+                .subscribe(
+                        (favorites -> {
+                            fragment.adapter.setLocations(favorites);
+                            countFollowers.setText(Integer.toString(favorites.size()));
+
+                            followerIds = Observable.from(favorites)
+                                    .map(follower -> follower.id)
+                                    .toList().toBlocking().single();
+                        }),
+                        (error -> {
+                        })
+                );
     }
 
     private void addFollowerAdapter(FragmentAdapter adapter) {
@@ -134,10 +160,6 @@ public class ProfileActivity extends FragmentActivity {
                         (followers -> {
                             fragment.adapter.setUsers(followers);
                             countFollowers.setText(Integer.toString(followers.size()));
-
-                            followerIds = Observable.from(followers)
-                                            .map(follower -> follower.id)
-                                            .toList().toBlocking().single();
                         }),
                         (error -> {
                         })
@@ -165,11 +187,20 @@ public class ProfileActivity extends FragmentActivity {
     @OnClick(R.id.goToHomeScreen)
     public void onGoToHomeScreenClicked() {
         Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
 
     @OnClick(R.id.unFollowUser)
+    public void onUnFollowUserClicked() {
+        if (isSelf) {
+            Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
+            startActivity(intent);
+        } else {
+            unFollowUser();
+        }
+    }
+
+
     public void unFollowUser() {
         UserController userController = UserController.getInstance();
         if (!userController.loggedIn()) {
