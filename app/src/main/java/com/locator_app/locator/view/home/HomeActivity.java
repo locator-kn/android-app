@@ -100,7 +100,18 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void loadBubbleScreen() {
-        MyController.getInstance().getBubbleScreen()
+        gpsService.getCurLocation()
+                .subscribe(
+                        (position) -> {
+                            loadBubbleScreenAt(position.getLongitude(), position.getLatitude());
+                        },
+                        (error) -> {
+                        }
+                );
+    }
+
+    private void loadBubbleScreenAt(double lon, double lat) {
+        MyController.getInstance().getBubbleScreen(lon, lat)
                 .subscribe(
                         bubbleController::onBubbleScreenUpdate,
                         (err) -> { }

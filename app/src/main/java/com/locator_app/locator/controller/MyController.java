@@ -14,8 +14,8 @@ public class MyController {
 
     MyApiService myService = null;
 
-    public Observable<BubbleScreenResponse> getBubbleScreen() {
-        return myService.bubbleScreen()
+    public Observable<BubbleScreenResponse> getBubbleScreen(double lon, double lat) {
+        return myService.bubbleScreen(lon, lat)
                 .doOnError(this::onBubbleScreenError)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
