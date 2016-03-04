@@ -3,10 +3,14 @@ package com.locator_app.locator.apiservice;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.logging.HttpLoggingInterceptor;
 
+import java.io.IOException;
 import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
 import java.net.CookieStore;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.concurrent.TimeUnit;
 
 import retrofit.GsonConverterFactory;
@@ -21,8 +25,6 @@ public class ServiceFactory {
         if (retrofit == null) {
 
             OkHttpClient client = new OkHttpClient();
-            client.setConnectTimeout(5, TimeUnit.MINUTES);
-            client.setReadTimeout(5, TimeUnit.MINUTES);
             HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
             interceptor.setLevel(HttpLoggingInterceptor.Level.HEADERS);
             client.interceptors().add(interceptor);

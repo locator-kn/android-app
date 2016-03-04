@@ -44,10 +44,9 @@ public class UsersApiService {
         Observable<Response<User>> register(@Body RegistrationRequest registrationBodyRequest);
 
         @Multipart
-        @POST(Api.version + "/users/register/image")
+        @POST(Api.version + "/users/image")
         Observable<Response<Object>> setProfilePicture(@Part("file\"; filename=image.jpg") RequestBody file);
 
-        @Headers("Cache-Control: max-age=10")
         @GET(Api.version + "/users/{userId}?count=locations,followers")
         Observable<Response<User>> getUser(@Path("userId") String userId);
 

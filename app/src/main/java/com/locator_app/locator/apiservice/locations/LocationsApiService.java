@@ -33,7 +33,7 @@ public class LocationsApiService {
         Observable<Response<LocatorLocation>> locationById(@Path("locationId") String locationId);
 
         @GET(Api.version + "/locations/nearby")
-        Observable<Response<LocationsNearbyResponse>> locationsNearby(@Query("long") double lon,
+        Observable<Response<List<LocationResponse>>> locationsNearby(@Query("long") double lon,
                                                                       @Query("lat") double lat,
                                                                       @Query("maxDistance") double maxDistance,
                                                                       @Query("limit") int limit);
@@ -82,7 +82,7 @@ public class LocationsApiService {
         return GenericErrorHandler.wrapSingle(service.locationById(locationId));
     }
 
-    public Observable<LocationsNearbyResponse> getLocationsNearby(double lon, double lat, double maxRadius, int limit) {
+    public Observable<List<LocationResponse>> getLocationsNearby(double lon, double lat, double maxRadius, int limit) {
         return GenericErrorHandler.wrapSingle(service.locationsNearby(lon, lat, maxRadius, limit));
     }
 

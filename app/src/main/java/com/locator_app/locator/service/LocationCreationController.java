@@ -1,19 +1,10 @@
 package com.locator_app.locator.service;
 
 import android.app.Activity;
-import android.content.ContentValues;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.Bundle;
-import android.provider.MediaStore;
 
-import com.locator_app.locator.apiservice.locations.LocationsNearbyResponse;
-import com.locator_app.locator.model.impressions.AbstractImpression;
-import com.locator_app.locator.util.BitmapHelper;
 import com.locator_app.locator.view.locationcreation.LocationSuggestions;
-
-import java.io.IOException;
 
 public class LocationCreationController {
     private Activity activity;
