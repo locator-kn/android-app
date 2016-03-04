@@ -1,6 +1,7 @@
 package com.locator_app.locator.controller;
 
 
+import com.locator_app.locator.apiservice.errorhandling.HttpError;
 import com.locator_app.locator.apiservice.users.LoginRequest;
 import com.locator_app.locator.apiservice.users.LogoutResponse;
 import com.locator_app.locator.apiservice.users.RegistrationRequest;
@@ -41,9 +42,18 @@ public class UserController {
 
     public Observable<User> checkProtected() {
         return userService.checkProtected()
+                .doOnError(this::handleProtectedError)
                 .doOnNext(this::handleLogin)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    private void handleProtectedError(Throwable error) {
+        if (error instanceof HttpError &&
+                ((HttpError) error).getErrorCode() == HttpError.HttpErrorCode.unauthorized) {
+            return;
+        }
+        logout();
     }
 
     private void handleLogin(User user) {
