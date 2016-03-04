@@ -86,6 +86,12 @@ public class LocationController {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
+    public Observable<Object> createTextImpression(String locationId, String text) {
+        return locationService.createTextImpression(locationId, text)
+                .subscribeOn(Schedulers.io())
+                .subscribeOn(AndroidSchedulers.mainThread());
+    }
+
     private static LocationController instance;
     public static LocationController getInstance() {
         if (instance == null) {
