@@ -27,7 +27,6 @@ public class LocationController {
     public Observable<LocatorLocation> getLocationsNearby(double lon, double lat, double maxDistance,
                                                           int limit) {
         return locationService.getLocationsNearby(lon, lat, maxDistance, limit)
-                .map(locationsNearbyResponse -> locationsNearbyResponse.results)
                 .flatMapIterable(list -> list)
                 .map(x -> x.location)
                 .subscribeOn(Schedulers.io())

@@ -3,7 +3,7 @@ package com.locator_app.locator.apiservice.search;
 import com.locator_app.locator.apiservice.Api;
 import com.locator_app.locator.apiservice.ServiceFactory;
 import com.locator_app.locator.apiservice.errorhandling.GenericErrorHandler;
-import com.locator_app.locator.apiservice.locations.LocationsNearbyResponse;
+import com.locator_app.locator.apiservice.locations.LocationResponse;
 import com.locator_app.locator.model.LocatorLocation;
 
 import java.util.List;
@@ -11,7 +11,6 @@ import java.util.Vector;
 
 import retrofit.Response;
 import retrofit.http.GET;
-import retrofit.http.Path;
 import retrofit.http.Query;
 import rx.Observable;
 
@@ -44,8 +43,8 @@ public class SearchApiService {
 
     private Observable<List<LocatorLocation>> parseResponseToList(SearchResponse response) {
         List<LocatorLocation> allLocations = new Vector<>();
-        for (LocationsNearbyResponse.Result locationResult : response.locatorLocations) {
-            allLocations.add(locationResult.location);
+        for (LocationResponse locationResponse : response.locatorLocations) {
+            allLocations.add(locationResponse.location);
         }
         allLocations.addAll(response.googleLocations);
         return Observable.just(allLocations);
