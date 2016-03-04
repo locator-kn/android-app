@@ -83,12 +83,12 @@ public class ImpressionController extends Activity {
         } else if (requestCode == VIDEO) {
             doUploadVideo();
         } else if (requestCode == TEXT) {
-            checkTextImpressionActivityResult(resultCode);
+            checkTextImpressionActivityResult(data);
         }
     }
 
-    private void checkTextImpressionActivityResult(int resultCode) {
-        if (resultCode == TextImpressionActivity.textImpressionUploadSuccess) {
+    private void checkTextImpressionActivityResult(Intent data) {
+        if (data.getBooleanExtra("success", false)) {
             notify(AbstractImpression.ImpressionType.TEXT);
         } else {
             notifyError(AbstractImpression.ImpressionType.IMAGE,

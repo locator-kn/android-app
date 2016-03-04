@@ -27,11 +27,6 @@ public class TextImpressionActivity extends Activity {
 
     String locationId;
 
-    private final float alphaEnabled = 1.0f;
-    private final float alphaDisabled = 0.4f;
-    public static final int textImpressionUploadSuccess = 0;
-    public static final int textImpressionUploadFailed = 1;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,13 +65,16 @@ public class TextImpressionActivity extends Activity {
             LocationController.getInstance().createTextImpression(locationId, impression)
             .subscribe(
                     (val) -> {
-                        setResult(textImpressionUploadSuccess);
+                        Intent intent = new Intent();
+                        intent.putExtra("success", true);
+                        setResult(RESULT_OK, intent);
                         finish();
                     },
                     (err) -> {
-                        setResult(textImpressionUploadFailed);
-                        Toast.makeText(this, "Deine Text-Impression konnte leider nicht "
-                                 + "hochgeladen werden", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent();
+                        intent.putExtra("success", false);
+                        setResult(RESULT_OK, intent);
+                        finish();
                     }
             );
         }
@@ -89,8 +87,10 @@ public class TextImpressionActivity extends Activity {
 
     private void updateSendIconAlphaValue() {
         if (reachedMinImpressionLength()) {
+            float alphaEnabled = 1.0f;
             sendTextImpression.setAlpha(alphaEnabled);
         } else {
+            float alphaDisabled = 0.4f;
             sendTextImpression.setAlpha(alphaDisabled);
         }
     }
