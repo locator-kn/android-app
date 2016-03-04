@@ -86,4 +86,10 @@ public class LoginRegisterStartActivity extends AppCompatActivity {
         Glide.with(this).load(R.drawable.yes).into(loginYes);
         Glide.with(this).load(R.drawable.no).into(loginNo);
     }
+
+
+    @Override
+    public void onBackPressed() {
+        moveTaskToBack(true);
+    }
 }
