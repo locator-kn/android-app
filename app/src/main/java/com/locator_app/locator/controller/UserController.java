@@ -50,13 +50,12 @@ public class UserController {
 
     private void handleProtectedError(Throwable error) {
         if (error instanceof HttpError &&
-                ((HttpError) error).getErrorCode() == HttpError.HttpErrorCode.unauthorized) {
-            return;
+                ((HttpError) error).getErrorCode() == HttpError.HttpErrorCode.badRequest) {
+            logout().subscribe(
+                    (res)->{},
+                    (err)-> {}
+            );
         }
-        logout().subscribe(
-                (res)->{},
-                (err)-> {}
-        );
     }
 
     private void handleLogin(User user) {
