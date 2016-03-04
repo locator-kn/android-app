@@ -1,16 +1,19 @@
 package com.locator_app.locator.view.register;
 
+import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.opengl.Visibility;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,6 +23,7 @@ import com.locator_app.locator.R;
 import com.locator_app.locator.apiservice.users.RegistrationRequest;
 import com.locator_app.locator.controller.UserController;
 import com.locator_app.locator.util.BitmapHelper;
+import com.locator_app.locator.view.LoadingSpinner;
 import com.locator_app.locator.view.home.HomeActivity;
 import com.locator_app.locator.view.login.LoginCustomActionBar;
 import com.locator_app.locator.view.login.LoginRegisterStartActivity;
@@ -50,11 +54,16 @@ public class RegisterProfilePictureActivity extends AppCompatActivity {
     @Bind(R.id.profilePictureText)
     TextView profilePictureText;
 
+    LoadingSpinner loadingSpinner;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_profile_picture);
         ButterKnife.bind(this);
+
+        loadingSpinner = new LoadingSpinner(this);
+
         setCustomActionBar();
         loadImages();
     }
@@ -66,16 +75,15 @@ public class RegisterProfilePictureActivity extends AppCompatActivity {
 
     @OnClick(R.id.profileNo)
     public void onProfileNoClick() {
-        HashMap<String, String> registerValues =
-                (HashMap<String, String>)getIntent().getSerializableExtra("registerValues");
-        registerValues.put("profilePicture", null);
-        register(registerValues);
+        Intent intent = new Intent(this, HomeActivity.class);
+        startActivity(intent);
     }
 
     private void setCustomActionBar() {
         LoginCustomActionBar customActionBar = new LoginCustomActionBar(getSupportActionBar(), this);
         customActionBar.setTitle(getResources().getString(R.string.register));
-        customActionBar.setCrossButtonJumpScreen(LoginRegisterStartActivity.class);
+        customActionBar.setBackButtonVisibility(View.GONE);
+        customActionBar.setCrossButtonVisibility(View.GONE);
         customActionBar.setColor(R.color.colorRegister);
     }
 
@@ -139,12 +147,25 @@ public class RegisterProfilePictureActivity extends AppCompatActivity {
             else if(requestCode == PIC_CROP) {
                 Bundle extras = data.getExtras();
                 Bitmap thePic = extras.getParcelable("data");
-                Bitmap roundedBitmap = BitmapHelper.getRoundBitmap(thePic, 500);
-                profilePicture.setImageBitmap(roundedBitmap);
-                profilePictureText.setText(getResources().getString(R.string.your_profile_picture));
 
-                Glide.with(this).load(R.drawable.continue_white)
-                        .into(profileNo);
+                loadingSpinner.showSpinner();
+                UserController.getInstance().setProfilePicture(thePic)
+                        .subscribe(
+                                (res) -> {
+                                    Bitmap roundedBitmap = BitmapHelper.getRoundBitmap(thePic, 500);
+                                    profilePicture.setImageBitmap(roundedBitmap);
+                                    profilePictureText.setText(getResources().getString(R.string.your_profile_picture));
+                                    loadingSpinner.hideSpinner();
+                                    Glide.with(this).load(R.drawable.continue_white)
+                                            .into(profileNo);
+                                },
+                                (error) -> {
+                                    loadingSpinner.hideSpinner();
+                                    Toast.makeText(this, "Da ist was schief gelaufen",
+                                            Toast.LENGTH_SHORT).show();
+                                }
+                        );
+
             }
         }
     }
@@ -167,28 +188,6 @@ public class RegisterProfilePictureActivity extends AppCompatActivity {
             Toast toast = Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT);
             toast.show();
         }
-    }
-
-    private void register(HashMap<String, String> regValues) {
-        final Context context = getApplicationContext();
-        UserController controller = UserController.getInstance();
-        RegistrationRequest request = new RegistrationRequest();
-        request.mail = regValues.get("mail");
-        request.name = regValues.get("name");
-        request.password = regValues.get("password");
-        request.residence = regValues.get("residence");
-        controller.register(request)
-            .subscribe(
-                (loginResponse) -> {
-                    Intent intent = new Intent(context, HomeActivity.class);
-                    startActivity(intent);
-                },
-                (error) -> {
-                    Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(context, RegisterNameActivity.class);
-                    startActivity(intent);
-                }
-            );
     }
 
     @Override

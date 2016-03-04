@@ -1,6 +1,8 @@
 package com.locator_app.locator.controller;
 
 
+import android.graphics.Bitmap;
+
 import com.locator_app.locator.apiservice.errorhandling.HttpError;
 import com.locator_app.locator.apiservice.users.LoginRequest;
 import com.locator_app.locator.apiservice.users.LogoutResponse;
@@ -29,6 +31,12 @@ public class UserController {
     public Observable<User> register(RegistrationRequest registrationRequest) {
         return userService.register(registrationRequest)
                 .doOnNext(this::handleLogin)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public Observable<Object> setProfilePicture(Bitmap image) {
+        return userService.setProfilePicture(image)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
