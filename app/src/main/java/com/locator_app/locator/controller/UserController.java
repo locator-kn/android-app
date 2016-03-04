@@ -48,6 +48,13 @@ public class UserController {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
+    public Observable<User> facebooklogin(String token) {
+        return userService.facebooklogin(token)
+                .doOnNext(this::handleLogin)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
     public Observable<User> checkProtected() {
         return userService.checkProtected()
                 .doOnError(this::handleProtectedError)

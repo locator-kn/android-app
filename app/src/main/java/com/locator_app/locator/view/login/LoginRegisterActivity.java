@@ -18,6 +18,8 @@ import com.facebook.GraphResponse;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.locator_app.locator.R;
+import com.locator_app.locator.controller.UserController;
+import com.locator_app.locator.view.home.HomeActivity;
 import com.locator_app.locator.view.register.RegisterNameActivity;
 
 import org.json.JSONObject;
@@ -92,39 +94,29 @@ public class LoginRegisterActivity extends AppCompatActivity {
                 new FacebookCallback<LoginResult>() {
                     @Override
                     public void onSuccess(LoginResult loginResult) {
-                        //TODO: send token to server
-                        GraphRequest request = GraphRequest.newMeRequest(
-                                loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
-                                    @Override
-                                    public void onCompleted(JSONObject json, GraphResponse response) {
-                                        if (response.getError() != null) {
-                                            Toast.makeText(getApplicationContext(), R.string.something_went_wrong, Toast.LENGTH_SHORT);
-                                        } else {
-//                                            String jsonresult = String.valueOf(json);
-                                            String firstName = json.optString("first_name");
-                                            Toast.makeText(getApplicationContext(), "Hallo " + firstName, Toast.LENGTH_LONG);
-                                            //TODO: go to next activity
+                            UserController.getInstance()
+                                .facebooklogin(loginResult.getAccessToken().toString())
+                                .subscribe(
+                                        (user) -> {
+                                            Intent intent = new Intent(LoginRegisterActivity.this, HomeActivity.class);
+                                            startActivity(intent);
+                                        },
+                                        (error) -> {
+                                            Toast.makeText(LoginRegisterActivity.this,
+                                                    R.string.something_went_wrong,
+                                                    Toast.LENGTH_SHORT).show();
                                         }
-                                    }
-
-                                });
-
-                        Bundle parameters = new Bundle();
-                        parameters.putString("fields", "id,first_name, last_name,email");
-                        request.setParameters(parameters);
-                        request.executeAsync();
+                                );
                     }
 
                     @Override
                     public void onCancel() {
                         //user clicked on cancel button before login
-                        finish();
                     }
 
                     @Override
                     public void onError(FacebookException error) {
-                        Toast.makeText(getApplicationContext(), R.string.something_went_wrong, Toast.LENGTH_SHORT);
-                        Log.d("Facebook Login", error.toString());
+                        Toast.makeText(getApplicationContext(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
                     }
                 });
     }
