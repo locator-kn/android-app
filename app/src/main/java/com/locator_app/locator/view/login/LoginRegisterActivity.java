@@ -95,7 +95,7 @@ public class LoginRegisterActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(LoginResult loginResult) {
                             UserController.getInstance()
-                                .facebooklogin(loginResult.getAccessToken().toString())
+                                .facebooklogin(loginResult.getAccessToken().getToken())
                                 .subscribe(
                                         (user) -> {
                                             Intent intent = new Intent(LoginRegisterActivity.this, HomeActivity.class);
