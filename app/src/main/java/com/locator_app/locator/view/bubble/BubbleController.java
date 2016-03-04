@@ -2,7 +2,9 @@ package com.locator_app.locator.view.bubble;
 
 import android.content.Intent;
 import android.graphics.Point;
+import android.os.Handler;
 import android.support.v4.content.ContextCompat;
+import android.view.View;
 
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
@@ -108,7 +110,6 @@ public class BubbleController {
                     final int priority = getPriority(locationResult, response.locations);
                     return makeLocationBubble(locationResult.location, priority);
                 })
-                .doOnNext(bubble -> bubble.view.setAlpha(0f))
                 .subscribe(
                         bubbles::add,
                         (err) -> {
@@ -131,11 +132,11 @@ public class BubbleController {
             .toBlocking()
             .forEach(
                     bubbleView -> {
-                        bubbleView.setAlpha(0f);
-                        YoYo.with(Techniques.BounceIn)
-                                .delay(random.nextInt(1500))
-                                .duration(500)
-                                .playOn(bubbleView);
+                        new Handler().postDelayed(() ->
+                                YoYo.with(Techniques.FadeInUp)
+                                    .duration(1500)
+                                    .playOn(bubbleView), 
+                                random.nextInt(1500));
                     });
     }
 
@@ -177,6 +178,7 @@ public class BubbleController {
 
     private Bubble makeLocationBubble(LocatorLocation location, int priority) {
         BubbleView view = new BubbleView(layout.getContext());
+        view.setAlpha(0);
         layout.addView(view);
         layout.setBubbleRadius(view, getRadiusByPriority(priority));
         view.setFillColor(color(R.color.innerRed));

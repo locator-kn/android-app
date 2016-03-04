@@ -7,14 +7,19 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.Interpolator;
 import android.view.animation.TranslateAnimation;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.github.tbouron.shakedetector.library.ShakeDetector;
 import com.locator_app.locator.R;
 import com.locator_app.locator.controller.DeviceController;
@@ -211,9 +216,9 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void onUserIsLoggedIn(User user) {
-        final int animationTime = 2500;
+        final int animationTime = 3500;
 
-        ahoiName.setText(String.format("%s!", user.name));
+        ahoiName.setText(String.format("%s!", user.name.split(" ")[0]));
 
         final Animation fadeInAnimation = new AlphaAnimation(0.4f, 1.0f);
         final Animation moveLeftAnimation = new TranslateAnimation(0, -200, 0, 0);
