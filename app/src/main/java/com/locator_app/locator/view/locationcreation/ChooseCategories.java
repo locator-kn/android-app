@@ -79,7 +79,7 @@ public class ChooseCategories extends Activity {
     void onHolidayClicked()   { toggleCategory(holiday, HOLIDAY_ID); }
 
     private final ArrayList<String> selectedCategories = new ArrayList<>();
-    private static final int MAX_CATEGORIES = 3;
+    private static final int MAX_CATEGORIES = 2;
 
     synchronized
     private void toggleCategory(View v, String category) {
