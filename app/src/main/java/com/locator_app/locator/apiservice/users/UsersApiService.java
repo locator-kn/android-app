@@ -31,6 +31,9 @@ public class UsersApiService {
         @POST(Api.version + "/users/login")
         Observable<Response<User>> login(@Body LoginRequest loginBodyRequest);
 
+        @POST(Api.version + "/users/facebooklogin")
+        Observable<Response<User>> facebooklogin(@Body FacebookLoginRequest facebookLoginRequest);
+
         @GET(Api.version + "/users/logout")
         Observable<Response<LogoutResponse>> logout();
 
@@ -59,6 +62,10 @@ public class UsersApiService {
 
     public Observable<User> login(LoginRequest loginRequest) {
         return GenericErrorHandler.wrapSingle(service.login(loginRequest));
+    }
+
+    public Observable<User> facebooklogin(String token) {
+        return GenericErrorHandler.wrapSingle(service.facebooklogin(new FacebookLoginRequest(token)));
     }
 
     public Observable<LogoutResponse> logout() {
