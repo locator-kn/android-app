@@ -150,13 +150,19 @@
                         android:layout_weight="1"
                         />
 
-                    <ImageView
-                        android:id="@+id/unFollowUser"
+                    <FrameLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/follow_user_small"
                         android:layout_weight="1"
-                        android:layout_margin="10dp" />
+                        android:id="@+id/unFollowUser">
+
+                        <ImageView
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/follow_user_small"
+                            android:layout_margin="10dp"
+                            android:id="@+id/unfollowImage" />
+                    </FrameLayout>
 
                 </LinearLayout>
 

@@ -56,7 +56,10 @@ public class ProfileActivity extends FragmentActivity {
     TextView countFollowers;
 
     @Bind(R.id.unFollowUser)
-    ImageView unFollowUser;
+    View unFollowUser;
+
+    @Bind(R.id.unfollowImage)
+    ImageView unfollowImage;
 
     List<String> followerIds = null;
 
@@ -97,7 +100,7 @@ public class ProfileActivity extends FragmentActivity {
     }
 
     private void replaceFollowButtonWithSettings() {
-        Glide.with(this).load(R.drawable.ic_setting_dark).asBitmap().into(unFollowUser);
+        Glide.with(this).load(R.drawable.ic_setting_dark).asBitmap().into(unfollowImage);
     }
 
     private void setupTabLayout() {

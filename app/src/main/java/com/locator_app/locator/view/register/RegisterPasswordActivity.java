@@ -10,7 +10,10 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.locator_app.locator.R;
+import com.locator_app.locator.apiservice.users.RegistrationRequest;
+import com.locator_app.locator.controller.UserController;
 import com.locator_app.locator.service.LocationCreationController;
+import com.locator_app.locator.view.home.HomeActivity;
 import com.locator_app.locator.view.locationcreation.ChooseCategories;
 import com.locator_app.locator.view.login.LoginCustomActionBar;
 import com.locator_app.locator.view.login.LoginRegisterStartActivity;
@@ -65,14 +68,37 @@ public class RegisterPasswordActivity extends AppCompatActivity {
         if (registerPassword.getText().length() >= 3 &&
                 registerPassword.getText().length() <= 30) {
 
+            HashMap<String, String> registerValues =
+                (HashMap<String, String>)getIntent().getSerializableExtra("registerValues");
             registerValues.put("password", registerPassword.getText().toString());
-            Intent intent = new Intent(this, RegisterProfilePictureActivity.class);
-            intent.putExtra("registerValues", registerValues);
-            startActivity(intent);
+            register(registerValues);
         } else {
             Toast.makeText(getApplicationContext(),
                     "Der Name sollte zwischen 3 und 30 Zeichen lang sein",
                     Toast.LENGTH_SHORT).show();
         }
+    }
+
+
+    private void register(HashMap<String, String> registerValues) {
+        final Context context = getApplicationContext();
+        UserController controller = UserController.getInstance();
+        RegistrationRequest request = new RegistrationRequest();
+        request.mail = registerValues.get("mail");
+        request.name = registerValues.get("name");
+        request.password = registerValues.get("password");
+        request.residence = registerValues.get("residence");
+        controller.register(request)
+                .subscribe(
+                        (loginResponse) -> {
+                            Intent intent = new Intent(this, RegisterProfilePictureActivity.class);
+                            startActivity(intent);
+                        },
+                        (error) -> {
+                            Toast.makeText(context,
+                                           "Da ist was schiefgelaufen, versuchs nochmal",
+                                           Toast.LENGTH_SHORT).show();
+                        }
+                );
     }
 }

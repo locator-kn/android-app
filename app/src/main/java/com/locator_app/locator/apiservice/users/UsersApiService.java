@@ -1,18 +1,26 @@
 package com.locator_app.locator.apiservice.users;
 
 
+import android.graphics.Bitmap;
+
 import com.locator_app.locator.apiservice.Api;
 import com.locator_app.locator.apiservice.ServiceFactory;
 import com.locator_app.locator.apiservice.errorhandling.GenericErrorHandler;
 import com.locator_app.locator.model.User;
+import com.locator_app.locator.util.BitmapHelper;
+import com.squareup.okhttp.MediaType;
+import com.squareup.okhttp.RequestBody;
 
+import java.io.File;
 import java.util.List;
 
 import retrofit.Response;
 import retrofit.http.Body;
 import retrofit.http.GET;
 import retrofit.http.Headers;
+import retrofit.http.Multipart;
 import retrofit.http.POST;
+import retrofit.http.Part;
 import retrofit.http.Path;
 import rx.Observable;
 
@@ -31,6 +39,10 @@ public class UsersApiService {
 
         @POST(Api.version + "/users/register")
         Observable<Response<User>> register(@Body RegistrationRequest registrationBodyRequest);
+
+        @Multipart
+        @POST(Api.version + "/users/register/image")
+        Observable<Response<Object>> setProfilePicture(@Part("file\"; filename=image.jpg") RequestBody file);
 
         @Headers("Cache-Control: max-age=10")
         @GET(Api.version + "/users/{userId}?count=locations,followers")
@@ -55,6 +67,13 @@ public class UsersApiService {
 
     public Observable<User> register(RegistrationRequest request) {
         return GenericErrorHandler.wrapSingle(service.register(request));
+    }
+
+    public Observable<Object> setProfilePicture(Bitmap image) {
+        File jpgFile = BitmapHelper.toJpgFile(image);
+        RequestBody requestBody = RequestBody.create(MediaType.parse("image/jpg"), jpgFile);
+        return GenericErrorHandler.wrapSingle(service.setProfilePicture(requestBody));
+
     }
 
     public Observable<User> getUser(String userId) {

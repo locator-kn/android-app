@@ -1,6 +1,9 @@
 package com.locator_app.locator.controller;
 
 
+import android.graphics.Bitmap;
+
+import com.locator_app.locator.apiservice.errorhandling.HttpError;
 import com.locator_app.locator.apiservice.users.LoginRequest;
 import com.locator_app.locator.apiservice.users.LogoutResponse;
 import com.locator_app.locator.apiservice.users.RegistrationRequest;
@@ -32,6 +35,12 @@ public class UserController {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
+    public Observable<Object> setProfilePicture(Bitmap image) {
+        return userService.setProfilePicture(image)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
     public Observable<User> login(LoginRequest loginRequest) {
         return userService.login(loginRequest)
                 .doOnNext(this::handleLogin)
@@ -41,9 +50,20 @@ public class UserController {
 
     public Observable<User> checkProtected() {
         return userService.checkProtected()
+                .doOnError(this::handleProtectedError)
                 .doOnNext(this::handleLogin)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    private void handleProtectedError(Throwable error) {
+        if (error instanceof HttpError &&
+                ((HttpError) error).getErrorCode() == HttpError.HttpErrorCode.badRequest) {
+            logout().subscribe(
+                    (res)->{},
+                    (err)-> {}
+            );
+        }
     }
 
     private void handleLogin(User user) {
