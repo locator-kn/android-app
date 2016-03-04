@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.locator_app.locator">
+    package="com.locator_app.locator" >
 
     <uses-sdk
         android:minSdkVersion="9"
@@ -11,11 +11,11 @@
     <permission
         android:name="com.locator_app.locator.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
+    <uses-permission android:name="com.locator_app.locator.permission.C2D_MESSAGE" />
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="com.locator_app.locator.permission.C2D_MESSAGE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -32,39 +32,48 @@
         android:label="@string/app_name"
         android:largeHeap="true"
         android:supportsRtl="true"
-        android:theme="@style/WelcomeActionBarTheme">
+        android:theme="@style/WelcomeActionBarTheme" >
         <receiver
             android:name="com.google.android.gms.gcm.GcmReceiver"
             android:exported="true"
-            android:permission="com.google.android.c2dm.permission.SEND">
+            android:permission="com.google.android.c2dm.permission.SEND" >
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-
                 <category android:name="com.locator_app.locator" />
             </intent-filter>
         </receiver>
-
         <service
-            android:name=".service.MyGcmListenerService"
-            android:exported="false">
+            android:name="com.locator_app.locator.service.MyGcmListenerService"
+            android:exported="false" >
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
             </intent-filter>
         </service>
         <service
-            android:name=".service.MyInstanceIDListenerService"
+            android:name="com.locator_app.locator.service.MyInstanceIDListenerService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.android.gms.iid.InstanceID" />
             </intent-filter>
         </service>
         <service
-            android:name=".service.RegistrationIntentService"
-            android:exported="false" />
+            android:name="com.locator_app.locator.service.RegistrationIntentService"
+            android:exported="false">
+        </service>
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
+        <meta-data
+            android:name="com.locator_app.locator.customglide.LocatorGlideModule"
+            android:value="GlideModule" />
 
         <activity
             android:name=".view.home.HomeActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -115,17 +124,6 @@
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_maps_key" />
-        <meta-data
-            android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/facebook_app_id" />
-        <meta-data
-            android:name="com.locator_app.locator.customglide.LocatorGlideModule"
-            android:value="GlideModule" />
-
         <activity
             android:name=".view.LocationDetailActivity"
             android:screenOrientation="portrait" />
@@ -142,8 +140,15 @@
         <activity
             android:name=".view.locationcreation.ChooseCategories"
             android:screenOrientation="portrait" />
-        <activity android:name=".view.profile.SettingsActivity" />
-        <activity android:name=".view.profile.ChangePasswordActivity"></activity>
+        <activity
+            android:name=".view.profile.SettingsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.impressions.TextImpressionActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.profile.ChangePasswordActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

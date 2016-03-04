@@ -1,6 +1,8 @@
 package com.locator_app.locator.controller;
 
 
+import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.provider.Settings;
@@ -10,6 +12,7 @@ import com.locator_app.locator.LocatorApplication;
 import com.locator_app.locator.apiservice.device.DeviceApiService;
 import com.locator_app.locator.apiservice.device.RegisterDeviceRequest;
 import com.locator_app.locator.apiservice.device.RegisterDeviceResponse;
+import com.locator_app.locator.service.RegistrationIntentService;
 
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -34,6 +37,11 @@ public class DeviceController {
                               "Could not register device: " + throwable.getMessage()))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public void registerDevice(Context context) {
+        Intent intent = new Intent(context, RegistrationIntentService.class);
+        context.startService(intent);
     }
 
     private void storePushToken(String token) {

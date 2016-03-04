@@ -17,12 +17,14 @@ import android.widget.Toast;
 
 import com.github.tbouron.shakedetector.library.ShakeDetector;
 import com.locator_app.locator.R;
+import com.locator_app.locator.controller.DeviceController;
 import com.locator_app.locator.service.LocationCreationController;
 import com.locator_app.locator.controller.MyController;
 import com.locator_app.locator.controller.SchoenHierController;
 import com.locator_app.locator.controller.UserController;
 import com.locator_app.locator.model.User;
 import com.locator_app.locator.service.GpsService;
+import com.locator_app.locator.service.RegistrationIntentService;
 import com.locator_app.locator.view.bubble.BubbleController;
 import com.locator_app.locator.view.bubble.BubbleView;
 import com.locator_app.locator.view.bubble.RelativeBubbleLayout;
@@ -76,6 +78,8 @@ public class HomeActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         if (isFirstTime) {
+            DeviceController.getInstance().registerDevice(this);
+
             welcomeScreen.setVisibility(View.VISIBLE);
 
             UserController.getInstance().checkProtected()
@@ -114,7 +118,8 @@ public class HomeActivity extends AppCompatActivity {
         MyController.getInstance().getBubbleScreen(lon, lat)
                 .subscribe(
                         bubbleController::onBubbleScreenUpdate,
-                        (err) -> { }
+                        (err) -> {
+                        }
                 );
     }
 
