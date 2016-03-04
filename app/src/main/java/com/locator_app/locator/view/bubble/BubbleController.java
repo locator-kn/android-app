@@ -13,12 +13,14 @@ import com.locator_app.locator.model.LocatorLocation;
 import com.locator_app.locator.model.LocatorObject;
 import com.locator_app.locator.view.LocationDetailActivity;
 import com.nineoldandroids.animation.Animator;
+import com.nineoldandroids.animation.AnimatorListenerAdapter;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
 import rx.Observable;
+import rx.functions.Action1;
 
 
 public class BubbleController {
@@ -31,7 +33,7 @@ public class BubbleController {
     }
 
     Random random = new Random();
-    private List<Bubble> bubbles = new LinkedList<>();
+    private final List<Bubble> bubbles = new LinkedList<>();
     private RelativeBubbleLayout layout;
     private Bubble schoenHierBubble;
     private Bubble userProfileBubble;
@@ -70,16 +72,35 @@ public class BubbleController {
 
         initUserProfileBubble();
         initSchoenHierBubble();
-
-        for (Bubble b: bubbles) {
-            layout.removeView(b.view);
-            b.view = null;
+        if (bubbles.isEmpty()) {
+            createNewBubblesFromBubbleScreenResponse(response);
+        } else {
+            for (Bubble b: bubbles) {
+                int delay = random.nextInt(1200);
+                YoYo.with(Techniques.TakingOff)
+                        .delay(delay)
+                        .duration(600)
+                        .withListener(new AnimatorListenerAdapter() {
+                            @Override
+                            public void onAnimationEnd(Animator animation) {
+                                super.onAnimationEnd(animation);
+                                synchronized (bubbles) {
+                                    layout.removeView(b.view);
+                                    b.view = null;
+                                    bubbles.remove(b);
+                                    if (bubbles.isEmpty()) {
+                                        createNewBubblesFromBubbleScreenResponse(response);
+                                    }
+                                }
+                            }
+                        })
+                        .playOn(b.view);
+            }
         }
-        bubbles.clear();
+    }
 
-        //hideBubblesWithAnimation();
-
-        int numberOfLocations = random.nextInt(4) + 10;
+    private void createNewBubblesFromBubbleScreenResponse(BubbleScreenResponse response) {
+        int numberOfLocations = Math.min(response.locations.size(), random.nextInt(4) + 10);
 
         Observable.from(response.locations)
                 .take(numberOfLocations)
@@ -87,9 +108,11 @@ public class BubbleController {
                     final int priority = getPriority(locationResult, response.locations);
                     return makeLocationBubble(locationResult.location, priority);
                 })
+                .doOnNext(bubble -> bubble.view.setAlpha(0f))
                 .subscribe(
                         bubbles::add,
-                        (err) -> {}
+                        (err) -> {
+                        }
                 );
 
         positionBubblesInDifferentQuadrants();
@@ -98,56 +121,22 @@ public class BubbleController {
         simulateGravity();
         simulateGravity();
 
-        //showBubblesWithAnimation();
+        showBubblesWithAnimation();
     }
 
     private void showBubblesWithAnimation() {
-        List<BubbleView> bubblesToAnimate = Observable.from(bubbles)
-                .filter(b -> b.priority != -1)
-                .map(b -> b.view)
-                .toList().toBlocking().single();
-        if (bubblesToAnimate.size() > 0) {
-            blobInBubble(bubblesToAnimate.get(0), bubblesToAnimate);
-        }
-    }
-
-    private void blobInBubble(BubbleView bubbleView, List<BubbleView> bubblesToAnimate) {
-        YoYo.with(Techniques.Landing)
-                .withListener(new Animator.AnimatorListener() {
-                    @Override
-                    public void onAnimationStart(Animator animation) {
-                    }
-
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        int currentIndex = bubblesToAnimate.indexOf(bubbleView);
-                        if (currentIndex == bubblesToAnimate.size() - 1) {
-                            return;
-                        }
-                        blobInBubble(bubblesToAnimate.get(currentIndex + 1), bubblesToAnimate);
-                    }
-
-                    @Override
-                    public void onAnimationCancel(Animator animation) {
-                    }
-
-                    @Override
-                    public void onAnimationRepeat(Animator animation) {
-                    }
-                })
-                .duration(1000)
-                .playOn(bubbleView);
-
-    }
-
-    private void hideBubblesWithAnimation() {
-        final int duration = 1000;
-        while (!bubbles.isEmpty()) {
-            BubbleView bubbleView = bubbles.remove(0).view;
-            YoYo.with(Techniques.TakingOff)
-                    .duration(duration)
-                    .playOn(bubbleView);
-        }
+        Observable.from(bubbles)
+            .filter(b -> b.priority != -1)
+            .map(b -> b.view)
+            .toBlocking()
+            .forEach(
+                    bubbleView -> {
+                        bubbleView.setAlpha(0f);
+                        YoYo.with(Techniques.BounceIn)
+                                .delay(random.nextInt(1500))
+                                .duration(500)
+                                .playOn(bubbleView);
+                    });
     }
 
     private void simulateGravity() {

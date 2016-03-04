@@ -216,7 +216,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void onUserIsLoggedIn(User user) {
-        final int animationTime = 4500;
+        final int animationTime = 2500;
 
         ahoiName.setText(String.format("%s!", user.name));
 
