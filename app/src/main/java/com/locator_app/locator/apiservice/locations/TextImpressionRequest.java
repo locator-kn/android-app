@@ -7,4 +7,8 @@ public class TextImpressionRequest {
 
     @SerializedName("data")
     public String data = "";
+
+    public TextImpressionRequest(String text) {
+        data = text;
+    }
 }

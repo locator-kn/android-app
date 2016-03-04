@@ -16,6 +16,7 @@ import java.io.File;
 import java.util.List;
 
 import retrofit.Response;
+import retrofit.http.Body;
 import retrofit.http.GET;
 import retrofit.http.Multipart;
 import retrofit.http.POST;
@@ -72,7 +73,7 @@ public class LocationsApiService {
 
         @POST(Api.version + "/locations/{locationId}/impressions/text")
         Observable<Response<Object>> postTextImpression(@Path("locationId") String locationId,
-                                                         TextImpressionRequest text);
+                                                        @Body TextImpressionRequest text);
     }
 
     LocationsApi service = ServiceFactory.createService(LocationsApi.class);
@@ -138,10 +139,7 @@ public class LocationsApiService {
     }
 
     public Observable<Object> createTextImpression(String locationId, String text) {
-        assert text != null;
-
-        TextImpressionRequest request = new TextImpressionRequest();
-        request.data = text;
+        TextImpressionRequest request = new TextImpressionRequest(text);
         return GenericErrorHandler.wrapSingle(service.postTextImpression(locationId, request));
     }
 }
