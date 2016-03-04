@@ -39,6 +39,7 @@ import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStates;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
+import com.google.android.gms.maps.GoogleMap;
 import com.locator_app.locator.LocatorApplication;
 import com.locator_app.locator.R;
 
@@ -79,6 +80,15 @@ public class GpsService implements GoogleApiClient.ConnectionCallbacks,
     final List<Observer> currentLocationSubscribers = new LinkedList<>();
     Observable<Location> currentLocationObservable = Observable.create(currentLocationSubscribers::add);
 
+    public void setMyLocationEnabled(GoogleMap googleMap) {
+        getCurLocation().subscribe(
+                (res) -> {
+                    googleMap.setMyLocationEnabled(true);
+                },
+                (err) -> {}
+                );
+    }
+
     public Observable<android.location.Location> getCurLocation() {
         googleApiClient.connect();
         return currentLocationObservable
@@ -88,13 +98,22 @@ public class GpsService implements GoogleApiClient.ConnectionCallbacks,
 
     private static final int PERMISSION_REQUEST_CODE = 69; // :D
 
+    private void onHasPermissions() {
+        checkForSettings();
+        notifyObserversWithLocation();
+    }
+
+    private void onGpsOn() {
+        notifyObserversWithLocation();
+    }
+
     private void notifyObserversWithLocation() {
         synchronized (currentLocationSubscribers) {
             Location location = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
             if (location == null) {
                 if (gpsShouldBeOn) {
                     new Handler().postDelayed(() -> {
-                        onConnected(null);
+                        checkForSettings();
                     }, 2000);
                 }
                 return;
@@ -108,6 +127,14 @@ public class GpsService implements GoogleApiClient.ConnectionCallbacks,
         }
     }
 
+    private void onNoPermissions() {
+        notifyObserversWithError();
+    }
+
+    private void onGpsOff() {
+        notifyObserversWithError();
+    }
+
     private void notifyObserversWithError() {
         synchronized (currentLocationSubscribers) {
             for (Observer sub : currentLocationSubscribers) {
@@ -118,21 +145,17 @@ public class GpsService implements GoogleApiClient.ConnectionCallbacks,
         }
     }
 
-    public void onRequestPermissionsResult(int requestCode,
-                                           String[] permissions,
-                                           int[] grantResults) {
-        if (requestCode == PERMISSION_REQUEST_CODE) {
-            if (grantResults.length > 0
-                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                onConnected(null);
-                return;
-            }
-            notifyObserversWithError();
-        }
-    }
-
     @Override
     public void onConnected(Bundle bundle) {
+        if (!checkForPermission()) {
+            return;
+        }
+        checkForSettings();
+
+        notifyObserversWithLocation();
+    }
+
+    private boolean checkForPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (activity.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
                     != PackageManager.PERMISSION_GRANTED
@@ -140,10 +163,26 @@ public class GpsService implements GoogleApiClient.ConnectionCallbacks,
                     != PackageManager.PERMISSION_GRANTED) {
                 activity.requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                         PERMISSION_REQUEST_CODE);
-                return;
+                return false;
             }
         }
+        return true;
+    }
 
+    public void onRequestPermissionsResult(int requestCode,
+                                           String[] permissions,
+                                           int[] grantResults) {
+        if (requestCode == PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                onHasPermissions();
+                return;
+            }
+            onNoPermissions();
+        }
+    }
+
+    private void checkForSettings() {
         PendingResult<LocationSettingsResult> result =
                 LocationServices.SettingsApi.checkLocationSettings(googleApiClient, settingsRequest);
         result.setResultCallback(settingsResult -> {
@@ -151,7 +190,7 @@ public class GpsService implements GoogleApiClient.ConnectionCallbacks,
             switch (status.getStatusCode()) {
                 case LocationSettingsStatusCodes.SUCCESS:
                     gpsShouldBeOn = true;
-                    notifyObserversWithLocation();
+                    onGpsOn();
                     break;
                 case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
                     gpsShouldBeOn = false;
@@ -168,12 +207,10 @@ public class GpsService implements GoogleApiClient.ConnectionCallbacks,
                     break;
                 case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
                     gpsShouldBeOn = false;
-                    notifyObserversWithError();
+                    onGpsOff();
                     break;
             }
         });
-
-        notifyObserversWithLocation();
     }
 
     private final static int REQUEST_CHECK_SETTINGS = 1000;
@@ -184,11 +221,11 @@ public class GpsService implements GoogleApiClient.ConnectionCallbacks,
             switch (resultCode) {
                 case Activity.RESULT_OK:
                     gpsShouldBeOn = true;
-                    notifyObserversWithLocation();
+                    onGpsOn();
                     break;
                 case Activity.RESULT_CANCELED:
                     gpsShouldBeOn = false;
-                    notifyObserversWithError();
+                    onGpsOff();
                     break;
                 default:
                     break;

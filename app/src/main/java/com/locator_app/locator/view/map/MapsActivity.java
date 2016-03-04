@@ -223,8 +223,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
             checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
-            googleMap.setMyLocationEnabled(true);
         }
+        gpsService.setMyLocationEnabled(googleMap);
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(locationPos, 15));
         mapsController.drawHeatMapAt(locationPos);
         mapsController.drawLocationsAt(locationPos);
