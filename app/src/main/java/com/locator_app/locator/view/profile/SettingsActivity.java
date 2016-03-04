@@ -7,6 +7,7 @@ import android.os.Bundle;
 import com.locator_app.locator.R;
 import com.locator_app.locator.controller.UserController;
 import com.locator_app.locator.view.login.LoginRegisterStartActivity;
+import com.locator_app.locator.view.register.RegisterProfilePictureActivity;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -21,6 +22,8 @@ public class SettingsActivity extends Activity {
 
     @OnClick(R.id.changeImage)
     public void onChangeImageClick() {
+        Intent intent = new Intent(this, RegisterProfilePictureActivity.class);
+        startActivity(intent);
 
     }
 
