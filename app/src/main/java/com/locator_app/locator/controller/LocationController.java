@@ -89,7 +89,7 @@ public class LocationController {
     public Observable<Object> createTextImpression(String locationId, String text) {
         return locationService.createTextImpression(locationId, text)
                 .subscribeOn(Schedulers.io())
-                .subscribeOn(AndroidSchedulers.mainThread());
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     private static LocationController instance;
