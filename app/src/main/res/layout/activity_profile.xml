@@ -67,7 +67,14 @@
                 </LinearLayout>
 
                 <!-- user profile picture -->
+                <!--
                 <de.hdodenhof.circleimageview.CircleImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="130dp"
+                    android:id="@+id/profileImageView"
+                    android:src="@drawable/profile" />
+                    -->
+                <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="130dp"
                     android:id="@+id/profileImageView"

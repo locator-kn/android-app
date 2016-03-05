@@ -29,6 +29,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
+import jp.wasabeef.glide.transformations.CropCircleTransformation;
 import rx.Observable;
 
 public class ProfileActivity extends FragmentActivity {
@@ -41,7 +42,8 @@ public class ProfileActivity extends FragmentActivity {
     TextView userName;
 
     @Bind(R.id.profileImageView)
-    CircleImageView profileImageBubbleView;
+    //CircleImageView profileImageBubbleView;
+    ImageView profileImageBubbleView;
 
     @Bind(R.id.tabLayout)
     TabLayout tabLayout;
@@ -74,6 +76,8 @@ public class ProfileActivity extends FragmentActivity {
 
         Glide.with(this).load(user.getProfilePictureNormalSize())
                 .centerCrop()
+                .error(R.drawable.profile_black)
+                .bitmapTransform(new CropCircleTransformation(this))
                 .into(profileImageBubbleView);
 
         hideActionBar();
