@@ -18,6 +18,7 @@ import com.locator_app.locator.model.LocatorLocation;
 import com.locator_app.locator.service.GpsService;
 import com.locator_app.locator.view.LoadingSpinner;
 import com.locator_app.locator.view.LocationDetailActivity;
+import com.locator_app.locator.view.UiError;
 import com.locator_app.locator.view.home.HomeActivity;
 import com.locator_app.locator.view.fragments.SearchResultsFragment;
 
@@ -74,7 +75,6 @@ public class LocationSuggestions extends FragmentActivity implements SearchResul
                                     location.getLatitude());
                         },
                         (err) -> {
-                            Toast.makeText(getApplicationContext(), err.getMessage(), Toast.LENGTH_SHORT).show();
                             LocationSuggestions.this.finish();
                         }
                 );
@@ -131,9 +131,9 @@ public class LocationSuggestions extends FragmentActivity implements SearchResul
                             (err) -> {
                                 uploadLoadingSpinner.hideSpinner();
                                 cancelButton.setVisibility(View.VISIBLE);
-                                Toast.makeText(LocatorApplication.getAppContext(),
-                                        "Deine Impression konnte leider nicht hochgeladen werden :-(",
-                                        Toast.LENGTH_SHORT).show();
+                                UiError.showError(LocatorApplication.getAppContext(),
+                                        err,
+                                        "Deine Impression konnte leider nicht hochgeladen werden :-(");
                             }
                     );
         }

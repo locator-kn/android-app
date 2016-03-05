@@ -5,6 +5,7 @@ import android.graphics.Point;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
+import android.widget.Toast;
 
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
@@ -14,6 +15,7 @@ import com.locator_app.locator.controller.LocationController;
 import com.locator_app.locator.model.LocatorLocation;
 import com.locator_app.locator.model.LocatorObject;
 import com.locator_app.locator.view.LocationDetailActivity;
+import com.locator_app.locator.view.UiError;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorListenerAdapter;
 
@@ -135,7 +137,7 @@ public class BubbleController {
                         new Handler().postDelayed(() ->
                                 YoYo.with(Techniques.FadeInUp)
                                     .duration(1500)
-                                    .playOn(bubbleView), 
+                                    .playOn(bubbleView),
                                 random.nextInt(1500));
                     });
     }
@@ -209,7 +211,7 @@ public class BubbleController {
                             layout.getContext().startActivity(intent);
                         },
                         (err) -> {
-
+                            UiError.showError(layout.getContext(), err, "Die Location konnte nicht geladen werden :(");
                         }
                 );
     }

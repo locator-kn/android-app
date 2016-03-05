@@ -13,20 +13,24 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.tbouron.shakedetector.library.ShakeDetector;
 import com.locator_app.locator.R;
 import com.locator_app.locator.controller.DeviceController;
+import com.locator_app.locator.view.UiError;
 import com.locator_app.locator.view.locationcreation.LocationCreationController;
 import com.locator_app.locator.controller.MyController;
 import com.locator_app.locator.controller.SchoenHierController;
 import com.locator_app.locator.controller.UserController;
 import com.locator_app.locator.model.User;
 import com.locator_app.locator.service.GpsService;
+import com.locator_app.locator.view.OnSwipeTouchListener;
 import com.locator_app.locator.view.bubble.BubbleController;
 import com.locator_app.locator.view.bubble.BubbleView;
 import com.locator_app.locator.view.bubble.RelativeBubbleLayout;
 import com.locator_app.locator.view.login.LoginRegisterStartActivity;
+import com.locator_app.locator.view.map.MapsActivity;
 import com.locator_app.locator.view.profile.ProfileActivity;
 
 import butterknife.Bind;
@@ -49,19 +53,10 @@ public class HomeActivity extends AppCompatActivity {
     BubbleView userProfileBubble;
 
     @Bind(R.id.welcomeScreen)
-    View welcomeScreen;
+    ImageView welcomeScreen;
 
-    @Bind(R.id.ahoiName)
-    TextView ahoiName;
-
-    @Bind(R.id.ahoi)
-    TextView ahoi;
-
-    @Bind(R.id.welcomeBack)
-    TextView welcomeBack;
-
-    @Bind(R.id.locatorLogo)
-    ImageView locatorLogo;
+    @Bind(R.id.bubbleScreen)
+    View bubbleScreen;
 
     BubbleController bubbleController;
 
@@ -87,6 +82,14 @@ public class HomeActivity extends AppCompatActivity {
                     );
             isFirstTime = false;
         }
+
+        bubbleScreen.setOnTouchListener(new OnSwipeTouchListener(this) {
+            public void onSwipeLeft() {
+                Intent intent = new Intent(HomeActivity.this, MapsActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.push_right_in, R.anim.push_left_out);
+            }
+        });
 
         bubbleController = new BubbleController(bubbleLayout);
         locationCreationController = new LocationCreationController(this);
@@ -117,6 +120,7 @@ public class HomeActivity extends AppCompatActivity {
                 .subscribe(
                         bubbleController::onBubbleScreenUpdate,
                         (err) -> {
+                            UiError.showError(this, err, "Der Bubblescreen konnte nicht geladen werden :(");
                         }
                 );
     }
@@ -174,8 +178,11 @@ public class HomeActivity extends AppCompatActivity {
     void onSchoenHierBubbleClick() {
         SchoenHierController.getInstance().markCurPosAsSchoenHier(gpsService)
                 .subscribe(
-                        (response) -> {},
-                        (error) -> {}
+                        (response) -> {
+                        },
+                        (error) -> {
+                            UiError.showError(this, error);
+                        }
                 );
     }
 
@@ -209,28 +216,11 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void onUserIsLoggedIn(User user) {
-        final int animationTime = 3500;
-
-        ahoiName.setText(String.format("%s!", user.name.split(" ")[0]));
-
-        final Animation fadeInAnimation = new AlphaAnimation(0.4f, 1.0f);
-        final Animation moveLeftAnimation = new TranslateAnimation(0, -200, 0, 0);
-        final Animation moveRightAnimation = new TranslateAnimation(0, -80, 0, 0);
-
-        moveRightAnimation.setDuration(animationTime);
-        moveLeftAnimation.setDuration(animationTime);
-        fadeInAnimation.setDuration(animationTime);
-
-        ahoi.startAnimation(fadeInAnimation);
-        ahoiName.startAnimation(fadeInAnimation);
-        welcomeBack.startAnimation(moveRightAnimation);
-        locatorLogo.startAnimation(moveLeftAnimation);
-
-        new Handler().postDelayed(() -> {
-            Animation animationFadeOut = AnimationUtils.loadAnimation(this, R.anim.fadeout);
-            welcomeScreen.startAnimation(animationFadeOut);
-            welcomeScreen.setVisibility(View.INVISIBLE);
-        }, 2000);
+//        Animation animationFadeOut = AnimationUtils.loadAnimation(this, R.anim.fadeout);
+//        welcomeScreen.startAnimation(animationFadeOut);
+        new Handler().postDelayed(
+                () -> welcomeScreen.setVisibility(View.INVISIBLE),
+                1000);
     }
 
     private void jumpToLoginRegisterActivity() {

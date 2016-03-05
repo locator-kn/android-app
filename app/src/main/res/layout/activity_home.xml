@@ -12,7 +12,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/homescreen_background"
-        tools:context="com.locator_app.locator.view.home.HomeFragment">
+        tools:context="com.locator_app.locator.view.home.HomeFragment"
+        android:id="@+id/bubbleScreen">
 
         <LinearLayout
             android:id="@+id/header"
@@ -65,104 +66,11 @@
 
     </LinearLayout>
 
-    <!-- Welcome screen -->
-    <LinearLayout
+    <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="com.locator_app.locator.view.WelcomeActivity"
         android:id="@+id/welcomeScreen"
-        android:background="@color/colorWelcome"
-        android:visibility="invisible"
-        android:orientation="vertical">
-
-        <Space
-            android:layout_width="fill_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
-
-        <RelativeLayout
-            android:layout_width="fill_parent"
-            android:layout_height="0dp"
-            android:layout_weight="3"
-            android:id="@+id/mainLayout">
-
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <Space
-                    android:layout_width="100px"
-                    android:layout_height="20px" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/locatorLogo"
-                    android:src="@drawable/locator_logo"
-                    android:alpha="0.3" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:gravity="center"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:orientation="vertical"
-                android:padding="20dp">
-
-                <RelativeLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:id="@+id/ahoi"
-                        android:text="Ahoi "
-                        android:textColor="@color/colorWhite"
-                        android:gravity="center_horizontal"
-                        android:layout_weight="1"
-                        android:layout_alignParentTop="true"
-                        android:layout_centerHorizontal="true"
-                        android:alpha="0.4" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:id="@+id/ahoiName"
-                        android:textColor="@color/colorWhite"
-                        android:gravity="center_horizontal"
-                        android:layout_weight="1"
-                        android:layout_alignParentTop="true"
-                        android:layout_toRightOf="@+id/ahoi"
-                        android:layout_toEndOf="@+id/ahoi"
-                        android:alpha="0.4" />
-
-                </RelativeLayout>
-
-                <TextView
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:text="Welcome back"
-                    android:id="@+id/welcomeBack"
-                    android:textColor="@color/colorWhite"
-                    android:layout_centerVertical="true"
-                    android:layout_centerHorizontal="true"
-                    android:gravity="center_horizontal" />
-
-            </LinearLayout>
-
-        </RelativeLayout>
-
-        <Space
-            android:layout_width="fill_parent"
-            android:layout_height="0dp"
-            android:layout_weight="3" />
-
-
-    </LinearLayout>
+        android:src="@drawable/splashscreen_small"
+        android:scaleType="centerCrop"
+        android:visibility="invisible" />
 </RelativeLayout>

@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.locator_app.locator.R;
 import com.locator_app.locator.controller.LocationController;
 import com.locator_app.locator.view.LocationDetailActivity;
+import com.locator_app.locator.view.UiError;
 import com.locator_app.locator.view.home.HomeActivity;
 import com.locator_app.locator.view.LoadingSpinner;
 
@@ -145,8 +146,7 @@ public class ChooseCategories extends Activity {
                             loadingSpinner.hideSpinner();
                             cancelButton.setVisibility(View.VISIBLE);
                             loading = false;
-                            Toast.makeText(ChooseCategories.this, "Could not create location",
-                                    Toast.LENGTH_SHORT).show();
+                            UiError.showError(this, error, "Could not create location");
                         }
                 );
             }

@@ -1,5 +1,6 @@
 package com.locator_app.locator.view.impressions;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.view.View;
 import android.widget.ImageView;
@@ -21,10 +22,13 @@ class LocationInfoViewHolder extends ImpressionViewHolder {
     TextView city;
     TextView favorites;
     ImageView goToHeatmap;
+    Activity activity;
 
-    public LocationInfoViewHolder(ImpressionRecyclerViewAdapter impressionRecyclerViewAdapter, View itemView) {
+    public LocationInfoViewHolder(ImpressionRecyclerViewAdapter impressionRecyclerViewAdapter,
+                                  View itemView, Activity activity) {
         super(itemView);
         this.impressionRecyclerViewAdapter = impressionRecyclerViewAdapter;
+        this.activity = activity;
         locatorName = (TextView) itemView.findViewById(R.id.locatorName);
         UserController.getInstance().getUser(impressionRecyclerViewAdapter.location.userId)
                 .subscribe(
@@ -44,10 +48,11 @@ class LocationInfoViewHolder extends ImpressionViewHolder {
         goToHeatmap = (ImageView) itemView.findViewById(R.id.heatmap);
 
         goToHeatmap.setOnClickListener(v -> {
-            Intent intent = new Intent(goToHeatmap.getContext(), MapsActivity.class);
+            Intent intent = new Intent(activity, MapsActivity.class);
             intent.putExtra("lon", impressionRecyclerViewAdapter.location.geoTag.getLongitude());
             intent.putExtra("lat", impressionRecyclerViewAdapter.location.geoTag.getLatitude());
-            goToHeatmap.getContext().startActivity(intent);
+            activity.startActivity(intent);
+            activity.overridePendingTransition(R.anim.push_right_in, R.anim.push_left_out);
         });
     }
 

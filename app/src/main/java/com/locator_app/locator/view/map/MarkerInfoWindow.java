@@ -33,7 +33,6 @@ public class MarkerInfoWindow extends Fragment {
 
     @Bind(R.id.nameTextView)
     TextView nameTextView;
-    private String nameText = "Gott";
     private String currentUserId = "";
 
     @Bind(R.id.followersTextView)

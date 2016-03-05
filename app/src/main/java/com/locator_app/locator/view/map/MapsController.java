@@ -21,11 +21,13 @@ import com.google.android.gms.maps.model.VisibleRegion;
 import com.google.maps.android.clustering.ClusterManager;
 import com.locator_app.locator.LocatorApplication;
 import com.locator_app.locator.R;
+import com.locator_app.locator.apiservice.schoenhier.SchoenHiersResponse;
 import com.locator_app.locator.controller.LocationController;
 import com.locator_app.locator.controller.SchoenHierController;
 import com.locator_app.locator.model.LocatorLocation;
 import com.locator_app.locator.util.DistanceCalculator;
 import com.locator_app.locator.view.LocationDetailActivity;
+import com.locator_app.locator.view.UiError;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -35,6 +37,7 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
 
+import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -173,26 +176,33 @@ public class MapsController {
         googleMap.setInfoWindowAdapter(clusterManager.getMarkerManager());
     }
 
-    public void drawLocationsAt(LatLng position) {
+    public void redrawLocationsAt(LatLng position) {
+        drawLocationsAt(position).subscribe(
+                (res) -> {
+                },
+                (err) -> {
+                }
+        );
+    }
+
+    public Observable<LocatorLocation> drawLocationsAt(LatLng position) {
         if (!mapsActivity.isLocationsEnabled()) {
-            return;
+            return Observable.error(new Exception());
         }
 
         LatLngBounds newLoadableRect = getNewLoadableRect(locationsLoadedRect);
         if (newLoadableRect == null) {
-            return;
+            return Observable.error(new Exception());
         }
         locationsLoadedRect = newLoadableRect;
 
-        LocationController.getInstance().getLocationsNearby(position.longitude, position.latitude,
-                                                            loadableRadius(locationsLoadedRect), 100)
-                .subscribe(
-                        newLocations::add,
-                        (error) -> Toast.makeText(LocatorApplication.getAppContext(),
-                                "Fehler beim Laden von Locations",
-                                Toast.LENGTH_SHORT),
-                        this::drawNewLocations
-                );
+        return LocationController.getInstance().getLocationsNearby(position.longitude, position.latitude,
+                loadableRadius(locationsLoadedRect), 100)
+                .doOnError((error) -> UiError.showError(mapsActivity,
+                        error,
+                        "Locations nicht bekommen"))
+                .doOnNext(newLocations::add)
+                .doOnCompleted(this::drawNewLocations);
     }
 
     public void drawNewLocations() {
@@ -238,33 +248,40 @@ public class MapsController {
         redrawHeatpoints();
     }
 
-    public void drawHeatMapAt(LatLng pos) {
+    public void redrawHeatMapAt(LatLng pos) {
+        drawHeatMapAt(pos).subscribe(
+                (res) -> {
+                },
+                (err) -> {
+                }
+        );
+    }
+
+    public Observable<SchoenHiersResponse> drawHeatMapAt(LatLng pos) {
         if (!mapsActivity.isHeatmapEnabled()) {
-            return;
+            return Observable.error(new Exception());
         }
         LatLngBounds newLoadableRect = getNewLoadableRect(heatmapLoadedRect);
         if (newLoadableRect == null) {
-            return;
+            return Observable.error(new Exception());
         }
         heatmapLoadedRect = newLoadableRect;
 
-        SchoenHierController.getInstance().schoenHiersNearby(pos.longitude, pos.latitude,
-                                                             loadableRadius(heatmapLoadedRect), 1000)
-                .subscribe(
-                        (item) -> {
-                            double shLon = item.schoenHier.geoTag.getLongitude();
-                            double shLat = item.schoenHier.geoTag.getLatitude();
-                            LatLng shPoint = new LatLng(shLat, shLon);
+        return SchoenHierController.getInstance().schoenHiersNearby(pos.longitude, pos.latitude,
+                loadableRadius(heatmapLoadedRect), 1000)
+                .doOnError((error) -> UiError.showError(mapsActivity,
+                        error,
+                        "Schön hier nicht bekommen"))
+                .doOnNext((item) -> {
+                    double shLon = item.schoenHier.geoTag.getLongitude();
+                    double shLat = item.schoenHier.geoTag.getLatitude();
+                    LatLng shPoint = new LatLng(shLat, shLon);
 
-                            if (!heatPoints.contains(shPoint)) {
-                                heatPoints.add(shPoint);
-                            }
-                        },
-                        (error) -> Toast.makeText(LocatorApplication.getAppContext(),
-                                "Schön hier nicht bekommen",
-                                Toast.LENGTH_SHORT),
-                        () -> mapsActivity.drawHeatMap(heatPoints)
-                );
+                    if (!heatPoints.contains(shPoint)) {
+                        heatPoints.add(shPoint);
+                    }
+                })
+                .doOnCompleted(() -> mapsActivity.drawHeatMap(heatPoints));
     }
 
     private LatLngBounds locationsLoadedRect = null;

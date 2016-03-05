@@ -1,5 +1,6 @@
 package com.locator_app.locator.view.impressions;
 
+import android.app.Activity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,12 +22,17 @@ public class ImpressionRecyclerViewAdapter
     final int createNewImpressionViewType = 200;
     final int numberOfAdditionalInfoTypes = 2;
 
+    Activity activity;
     List<AbstractImpression> impressions = new LinkedList<>();
     public LocatorLocation location = null;
     LocationInfoViewHolder locationInfo = null;
     CreateImpressionViewHolder createImpressionViewHolder = null;
     final List<AbstractImpression.ImpressionType> supportedImpressionTypes =
             Arrays.asList(ImpressionType.IMAGE, ImpressionType.VIDEO, ImpressionType.TEXT);
+
+    public ImpressionRecyclerViewAdapter(Activity activity) {
+        this.activity = activity;
+    }
 
     public void setLocation(LocatorLocation location) {
         this.location = location;
@@ -59,7 +65,7 @@ public class ImpressionRecyclerViewAdapter
             if (locationInfo == null) {
                 final int cardId = R.layout.card_location_information;
                 View v = LayoutInflater.from(parent.getContext()).inflate(cardId, parent, false);
-                locationInfo = new LocationInfoViewHolder(this, v);
+                locationInfo = new LocationInfoViewHolder(this, v, activity);
             }
             return locationInfo;
         } else {

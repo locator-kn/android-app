@@ -10,8 +10,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.locator_app.locator.R;
+import com.locator_app.locator.apiservice.errorhandling.HttpError;
 import com.locator_app.locator.controller.UserController;
 import com.locator_app.locator.apiservice.users.LoginRequest;
+import com.locator_app.locator.view.UiError;
 import com.locator_app.locator.view.home.HomeActivity;
 
 import butterknife.Bind;
@@ -67,8 +69,12 @@ public class LoginPasswordActivity extends AppCompatActivity {
                             startActivity(intent);
                         },
                         (error) -> {
-                            Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
-                            LoginPasswordActivity.this.finish();
+                            if (error instanceof HttpError &&
+                                ((HttpError) error).getErrorCode() == HttpError.HttpErrorCode.unauthorized) {
+                                UiError.showError(this, error, "E-Mail oder Passwort falsch");
+                                LoginPasswordActivity.this.finish();
+                            }
+                            UiError.showError(this, error, "Da ist was komisches passiert");
                         });
     }
 }

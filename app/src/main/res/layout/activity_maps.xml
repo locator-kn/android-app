@@ -40,7 +40,7 @@
         android:layout_width="45dp"
         android:layout_height="45dp"
         android:id="@+id/toggleLocationsButton"
-        android:src="@drawable/map_location"
+        android:src="@drawable/map_location_inverted"
         android:antialias="true"
         android:visibility="invisible"
         android:layout_marginRight="33dp"
@@ -54,11 +54,25 @@
         android:layout_width="45dp"
         android:layout_height="45dp"
         android:id="@+id/toggleHeatmapButton"
-        android:src="@drawable/map_heatmap"
+        android:src="@drawable/map_heatmap_inverted"
         android:antialias="true"
         android:visibility="invisible"
         android:layout_above="@+id/viewOptionsButton"
         android:layout_alignLeft="@+id/toggleLocationsButton"
         android:layout_alignStart="@+id/toggleLocationsButton" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorWelcome"
+        android:id="@+id/loadingScreen">
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:id="@+id/loadingSpinner"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true" />
+    </RelativeLayout>
 
 </RelativeLayout>

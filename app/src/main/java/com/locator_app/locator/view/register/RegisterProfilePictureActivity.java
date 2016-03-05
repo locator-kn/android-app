@@ -19,6 +19,7 @@ import com.locator_app.locator.controller.UserController;
 import com.locator_app.locator.service.CameraService;
 import com.locator_app.locator.util.BitmapHelper;
 import com.locator_app.locator.view.LoadingSpinner;
+import com.locator_app.locator.view.UiError;
 import com.locator_app.locator.view.home.HomeActivity;
 import com.locator_app.locator.view.login.LoginCustomActionBar;
 
@@ -146,7 +147,7 @@ public class RegisterProfilePictureActivity extends AppCompatActivity {
                         },
                         (error) -> {
                             loadingSpinner.hideSpinner();
-                            Toast.makeText(this, "Da ist was schief gelaufen", Toast.LENGTH_SHORT).show();
+                            UiError.showError(this, error, "Da ist was schief gelaufen");
                         }
                 );
     }

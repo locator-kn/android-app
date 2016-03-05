@@ -2,6 +2,7 @@ package com.locator_app.locator.view;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.UiThread;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -69,14 +70,14 @@ public class LocationDetailActivity extends FragmentActivity implements Impressi
         imageFragmentAdapter = new ImageFragmentAdapter(getSupportFragmentManager());
         viewPager.setAdapter(imageFragmentAdapter);
 
-        impressionAdapter = new ImpressionRecyclerViewAdapter();
+        impressionAdapter = new ImpressionRecyclerViewAdapter(this);
         impressionAdapter.setLocation(location);
 
         impressionsRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         impressionsRecyclerView.addItemDecoration(new DividerItemDecoration(getApplicationContext(), null));
         impressionsRecyclerView.setAdapter(impressionAdapter);
 
-         gpsService = new GpsService(this);
+        gpsService = new GpsService(this);
 
         loadImpressions();
         setupLocationInformation();
@@ -131,8 +132,7 @@ public class LocationDetailActivity extends FragmentActivity implements Impressi
     }
 
     private void handleUnFavorError(Throwable err) {
-        Toast.makeText(getApplicationContext(), "uuups, das hat leider nicht geklappt :-/",
-                Toast.LENGTH_SHORT).show();
+        UiError.showError(this, err, "uuups, das hat leider nicht geklappt :-/");
     }
 
     private void loadImpressions() {
@@ -141,8 +141,7 @@ public class LocationDetailActivity extends FragmentActivity implements Impressi
                 .subscribe(
                         this::handleImpressions,
                         (error) -> {
-                            Toast.makeText(getApplicationContext(), "could not load impressions :-(",
-                                    Toast.LENGTH_SHORT).show();
+                            UiError.showError(this, error, "could not load impressions :-(");
                         }
                 );
     }
@@ -165,6 +164,7 @@ public class LocationDetailActivity extends FragmentActivity implements Impressi
                 .subscribe(
                         imageFragmentAdapter::setImages,
                         (err) -> {
+                            UiError.showError(this, err);
                         }
                 );
     }
@@ -229,6 +229,6 @@ public class LocationDetailActivity extends FragmentActivity implements Impressi
 
     @Override
     public void onImpressionCreationFailed(AbstractImpression.ImpressionType type, Throwable error) {
-        Toast.makeText(this, error.toString(), Toast.LENGTH_SHORT).show();
+        UiError.showError(this, error, "Impression konnte nich hinzugefügt werden");
     }
 }
