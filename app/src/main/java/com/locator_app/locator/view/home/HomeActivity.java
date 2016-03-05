@@ -191,7 +191,7 @@ public class HomeActivity extends AppCompatActivity {
         if (UserController.getInstance().loggedIn()) {
             locationCreationController.startLocationCreation();
         } else {
-            Toast.makeText(this, "Melde dich an", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Whooop whooop! Erst anmelden!", Toast.LENGTH_SHORT).show();
         }
         return true;
     }
