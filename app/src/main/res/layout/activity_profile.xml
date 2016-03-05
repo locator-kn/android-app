@@ -67,7 +67,14 @@
                 </LinearLayout>
 
                 <!-- user profile picture -->
+                <!--
                 <de.hdodenhof.circleimageview.CircleImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="130dp"
+                    android:id="@+id/profileImageView"
+                    android:src="@drawable/profile" />
+                    -->
+                <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="130dp"
                     android:id="@+id/profileImageView"
@@ -119,12 +126,12 @@
                                 android:src="@drawable/location_icon_small"
                                 android:adjustViewBounds="true" />
 
-                            <ImageView
+                            <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:id="@+id/imageView2"
-                                android:src="@drawable/dot_icon"
-                                android:adjustViewBounds="true" />
+                                android:textAppearance="?android:attr/textAppearanceSmall"
+                                android:text=" · "
+                                android:id="@+id/dot" />
 
                             <TextView
                                 android:layout_width="wrap_content"
