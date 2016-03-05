@@ -21,11 +21,8 @@ public class User implements LocatorObject, Serializable {
     @SerializedName("name")
     public String name = "";
 
-    @SerializedName("picture")
-    public String picture = "";
-
-    @SerializedName("thumb")
-    public String thumb = "";
+    @SerializedName("images")
+    private Images images = new Images();
 
     @SerializedName("following")
     public List<String> following = new LinkedList<>();
@@ -38,7 +35,11 @@ public class User implements LocatorObject, Serializable {
 
     @Override
     public String thumbnailUri() {
-        return Api.serverUrl + picture;
+        return images.getSmall();
+    }
+
+    public String getProfilePictureNormalSize() {
+        return images.getNormal();
     }
 
     @Override

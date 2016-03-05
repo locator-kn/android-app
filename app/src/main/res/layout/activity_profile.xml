@@ -67,13 +67,11 @@
                 </LinearLayout>
 
                 <!-- user profile picture -->
-                <com.locator_app.locator.view.bubble.BubbleView
-                    android:id="@+id/profileImageBubbleView"
+                <de.hdodenhof.circleimageview.CircleImageView
                     android:layout_width="match_parent"
                     android:layout_height="130dp"
-                    custom:fillColor="@android:color/darker_gray"
-                    custom:strokeWidth="0"
-                    />
+                    android:id="@+id/profileImageView"
+                    android:src="@drawable/profile" />
 
                 <!-- residence & more -->
                 <LinearLayout
@@ -175,7 +173,7 @@
                 app:tabTextAppearance="@android:style/TextAppearance.Widget.TabWidget"
                 app:tabTextColor="@android:color/white"
                 app:tabSelectedTextColor="@android:color/white"
-                app:layout_scrollFlags="scroll|snap|enterAlways"
+                app:layout_scrollFlags="scroll|enterAlways"
                 android:background="@drawable/shape_gradient_bottom_up"/>
 
         </android.support.design.widget.AppBarLayout>
