@@ -94,6 +94,12 @@ public class UserController {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
+    public Observable<User> unfollowUser(String userId) {
+        return userService.unfollowUser(userId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
     public Observable<User> getUser(String userId) {
         return userService.getUser(userId)
                 .subscribeOn(Schedulers.io())
