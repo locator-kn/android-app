@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.locator_app.locator.R;
 import com.locator_app.locator.apiservice.users.RegistrationRequest;
 import com.locator_app.locator.controller.UserController;
+import com.locator_app.locator.view.UiError;
 import com.locator_app.locator.view.login.LoginCustomActionBar;
 import com.locator_app.locator.view.login.LoginRegisterStartActivity;
 
@@ -91,9 +92,9 @@ public class RegisterPasswordActivity extends AppCompatActivity {
                             startActivity(intent);
                         },
                         (error) -> {
-                            Toast.makeText(context,
-                                           "Da ist was schiefgelaufen, versuchs nochmal",
-                                           Toast.LENGTH_SHORT).show();
+                            UiError.showError(context,
+                                    error,
+                                    "Da ist was schiefgelaufen, versuchs nochmal");
                         }
                 );
     }

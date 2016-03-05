@@ -9,6 +9,7 @@ import android.widget.Toast;
 import com.locator_app.locator.R;
 import com.locator_app.locator.apiservice.errorhandling.HttpError;
 import com.locator_app.locator.controller.MyController;
+import com.locator_app.locator.view.UiError;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -59,9 +60,9 @@ public class ChangePasswordActivity extends Activity {
                         (error) -> {
                             if (error instanceof HttpError &&
                                 ((HttpError) error).getErrorCode() == HttpError.HttpErrorCode.unauthorized) {
-                                Toast.makeText(this, "Das alte Passwort war falsch", Toast.LENGTH_SHORT).show();
+                                UiError.showError(this, error, "Das alte Passwort war falsch");
                             } else {
-                                Toast.makeText(this, "Da war irgend ein Problem, versuchs nochmal besser", Toast.LENGTH_LONG).show();
+                                UiError.showError(this, error, "Da war irgend ein Problem");
                             }
                         });
     }

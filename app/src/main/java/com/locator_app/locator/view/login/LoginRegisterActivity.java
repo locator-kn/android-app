@@ -19,6 +19,7 @@ import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.locator_app.locator.R;
 import com.locator_app.locator.controller.UserController;
+import com.locator_app.locator.view.UiError;
 import com.locator_app.locator.view.home.HomeActivity;
 import com.locator_app.locator.view.register.RegisterNameActivity;
 
@@ -102,9 +103,9 @@ public class LoginRegisterActivity extends AppCompatActivity {
                                             startActivity(intent);
                                         },
                                         (error) -> {
-                                            Toast.makeText(LoginRegisterActivity.this,
-                                                    R.string.something_went_wrong,
-                                                    Toast.LENGTH_SHORT).show();
+                                            UiError.showError(LoginRegisterActivity.this,
+                                                    error,
+                                                    "Da ist was schiefgelaufen");
                                         }
                                 );
                     }
@@ -116,7 +117,9 @@ public class LoginRegisterActivity extends AppCompatActivity {
 
                     @Override
                     public void onError(FacebookException error) {
-                        Toast.makeText(getApplicationContext(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
+                        UiError.showError(LoginRegisterActivity.this,
+                                error,
+                                "Da ist was schiefgelaufen");
                     }
                 });
     }

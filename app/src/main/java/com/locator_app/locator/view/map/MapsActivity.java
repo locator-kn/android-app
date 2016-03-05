@@ -26,6 +26,7 @@ import com.google.maps.android.heatmaps.HeatmapTileProvider;
 import com.locator_app.locator.R;
 import com.locator_app.locator.controller.SchoenHierController;
 import com.locator_app.locator.service.GpsService;
+import com.locator_app.locator.view.UiError;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorListenerAdapter;
 
@@ -135,6 +136,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .subscribe(
                         mapsController::addHeatpointAndRedraw,
                         (error) -> {
+                            UiError.showError(this, error);
                         }
                 );
     }

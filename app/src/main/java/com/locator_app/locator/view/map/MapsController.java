@@ -21,13 +21,13 @@ import com.google.android.gms.maps.model.VisibleRegion;
 import com.google.maps.android.clustering.ClusterManager;
 import com.locator_app.locator.LocatorApplication;
 import com.locator_app.locator.R;
-import com.locator_app.locator.apiservice.schoenhier.SchoenHiersNearbyResponse;
 import com.locator_app.locator.apiservice.schoenhier.SchoenHiersResponse;
 import com.locator_app.locator.controller.LocationController;
 import com.locator_app.locator.controller.SchoenHierController;
 import com.locator_app.locator.model.LocatorLocation;
 import com.locator_app.locator.util.DistanceCalculator;
 import com.locator_app.locator.view.LocationDetailActivity;
+import com.locator_app.locator.view.UiError;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -198,9 +198,9 @@ public class MapsController {
 
         return LocationController.getInstance().getLocationsNearby(position.longitude, position.latitude,
                 loadableRadius(locationsLoadedRect), 100)
-                .doOnError((error) -> Toast.makeText(LocatorApplication.getAppContext(),
-                        "Fehler beim Laden von Locations",
-                        Toast.LENGTH_SHORT))
+                .doOnError((error) -> UiError.showError(mapsActivity,
+                        error,
+                        "Locations nicht bekommen"))
                 .doOnNext(newLocations::add)
                 .doOnCompleted(this::drawNewLocations);
     }
@@ -269,9 +269,9 @@ public class MapsController {
 
         return SchoenHierController.getInstance().schoenHiersNearby(pos.longitude, pos.latitude,
                 loadableRadius(heatmapLoadedRect), 1000)
-                .doOnError((error) -> Toast.makeText(LocatorApplication.getAppContext(),
-                        "Schön hier nicht bekommen",
-                        Toast.LENGTH_SHORT))
+                .doOnError((error) -> UiError.showError(mapsActivity,
+                        error,
+                        "Schön hier nicht bekommen"))
                 .doOnNext((item) -> {
                     double shLon = item.schoenHier.geoTag.getLongitude();
                     double shLat = item.schoenHier.geoTag.getLatitude();

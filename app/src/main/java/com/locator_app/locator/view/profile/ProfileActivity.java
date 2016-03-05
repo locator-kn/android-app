@@ -16,6 +16,7 @@ import com.locator_app.locator.R;
 import com.locator_app.locator.controller.LocationController;
 import com.locator_app.locator.controller.UserController;
 import com.locator_app.locator.model.User;
+import com.locator_app.locator.view.UiError;
 import com.locator_app.locator.view.fragments.FavoritesFragment;
 import com.locator_app.locator.view.fragments.FragmentAdapter;
 import com.locator_app.locator.view.fragments.LocationsFragment;
@@ -243,8 +244,9 @@ public class ProfileActivity extends FragmentActivity {
                             followerIds.add(UserController.getInstance().me().id);
                             countFollowers.setText(Integer.toString(followerIds.size()));
                             updateUnFollowIcon();
-                            Toast.makeText(getApplicationContext(),
-                                    "uups, das hat leider nicht geklappt", Toast.LENGTH_SHORT).show();
+                            UiError.showError(getApplicationContext(),
+                                    err,
+                                    "uups, das hat leider nicht geklappt");
                         }
                 );
     }
@@ -261,8 +263,9 @@ public class ProfileActivity extends FragmentActivity {
                             followerIds.remove(UserController.getInstance().me().id);
                             countFollowers.setText(Integer.toString(followerIds.size()));
                             updateUnFollowIcon();
-                            Toast.makeText(getApplicationContext(),
-                                    "uups, das hat leider nicht geklappt", Toast.LENGTH_SHORT).show();
+                            UiError.showError(getApplicationContext(),
+                                    err,
+                                    "uups, das hat leider nicht geklappt");
                         }
                 );
     }
