@@ -2,7 +2,6 @@ package com.locator_app.locator.controller;
 
 import com.locator_app.locator.apiservice.schoenhier.SchoenHierApiService;
 import com.locator_app.locator.apiservice.schoenhier.SchoenHierRequest;
-import com.locator_app.locator.apiservice.schoenhier.SchoenHiersNearbyResponse;
 import com.locator_app.locator.apiservice.schoenhier.SchoenHiersResponse;
 import com.locator_app.locator.service.GpsService;
 
@@ -14,7 +13,7 @@ public class SchoenHierController {
 
     SchoenHierApiService schoenHierService;
 
-    public Observable<SchoenHiersNearbyResponse> schoenHiersNearby(double lon, double lat,
+    public Observable<SchoenHiersResponse> schoenHiersNearby(double lon, double lat,
                                                                    double dist, int max) {
         return schoenHierService.schoenHiersNearby(lon, lat, dist, max)
                 .subscribeOn(Schedulers.io())

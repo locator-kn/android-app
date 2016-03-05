@@ -11,7 +11,6 @@ public class GravityObject {
 
     public GravityObject(boolean fixedPosition) {
         this.fixedPosition = fixedPosition;
-        // todo determine smart initial values for velocity vector
         this.vx = 0;
         this.vy = 0;
         payload = null;

@@ -22,6 +22,7 @@ import com.google.maps.android.clustering.ClusterManager;
 import com.locator_app.locator.LocatorApplication;
 import com.locator_app.locator.R;
 import com.locator_app.locator.apiservice.schoenhier.SchoenHiersNearbyResponse;
+import com.locator_app.locator.apiservice.schoenhier.SchoenHiersResponse;
 import com.locator_app.locator.controller.LocationController;
 import com.locator_app.locator.controller.SchoenHierController;
 import com.locator_app.locator.model.LocatorLocation;
@@ -256,7 +257,7 @@ public class MapsController {
         );
     }
 
-    public Observable<SchoenHiersNearbyResponse.SchoenHierResult> drawHeatMapAt(LatLng pos) {
+    public Observable<SchoenHiersResponse> drawHeatMapAt(LatLng pos) {
         if (!mapsActivity.isHeatmapEnabled()) {
             return Observable.error(new Exception());
         }
@@ -267,8 +268,7 @@ public class MapsController {
         heatmapLoadedRect = newLoadableRect;
 
         return SchoenHierController.getInstance().schoenHiersNearby(pos.longitude, pos.latitude,
-                                                             loadableRadius(heatmapLoadedRect), 1000)
-                .flatMapIterable(response -> response.results)
+                loadableRadius(heatmapLoadedRect), 1000)
                 .doOnError((error) -> Toast.makeText(LocatorApplication.getAppContext(),
                         "Schön hier nicht bekommen",
                         Toast.LENGTH_SHORT))

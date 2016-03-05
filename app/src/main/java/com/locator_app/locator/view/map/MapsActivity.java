@@ -130,8 +130,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @OnClick(R.id.schoenHierButton)
     void onschoenHierButtonClick() {
         SchoenHierController.getInstance().markCurPosAsSchoenHier(gpsService)
-                .map(response -> new LatLng(response.geoTag.getLatitude(),
-                        response.geoTag.getLongitude()))
+                .map(response -> new LatLng(response.schoenHier.geoTag.getLatitude(),
+                        response.schoenHier.geoTag.getLongitude()))
                 .subscribe(
                         mapsController::addHeatpointAndRedraw,
                         (error) -> {
@@ -316,8 +316,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             return;
         }
         curNumberOfHeatPoints = heatPoints.size();
-
-        Gradient gradient = new Gradient(colors, startPoints);
 
         // Create a heat map tile provider, passing it the latlngs of the police stations.
         heatmapTileProvider = new HeatmapTileProvider.Builder()

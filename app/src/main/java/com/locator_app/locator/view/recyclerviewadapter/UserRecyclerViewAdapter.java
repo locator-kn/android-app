@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -71,6 +72,8 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
             this.view = view;
             name = (TextView) view.findViewById(R.id.text);
             description = (TextView) view.findViewById(R.id.description);
+            description.setVisibility(View.GONE);
+            name.setGravity(Gravity.CENTER_VERTICAL);
             imageView = (CircleImageView)view.findViewById(R.id.bubbleView);
             Glide.with(view.getContext()).load(R.drawable.profile).into(imageView);
 
@@ -81,9 +84,11 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
 
         public void update(User user) {
             title.setText(user.name);
+
             Glide.with(LocatorApplication.getAppContext())
                     .load(user.thumbnailUri())
                     .asBitmap()
+                    .error(R.drawable.profile)
                     .dontTransform()
                     .dontAnimate()
                     .into(imageView);

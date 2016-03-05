@@ -159,7 +159,7 @@
                             android:layout_height="wrap_content"
                             android:src="@drawable/follow_user_small"
                             android:layout_margin="10dp"
-                            android:id="@+id/unfollowImage" />
+                            android:id="@+id/unFollowImage" />
                     </FrameLayout>
 
                 </LinearLayout>

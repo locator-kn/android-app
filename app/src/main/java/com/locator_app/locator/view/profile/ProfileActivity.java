@@ -1,6 +1,7 @@
 package com.locator_app.locator.view.profile;
 
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentActivity;
@@ -15,7 +16,6 @@ import com.locator_app.locator.R;
 import com.locator_app.locator.controller.LocationController;
 import com.locator_app.locator.controller.UserController;
 import com.locator_app.locator.model.User;
-import com.locator_app.locator.view.bubble.BubbleView;
 import com.locator_app.locator.view.fragments.FavoritesFragment;
 import com.locator_app.locator.view.fragments.FragmentAdapter;
 import com.locator_app.locator.view.fragments.LocationsFragment;
@@ -57,8 +57,8 @@ public class ProfileActivity extends FragmentActivity {
     @Bind(R.id.unFollowUser)
     View unFollowUser;
 
-    @Bind(R.id.unfollowImage)
-    ImageView unfollowImage;
+    @Bind(R.id.unFollowImage)
+    ImageView unFollowImage;
 
     List<String> followerIds = null;
 
@@ -98,7 +98,7 @@ public class ProfileActivity extends FragmentActivity {
     }
 
     private void replaceFollowButtonWithSettings() {
-        Glide.with(this).load(R.drawable.ic_setting_dark).asBitmap().into(unfollowImage);
+        Glide.with(this).load(R.drawable.ic_setting_dark).asBitmap().into(unFollowImage);
     }
 
     private void setupTabLayout() {
@@ -145,6 +145,7 @@ public class ProfileActivity extends FragmentActivity {
                             followerIds = Observable.from(favorites)
                                     .map(follower -> follower.id)
                                     .toList().toBlocking().single();
+                            updateUnFollowIcon();
                         }),
                         (error -> {
                         })
@@ -176,7 +177,8 @@ public class ProfileActivity extends FragmentActivity {
                 .toList()
                 .subscribe(
                         (fragment.adapter::setUsers),
-                        (error) -> { }
+                        (error) -> {
+                        }
                 );
     }
 
@@ -197,7 +199,7 @@ public class ProfileActivity extends FragmentActivity {
             Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
             startActivity(intent);
         } else {
-            unFollowUser();
+            doFollowOrUnfullowUser();
         }
     }
 
@@ -206,33 +208,72 @@ public class ProfileActivity extends FragmentActivity {
                 UserController.getInstance().me().id.equals(user.id);
     }
 
-    public void unFollowUser() {
+    public void doFollowOrUnfullowUser() {
+        if (followerIds == null) {
+            return;
+        }
+
         UserController userController = UserController.getInstance();
         if (!userController.loggedIn()) {
             Toast.makeText(getApplicationContext(), "hierfür musst du angemeldet sein :-)", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        if (followerIds == null) {
-            return;
-        }
-
-        if (!followerIds.contains(userController.me().id)) {
-            followerIds.add(userController.me().id);
-            countFollowers.setText(String.format("%d", followerIds.size()));
-            userController.followUser(user.id)
-                    .subscribe(
-                            (res) -> {
-                            },
-                            (err) -> {
-                                followerIds.remove(userController.me().id);
-                                countFollowers.setText(Integer.toString(followerIds.size()));
-                                Toast.makeText(getApplicationContext(),
-                                        "uups, das hat leider nicht geklappt", Toast.LENGTH_SHORT).show();
-                            }
-                    );
+        if (iFollowThisUser()) {
+            doUnfollowUser();
         } else {
-            // todo: unfollow
+            doFollowUser();
+        }
+    }
+
+    private boolean iFollowThisUser() {
+        return followerIds != null && UserController.getInstance().loggedIn() &&
+                followerIds.contains(UserController.getInstance().me().id);
+    }
+
+    private void doUnfollowUser() {
+        followerIds.remove(UserController.getInstance().me().id);
+        countFollowers.setText(String.format("%d", followerIds.size()));
+        updateUnFollowIcon();
+        UserController.getInstance().unfollowUser(user.id)
+                .subscribe(
+                        (res) -> {
+                        },
+                        (err) -> {
+                            followerIds.add(UserController.getInstance().me().id);
+                            countFollowers.setText(Integer.toString(followerIds.size()));
+                            updateUnFollowIcon();
+                            Toast.makeText(getApplicationContext(),
+                                    "uups, das hat leider nicht geklappt", Toast.LENGTH_SHORT).show();
+                        }
+                );
+    }
+
+    private void doFollowUser() {
+        followerIds.add(UserController.getInstance().me().id);
+        countFollowers.setText(String.format("%d", followerIds.size()));
+        updateUnFollowIcon();
+        UserController.getInstance().followUser(user.id)
+                .subscribe(
+                        (res) -> {
+                        },
+                        (err) -> {
+                            followerIds.remove(UserController.getInstance().me().id);
+                            countFollowers.setText(Integer.toString(followerIds.size()));
+                            updateUnFollowIcon();
+                            Toast.makeText(getApplicationContext(),
+                                    "uups, das hat leider nicht geklappt", Toast.LENGTH_SHORT).show();
+                        }
+                );
+    }
+
+    private void updateUnFollowIcon() {
+        if (iFollowThisUser()) {
+            unFollowImage.setImageBitmap(BitmapFactory.decodeResource(getResources(),
+                    R.drawable.small_follow_red));
+        } else {
+            unFollowImage.setImageBitmap(BitmapFactory.decodeResource(getResources(),
+                    R.drawable.follow_user_small));
         }
     }
 }

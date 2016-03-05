@@ -54,6 +54,9 @@ public class UsersApiService {
 
         @POST(Api.version + "/users/{userId}/follow")
         Observable<Response<User>> followUser(@Path("userId") String userId);
+
+        @POST(Api.version + "/users/{userId}/unfollow")
+        Observable<Response<User>> unfollowUser(@Path("userId") String userId);
     }
 
     private UsersApi service = ServiceFactory.createService(UsersApi.class);
@@ -95,5 +98,9 @@ public class UsersApiService {
 
     public Observable<User> followUser(String userId) {
         return GenericErrorHandler.wrapSingle(service.followUser(userId));
+    }
+
+    public Observable<User> unfollowUser(String userId) {
+        return GenericErrorHandler.wrapSingle(service.unfollowUser(userId));
     }
 }

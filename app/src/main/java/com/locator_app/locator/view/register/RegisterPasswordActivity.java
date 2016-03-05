@@ -12,9 +12,6 @@ import android.widget.Toast;
 import com.locator_app.locator.R;
 import com.locator_app.locator.apiservice.users.RegistrationRequest;
 import com.locator_app.locator.controller.UserController;
-import com.locator_app.locator.service.LocationCreationController;
-import com.locator_app.locator.view.home.HomeActivity;
-import com.locator_app.locator.view.locationcreation.ChooseCategories;
 import com.locator_app.locator.view.login.LoginCustomActionBar;
 import com.locator_app.locator.view.login.LoginRegisterStartActivity;
 
@@ -22,7 +19,6 @@ import java.util.HashMap;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 public class RegisterPasswordActivity extends AppCompatActivity {
 

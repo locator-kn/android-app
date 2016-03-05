@@ -1,9 +1,10 @@
-package com.locator_app.locator.service;
+package com.locator_app.locator.view.locationcreation;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 
+import com.locator_app.locator.service.CameraService;
 import com.locator_app.locator.view.locationcreation.LocationSuggestions;
 
 public class LocationCreationController {
