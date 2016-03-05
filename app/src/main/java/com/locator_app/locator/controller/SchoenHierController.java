@@ -2,7 +2,6 @@ package com.locator_app.locator.controller;
 
 import com.locator_app.locator.apiservice.schoenhier.SchoenHierApiService;
 import com.locator_app.locator.apiservice.schoenhier.SchoenHierRequest;
-import com.locator_app.locator.apiservice.schoenhier.SchoenHiersNearbyResponse;
 import com.locator_app.locator.apiservice.schoenhier.SchoenHiersResponse;
 import com.locator_app.locator.service.GpsService;
 
