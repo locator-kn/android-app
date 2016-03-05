@@ -72,7 +72,6 @@ public class ProfileActivity extends FragmentActivity {
         user = (User) getIntent().getSerializableExtra("profile");
 
         Glide.with(this).load(user.getProfilePictureNormalSize())
-                .error(R.drawable.profile)
                 .centerCrop()
                 .into(profileImageBubbleView);
 
