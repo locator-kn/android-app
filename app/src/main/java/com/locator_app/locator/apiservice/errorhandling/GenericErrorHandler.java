@@ -20,15 +20,12 @@ public class GenericErrorHandler {
         return observable
                 .doOnError(GenericErrorHandler::logErrorMessage)
                 .onErrorResumeNext(throwable -> {
-                    Log.d("RequestError", throwable.getClass().toString());
                     return Observable.error(getRequestErrorFromThrowable(throwable));
                 })
                 .flatMap(response -> {
                     if (response.isSuccess()) {
                         return Observable.just(response.body());
                     }
-                    Log.d("RequestHeaders:", response.raw().request().headers().toString());
-                    Log.d("Request", response.errorBody().toString());
                     return Observable.error(getHttpErrorFromResponse(response));
                 });
     }
