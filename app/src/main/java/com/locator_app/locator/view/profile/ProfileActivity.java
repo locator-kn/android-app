@@ -61,7 +61,6 @@ public class ProfileActivity extends FragmentActivity {
     ImageView unFollowImage;
 
     List<String> followerIds = null;
-
     User user;
 
     @Override
@@ -72,10 +71,15 @@ public class ProfileActivity extends FragmentActivity {
 
         user = (User) getIntent().getSerializableExtra("profile");
 
+        Glide.with(this).load(user.getProfilePictureNormalSize())
+                .error(R.drawable.profile)
+                .centerCrop()
+                .into(profileImageBubbleView);
+
         hideActionBar();
         setupViewPager();
         setupTabLayout();
-        setupUserInformation();
+        updateUserInformation();
     }
 
     private void hideActionBar() {
@@ -85,15 +89,20 @@ public class ProfileActivity extends FragmentActivity {
         }
     }
 
-    private void setupUserInformation() {
+    private void updateUserInformation() {
         userName.setText(user.name);
         residence.setText(user.residence);
-        Glide.with(this).load(user.getProfilePictureNormalSize())
-                .asBitmap()
-                .error(R.drawable.profile)
-                .into(profileImageBubbleView);
+        if (followerIds != null) {
+            countFollowers.setText(String.format("%d", followerIds.size()));
+        }
         if (isSelf()) {
             replaceFollowButtonWithSettings();
+        } else if (iFollowThisUser()) {
+            unFollowImage.setImageBitmap(BitmapFactory.decodeResource(getResources(),
+                    R.drawable.small_follow_red));
+        } else {
+            unFollowImage.setImageBitmap(BitmapFactory.decodeResource(getResources(),
+                    R.drawable.follow_user_small));
         }
     }
 
@@ -108,7 +117,7 @@ public class ProfileActivity extends FragmentActivity {
     private void setupViewPager() {
         FragmentAdapter adapter = new FragmentAdapter(getSupportFragmentManager());
         addLocationsFragment(adapter);
-        addJourneysFragment(adapter);
+        addFavoritesFragment(adapter);
         addFollowerAdapter(adapter);
         addFollowsAdapter(adapter);
         viewPager.setAdapter(adapter);
@@ -122,33 +131,24 @@ public class ProfileActivity extends FragmentActivity {
         LocationController.getInstance().getLocationsByUserId(user.id)
                 .toList()
                 .subscribe(
-                        (locations -> {
+                        (locations) -> {
                             fragment.adapter.setLocations(locations);
                             countLocations.setText(Integer.toString(locations.size()));
-                        }),
+                        },
                         (error) -> {
                         }
                 );
     }
 
-    private void addJourneysFragment(FragmentAdapter adapter) {
+    private void addFavoritesFragment(FragmentAdapter adapter) {
         FavoritesFragment fragment = new FavoritesFragment();
         adapter.addFragment(fragment, "Favorites");
 
         LocationController.getInstance().getFavoritedLocations(user.id)
                 .toList()
                 .subscribe(
-                        (favorites -> {
-                            fragment.adapter.setLocations(favorites);
-                            countFollowers.setText(Integer.toString(favorites.size()));
-
-                            followerIds = Observable.from(favorites)
-                                    .map(follower -> follower.id)
-                                    .toList().toBlocking().single();
-                            updateUnFollowIcon();
-                        }),
-                        (error -> {
-                        })
+                        fragment.adapter::setLocations,
+                        (error) -> {}
                 );
     }
 
@@ -159,26 +159,26 @@ public class ProfileActivity extends FragmentActivity {
         UserController.getInstance().getFollowers(user.id)
                 .toList()
                 .subscribe(
-                        (followers -> {
+                        (followers) -> {
+                            followerIds = Observable.from(followers)
+                                    .map(follower -> follower.id)
+                                    .toList().toBlocking().single();
                             fragment.adapter.setUsers(followers);
-                            countFollowers.setText(Integer.toString(followers.size()));
-                        }),
-                        (error -> {
-                        })
+                            updateUserInformation();
+                        },
+                        (error) -> {}
                 );
     }
 
     private void addFollowsAdapter(FragmentAdapter adapter) {
         UsersFragment fragment = new UsersFragment();
         adapter.addFragment(fragment, user.name + " folgt");
-
         Observable.from(user.following)
                 .flatMap(following -> UserController.getInstance().getUser(following))
                 .toList()
                 .subscribe(
-                        (fragment.adapter::setUsers),
-                        (error) -> {
-                        }
+                        fragment.adapter::setUsers,
+                        (error) -> { }
                 );
     }
 
@@ -212,13 +212,11 @@ public class ProfileActivity extends FragmentActivity {
         if (followerIds == null) {
             return;
         }
-
         UserController userController = UserController.getInstance();
         if (!userController.loggedIn()) {
             Toast.makeText(getApplicationContext(), "hierfür musst du angemeldet sein :-)", Toast.LENGTH_SHORT).show();
             return;
         }
-
         if (iFollowThisUser()) {
             doUnfollowUser();
         } else {
@@ -234,15 +232,14 @@ public class ProfileActivity extends FragmentActivity {
     private void doUnfollowUser() {
         followerIds.remove(UserController.getInstance().me().id);
         countFollowers.setText(String.format("%d", followerIds.size()));
-        updateUnFollowIcon();
         UserController.getInstance().unfollowUser(user.id)
                 .subscribe(
                         (res) -> {
+                            updateUserInformation();
                         },
                         (err) -> {
                             followerIds.add(UserController.getInstance().me().id);
-                            countFollowers.setText(Integer.toString(followerIds.size()));
-                            updateUnFollowIcon();
+                            updateUserInformation();
                             Toast.makeText(getApplicationContext(),
                                     "uups, das hat leider nicht geklappt", Toast.LENGTH_SHORT).show();
                         }
@@ -252,28 +249,18 @@ public class ProfileActivity extends FragmentActivity {
     private void doFollowUser() {
         followerIds.add(UserController.getInstance().me().id);
         countFollowers.setText(String.format("%d", followerIds.size()));
-        updateUnFollowIcon();
         UserController.getInstance().followUser(user.id)
                 .subscribe(
                         (res) -> {
+                            updateUserInformation();
                         },
                         (err) -> {
                             followerIds.remove(UserController.getInstance().me().id);
-                            countFollowers.setText(Integer.toString(followerIds.size()));
-                            updateUnFollowIcon();
+                            updateUserInformation();
                             Toast.makeText(getApplicationContext(),
                                     "uups, das hat leider nicht geklappt", Toast.LENGTH_SHORT).show();
                         }
                 );
     }
 
-    private void updateUnFollowIcon() {
-        if (iFollowThisUser()) {
-            unFollowImage.setImageBitmap(BitmapFactory.decodeResource(getResources(),
-                    R.drawable.small_follow_red));
-        } else {
-            unFollowImage.setImageBitmap(BitmapFactory.decodeResource(getResources(),
-                    R.drawable.follow_user_small));
-        }
-    }
 }

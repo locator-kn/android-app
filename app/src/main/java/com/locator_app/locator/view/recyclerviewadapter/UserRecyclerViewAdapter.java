@@ -88,7 +88,6 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
             Glide.with(LocatorApplication.getAppContext())
                     .load(user.thumbnailUri())
                     .asBitmap()
-                    .error(R.drawable.profile)
                     .dontTransform()
                     .dontAnimate()
                     .into(imageView);
