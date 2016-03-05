@@ -158,6 +158,7 @@ public class RegisterProfilePictureActivity extends AppCompatActivity {
                                     loadingSpinner.hideSpinner();
                                     Glide.with(this).load(R.drawable.continue_white)
                                             .into(profileNo);
+                                    updateUserInfo();
                                 },
                                 (error) -> {
                                     loadingSpinner.hideSpinner();
@@ -165,8 +166,18 @@ public class RegisterProfilePictureActivity extends AppCompatActivity {
                                             Toast.LENGTH_SHORT).show();
                                 }
                         );
-
             }
+        }
+    }
+
+    private void updateUserInfo() {
+        // request current user to update the path to the profile image
+        if (UserController.getInstance().loggedIn()) {
+            UserController.getInstance().checkProtected()
+                    .subscribe(
+                            (val) -> {},
+                            (err) -> {}
+                    );
         }
     }
 

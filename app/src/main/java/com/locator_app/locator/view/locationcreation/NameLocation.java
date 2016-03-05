@@ -10,7 +10,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.locator_app.locator.R;
-import com.locator_app.locator.service.LocationCreationController;
 import com.locator_app.locator.view.home.HomeActivity;
 
 import butterknife.Bind;

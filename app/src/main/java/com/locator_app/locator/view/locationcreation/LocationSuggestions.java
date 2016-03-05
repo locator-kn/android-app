@@ -13,7 +13,6 @@ import android.widget.Toast;
 import com.locator_app.locator.LocatorApplication;
 import com.locator_app.locator.R;
 import com.locator_app.locator.controller.LocationController;
-import com.locator_app.locator.service.LocationCreationController;
 import com.locator_app.locator.model.GoogleLocation;
 import com.locator_app.locator.model.LocatorLocation;
 import com.locator_app.locator.service.GpsService;
