@@ -135,7 +135,7 @@ public class BubbleController {
                         new Handler().postDelayed(() ->
                                 YoYo.with(Techniques.FadeInUp)
                                     .duration(1500)
-                                    .playOn(bubbleView), 
+                                    .playOn(bubbleView),
                                 random.nextInt(1500));
                     });
     }
