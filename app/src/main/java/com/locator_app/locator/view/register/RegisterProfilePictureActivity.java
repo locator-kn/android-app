@@ -1,15 +1,10 @@
 package com.locator_app.locator.view.register;
 
-import android.app.Activity;
-import android.content.ActivityNotFoundException;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.opengl.Visibility;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -20,32 +15,22 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.locator_app.locator.R;
-import com.locator_app.locator.apiservice.users.RegistrationRequest;
 import com.locator_app.locator.controller.UserController;
+import com.locator_app.locator.service.CameraService;
 import com.locator_app.locator.util.BitmapHelper;
 import com.locator_app.locator.view.LoadingSpinner;
 import com.locator_app.locator.view.home.HomeActivity;
 import com.locator_app.locator.view.login.LoginCustomActionBar;
-import com.locator_app.locator.view.login.LoginRegisterStartActivity;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.HashMap;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 public class RegisterProfilePictureActivity extends AppCompatActivity {
 
-    private static final int REQUEST_CAMERA = 1;
-    private static final int SELECT_FILE = 2;
-    private static final int PIC_CROP = 3;
+    private static final int SELECT_FILE = 1;
 
     @Bind(R.id.profilePicture)
     ImageView profilePicture;
@@ -55,6 +40,8 @@ public class RegisterProfilePictureActivity extends AppCompatActivity {
     TextView profilePictureText;
 
     LoadingSpinner loadingSpinner;
+    CameraService cameraService;
+    Uri uri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +49,7 @@ public class RegisterProfilePictureActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register_profile_picture);
         ButterKnife.bind(this);
 
+        cameraService = new CameraService(this);
         loadingSpinner = new LoadingSpinner(this);
 
         setCustomActionBar();
@@ -98,8 +86,13 @@ public class RegisterProfilePictureActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int item) {
                 if (items[item].equals(takePhoto)) {
-                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    startActivityForResult(intent, REQUEST_CAMERA);
+                    cameraService.takePhoto().subscribe(
+                            (uri) -> {
+                                RegisterProfilePictureActivity.this.uri = uri;
+                            },
+                            (err) -> {
+                            }
+                    );
                 } else if (items[item].equals(choosePhoto)) {
                     Intent intent = new Intent(
                             Intent.ACTION_PICK,
@@ -120,57 +113,45 @@ public class RegisterProfilePictureActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
-            if (requestCode == REQUEST_CAMERA) {
-                //save image
-                Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
-                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-                //thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
-                File destination = new File(Environment.getExternalStorageDirectory(),
-                        System.currentTimeMillis() + ".jpg");
-                FileOutputStream fo;
-                try {
-                    destination.createNewFile();
-                    fo = new FileOutputStream(destination);
-                    fo.write(bytes.toByteArray());
-                    fo.close();
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                cropImage(data.getData());
-
+            if (requestCode == CameraService.CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
+                Uri profilePictureUri = this.uri;
+                uploadProfilePicture(profilePictureUri);
             } else if (requestCode == SELECT_FILE) {
-                cropImage(data.getData());
-            }
-            else if(requestCode == PIC_CROP) {
-                Bundle extras = data.getExtras();
-                Bitmap thePic = extras.getParcelable("data");
-
-                loadingSpinner.showSpinner();
-                UserController.getInstance().setProfilePicture(thePic)
-                        .subscribe(
-                                (res) -> {
-                                    Bitmap roundedBitmap = BitmapHelper.getRoundBitmap(thePic, 500);
-                                    profilePicture.setImageBitmap(roundedBitmap);
-                                    profilePictureText.setText(getResources().getString(R.string.your_profile_picture));
-                                    loadingSpinner.hideSpinner();
-                                    Glide.with(this).load(R.drawable.continue_white)
-                                            .into(profileNo);
-                                    updateUserInfo();
-                                },
-                                (error) -> {
-                                    loadingSpinner.hideSpinner();
-                                    Toast.makeText(this, "Da ist was schief gelaufen",
-                                            Toast.LENGTH_SHORT).show();
-                                }
-                        );
+                Uri profilePictureUri = data.getData();
+                uploadProfilePicture(profilePictureUri);
             }
         }
     }
 
-    private void updateUserInfo() {
+    private void uploadProfilePicture(Uri uri) {
+        try {
+            Bitmap profilePicture = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+            uploadProfilePicture(profilePicture);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void uploadProfilePicture(Bitmap profilePicture) {
+        loadingSpinner.showSpinner();
+        UserController.getInstance().setProfilePicture(profilePicture)
+                .subscribe(
+                        (res) -> {
+                            Bitmap roundBitmap = BitmapHelper.getRoundBitmap(profilePicture, this.profilePicture.getWidth());
+                            this.profilePicture.setImageBitmap(roundBitmap);
+                            profilePictureText.setText(getResources().getString(R.string.your_profile_picture));
+                            loadingSpinner.hideSpinner();
+                            Glide.with(this).load(R.drawable.continue_white).into(profileNo);
+                            reloadUserProfilePictureFromServer();
+                        },
+                        (error) -> {
+                            loadingSpinner.hideSpinner();
+                            Toast.makeText(this, "Da ist was schief gelaufen", Toast.LENGTH_SHORT).show();
+                        }
+                );
+    }
+
+    private void reloadUserProfilePictureFromServer() {
         // request current user to update the path to the profile image
         if (UserController.getInstance().loggedIn()) {
             UserController.getInstance().checkProtected()
@@ -178,26 +159,6 @@ public class RegisterProfilePictureActivity extends AppCompatActivity {
                             (val) -> {},
                             (err) -> {}
                     );
-        }
-    }
-
-    private void cropImage(Uri selectedImageUri) {
-        try {
-            Intent cropIntent = new Intent("com.android.camera.action.CROP");
-            cropIntent.setDataAndType(selectedImageUri, "image/*");
-            cropIntent.putExtra("crop", "true");
-            cropIntent.putExtra("aspectX", 1);
-            cropIntent.putExtra("aspectY", 1);
-            cropIntent.putExtra("outputX", 200);
-            cropIntent.putExtra("outputY", 200);
-            cropIntent.putExtra("return-data", true);
-            cropIntent.putExtra("circleCrop", new String(""));
-            startActivityForResult(cropIntent, PIC_CROP);
-        }
-        catch(ActivityNotFoundException anfe){
-            String errorMessage = "Whoops - your device doesn't support the crop action!";
-            Toast toast = Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT);
-            toast.show();
         }
     }
 
