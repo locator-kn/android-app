@@ -2,7 +2,6 @@ package com.locator_app.locator.view.map;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -51,8 +50,8 @@ public class MapFragment extends SupportMapFragment {
         public boolean dispatchTouchEvent(MotionEvent event) {
             if (event.getAction() == MotionEvent.ACTION_UP && isInitialized) {
                 LatLng curMapPos = googleMap.getCameraPosition().target;
-                mapsController.drawLocationsAt(curMapPos);
-                mapsController.drawHeatMapAt(curMapPos);
+                mapsController.redrawLocationsAt(curMapPos);
+                mapsController.redrawHeatMapAt(curMapPos);
             }
             return super.dispatchTouchEvent(event);
         }

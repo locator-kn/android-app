@@ -2,7 +2,6 @@ package com.locator_app.locator.view.map;
 
 import android.Manifest;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
@@ -24,7 +23,6 @@ import com.google.android.gms.maps.model.TileOverlay;
 import com.google.android.gms.maps.model.TileOverlayOptions;
 import com.google.maps.android.heatmaps.Gradient;
 import com.google.maps.android.heatmaps.HeatmapTileProvider;
-import com.locator_app.locator.LocatorApplication;
 import com.locator_app.locator.R;
 import com.locator_app.locator.controller.SchoenHierController;
 import com.locator_app.locator.service.GpsService;
@@ -37,7 +35,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnTouch;
-import rx.Subscription;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -67,6 +64,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Bind(R.id.loadingScreen)
     View loadingScreen;
+    boolean loadingScreenVisible = true;
 
     GpsService gpsService;
 
@@ -98,18 +96,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .into(loadingSpinner);
     }
 
+    synchronized
     private void endLoadingScreen() {
-        YoYo.with(Techniques.TakingOff)
-                .delay(600)
-                .duration(600)
-                .withListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        super.onAnimationEnd(animation);
-                        loadingScreen.setVisibility(View.GONE);
-                    }
-                })
-                .playOn(loadingScreen);
+        if (loadingScreenVisible) {
+            loadingScreenVisible = false;
+            if (loadingScreen.getVisibility() == View.VISIBLE) {
+                YoYo.with(Techniques.TakingOff)
+                        .duration(600)
+                        .withListener(new AnimatorListenerAdapter() {
+                            @Override
+                            public void onAnimationEnd(Animator animation) {
+                                super.onAnimationEnd(animation);
+                                loadingScreen.setVisibility(View.GONE);
+                            }
+                        })
+                        .playOn(loadingScreen);
+            }
+        }
     }
 
     @Override
@@ -188,16 +191,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     tileOverlay.setVisible(true);
                 }
                 LatLng mapPos = googleMap.getCameraPosition().target;
-                mapsController.drawHeatMapAt(mapPos);
+                mapsController.redrawHeatMapAt(mapPos);
             }
         } else {
             if (tileOverlay != null) {
                 tileOverlay.setVisible(false);
             }
         }
-
-        SharedPreferences preferences = LocatorApplication.getSharedPreferences();
-        preferences.edit().putBoolean("show_heatmap", isHeatmapEnabled).apply();
     }
 
     @OnClick(R.id.toggleLocationsButton)
@@ -217,14 +217,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             if (enabled) {
                 mapsController.setAllLocationsVisible();
                 LatLng mapPos = googleMap.getCameraPosition().target;
-                mapsController.drawLocationsAt(mapPos);
+                mapsController.redrawLocationsAt(mapPos);
             } else {
                 mapsController.setAllLocationsInvisible();
             }
         }
-
-        SharedPreferences preferences = LocatorApplication.getSharedPreferences();
-        preferences.edit().putBoolean("show_locations", isLocationsEnabled).apply();
     }
 
     private void setToggleButton(Boolean enabled, ImageView imageView, int enabledId, int disabledId) {
@@ -266,38 +263,29 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
         gpsService.setMyLocationEnabled(googleMap);
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(locationPos, 15));
-        mapsController.drawHeatMapAt(locationPos);
-        mapsController.drawLocationsAt(locationPos);
 
-        endLoadingScreen();
+        mapsController.drawHeatMapAt(locationPos).subscribe(
+                (res) -> {
+                },
+                (err) -> endLoadingScreen(),
+                this::endLoadingScreen
+        );
+        mapsController.drawLocationsAt(locationPos).subscribe(
+                (res) -> {
+                },
+                (err) -> endLoadingScreen(),
+                this::endLoadingScreen
+        );
     }
-
-    private void setPersonPosition(android.location.Location location) {
-        personMarker.setPosition(new LatLng(location.getLatitude(), location.getLongitude()));
-    }
-
-    Subscription continuousLocation;
 
     @Override
     public void onResume() {
         super.onResume();
-        SharedPreferences preferences = LocatorApplication.getSharedPreferences();
-        isLocationsEnabled = preferences.getBoolean("show_locations", true);
-        isHeatmapEnabled = preferences.getBoolean("show_heatmap", true);
-        setLocationsEnabled(isLocationsEnabled);
-        setHeatmapEnabled(isHeatmapEnabled);
-        // ---------- Manual Continuous Location Update ----------
-//        continuousLocation = gpsService.getContinuousCurLocation()
-//                                            .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(this::setPersonPosition);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        // ---------- Manual Continuous Location Update ----------
-//        continuousLocation.unsubscribe();
     }
 
     private HeatmapTileProvider heatmapTileProvider = null ;
