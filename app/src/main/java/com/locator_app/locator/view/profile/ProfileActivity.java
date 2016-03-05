@@ -232,7 +232,19 @@ public class ProfileActivity extends FragmentActivity {
                             }
                     );
         } else {
-            // todo: unfollow
+            followerIds.remove(userController.me().id);
+            countFollowers.setText(String.format("%d", followerIds.size()));
+            userController.unfollowUser(user.id)
+                    .subscribe(
+                            (res) -> {
+                            },
+                            (err) -> {
+                                followerIds.add(userController.me().id);
+                                countFollowers.setText(Integer.toString(followerIds.size()));
+                                Toast.makeText(getApplicationContext(),
+                                        "uups, das hat leider nicht geklappt", Toast.LENGTH_SHORT).show();
+                            }
+                    );
         }
     }
 }
