@@ -7,19 +7,13 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.animation.Interpolator;
 import android.view.animation.TranslateAnimation;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.daimajia.androidanimations.library.Techniques;
-import com.daimajia.androidanimations.library.YoYo;
 import com.github.tbouron.shakedetector.library.ShakeDetector;
 import com.locator_app.locator.R;
 import com.locator_app.locator.controller.DeviceController;
@@ -29,11 +23,13 @@ import com.locator_app.locator.controller.SchoenHierController;
 import com.locator_app.locator.controller.UserController;
 import com.locator_app.locator.model.User;
 import com.locator_app.locator.service.GpsService;
-import com.locator_app.locator.service.RegistrationIntentService;
+import com.locator_app.locator.view.LoadingSpinner;
+import com.locator_app.locator.view.OnSwipeTouchListener;
 import com.locator_app.locator.view.bubble.BubbleController;
 import com.locator_app.locator.view.bubble.BubbleView;
 import com.locator_app.locator.view.bubble.RelativeBubbleLayout;
 import com.locator_app.locator.view.login.LoginRegisterStartActivity;
+import com.locator_app.locator.view.map.MapsActivity;
 import com.locator_app.locator.view.profile.ProfileActivity;
 
 import butterknife.Bind;
@@ -70,6 +66,9 @@ public class HomeActivity extends AppCompatActivity {
     @Bind(R.id.locatorLogo)
     ImageView locatorLogo;
 
+    @Bind(R.id.bubbleScreen)
+    View bubbleScreen;
+
     BubbleController bubbleController;
 
     GpsService gpsService;
@@ -94,6 +93,14 @@ public class HomeActivity extends AppCompatActivity {
                     );
             isFirstTime = false;
         }
+
+        bubbleScreen.setOnTouchListener(new OnSwipeTouchListener(this) {
+            public void onSwipeLeft() {
+                Intent intent = new Intent(HomeActivity.this, MapsActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.push_right_in, R.anim.push_left_out);
+            }
+        });
 
         bubbleController = new BubbleController(bubbleLayout);
         locationCreationController = new LocationCreationController(this);

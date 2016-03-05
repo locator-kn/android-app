@@ -61,4 +61,18 @@
         android:layout_alignLeft="@+id/toggleLocationsButton"
         android:layout_alignStart="@+id/toggleLocationsButton" />
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorWelcome"
+        android:id="@+id/loadingScreen">
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:id="@+id/loadingSpinner"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true" />
+    </RelativeLayout>
+
 </RelativeLayout>

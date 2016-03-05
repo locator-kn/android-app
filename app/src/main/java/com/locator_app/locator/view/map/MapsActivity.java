@@ -12,6 +12,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -25,6 +28,8 @@ import com.locator_app.locator.LocatorApplication;
 import com.locator_app.locator.R;
 import com.locator_app.locator.controller.SchoenHierController;
 import com.locator_app.locator.service.GpsService;
+import com.nineoldandroids.animation.Animator;
+import com.nineoldandroids.animation.AnimatorListenerAdapter;
 
 import java.util.List;
 
@@ -57,6 +62,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private boolean isLocationsEnabled = true;
     public boolean isLocationsEnabled() { return isLocationsEnabled; }
 
+    @Bind(R.id.loadingSpinner)
+    ImageView loadingSpinner;
+
+    @Bind(R.id.loadingScreen)
+    View loadingScreen;
+
     GpsService gpsService;
 
     MapFragment mapFragment;
@@ -66,6 +77,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         ButterKnife.bind(this);
+        initLoadingSpinner();
 
         if (getIntent().hasExtra("lon") && getIntent().hasExtra("lat")) {
             double lon = getIntent().getDoubleExtra("lon", 0.0);
@@ -78,6 +90,26 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment = (MapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+    }
+
+    private void initLoadingSpinner() {
+        Glide.with(this).load(R.drawable.preloader)
+                .asGif()
+                .into(loadingSpinner);
+    }
+
+    private void endLoadingScreen() {
+        YoYo.with(Techniques.TakingOff)
+                .delay(600)
+                .duration(600)
+                .withListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        super.onAnimationEnd(animation);
+                        loadingScreen.setVisibility(View.GONE);
+                    }
+                })
+                .playOn(loadingScreen);
     }
 
     @Override
@@ -134,6 +166,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @OnClick(R.id.toggleHeatmapButton)
     void ontoggleHeatmapButtonClick() {
         setHeatmapEnabled(!isHeatmapEnabled);
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+        overridePendingTransition(R.anim.push_left_in, R.anim.push_right_out);
     }
 
     synchronized
@@ -206,7 +244,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             gpsService.getCurLocation()
                     .subscribe(
                             this::initiateMap,
-                            (err) -> {}
+                            (err) -> {
+                                endLoadingScreen();
+                            }
                     );
         }
     }
@@ -228,6 +268,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(locationPos, 15));
         mapsController.drawHeatMapAt(locationPos);
         mapsController.drawLocationsAt(locationPos);
+
+        endLoadingScreen();
     }
 
     private void setPersonPosition(android.location.Location location) {

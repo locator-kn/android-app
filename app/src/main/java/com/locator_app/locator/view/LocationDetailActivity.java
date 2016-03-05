@@ -69,14 +69,14 @@ public class LocationDetailActivity extends FragmentActivity implements Impressi
         imageFragmentAdapter = new ImageFragmentAdapter(getSupportFragmentManager());
         viewPager.setAdapter(imageFragmentAdapter);
 
-        impressionAdapter = new ImpressionRecyclerViewAdapter();
+        impressionAdapter = new ImpressionRecyclerViewAdapter(this);
         impressionAdapter.setLocation(location);
 
         impressionsRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         impressionsRecyclerView.addItemDecoration(new DividerItemDecoration(getApplicationContext(), null));
         impressionsRecyclerView.setAdapter(impressionAdapter);
 
-         gpsService = new GpsService(this);
+        gpsService = new GpsService(this);
 
         loadImpressions();
         setupLocationInformation();

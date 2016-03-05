@@ -12,7 +12,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/homescreen_background"
-        tools:context="com.locator_app.locator.view.home.HomeFragment">
+        tools:context="com.locator_app.locator.view.home.HomeFragment"
+        android:id="@+id/bubbleScreen">
 
         <LinearLayout
             android:id="@+id/header"
@@ -165,4 +166,5 @@
 
 
     </LinearLayout>
+
 </RelativeLayout>
