@@ -124,7 +124,7 @@ public class RegisterProfilePictureActivity extends AppCompatActivity {
                 //save image
                 Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
                 ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-                thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+                //thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
                 File destination = new File(Environment.getExternalStorageDirectory(),
                         System.currentTimeMillis() + ".jpg");
                 FileOutputStream fo;
