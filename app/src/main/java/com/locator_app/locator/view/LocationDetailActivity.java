@@ -19,11 +19,14 @@ import com.locator_app.locator.model.LocatorLocation;
 import com.locator_app.locator.model.impressions.AbstractImpression;
 import com.locator_app.locator.model.impressions.ImageImpression;
 import com.locator_app.locator.service.GpsService;
+import com.locator_app.locator.util.DistanceCalculator;
 import com.locator_app.locator.view.fragments.ImageFragmentAdapter;
 import com.locator_app.locator.view.home.HomeActivity;
 import com.locator_app.locator.view.impressions.ImpressionController;
 import com.locator_app.locator.view.impressions.ImpressionObserver;
 import com.locator_app.locator.view.impressions.ImpressionRecyclerViewAdapter;
+
+import org.w3c.dom.Text;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -182,7 +185,6 @@ public class LocationDetailActivity extends FragmentActivity implements Impressi
 
     private void setupLocationInformation() {
         locationTitle.setText(location.title);
-        showDistanceToLocation();
         updateFavorHeart();
     }
 
@@ -194,19 +196,6 @@ public class LocationDetailActivity extends FragmentActivity implements Impressi
 
     private boolean userFavorsLocation() {
         return UserController.getInstance().loggedIn() && location.favorites.contains(UserController.getInstance().me().id);
-    }
-
-    private void showDistanceToLocation() {
-        gpsService.getCurLocation()
-                .subscribe(
-                        (location) -> {
-                            //double distance = DistanceCalculator.distanceInKm();
-                            //double distanceToLocation = DistanceCalculator.
-                        },
-                        (error) -> {
-
-                        }
-                );
     }
 
     @Override

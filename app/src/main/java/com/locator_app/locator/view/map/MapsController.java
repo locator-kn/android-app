@@ -141,14 +141,6 @@ public class MapsController {
         });
     }
 
-//    private final static int MIN_CALL_DELAY_MS = 2000;
-//    private long lastCall;
-//    public boolean calledRecently() {
-//        long delay = System.currentTimeMillis() - lastCall;
-//        lastCall = System.currentTimeMillis();
-//        return delay < MIN_CALL_DELAY_MS;
-//    }
-
     public void setAllLocationsInvisible() {
         googleMap.setOnCameraChangeListener(null);
         googleMap.setOnMarkerClickListener(null);

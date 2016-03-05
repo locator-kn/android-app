@@ -250,8 +250,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    Marker personMarker;
-
     private void initiateMap(android.location.Location location) {
         LatLng locationPos = new LatLng(location.getLatitude(), location.getLongitude());
         initiateMapByLatLon(locationPos);

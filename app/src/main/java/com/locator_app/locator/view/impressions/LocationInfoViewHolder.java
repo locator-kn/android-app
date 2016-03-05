@@ -9,6 +9,8 @@ import android.widget.TextView;
 import com.locator_app.locator.R;
 import com.locator_app.locator.controller.UserController;
 import com.locator_app.locator.model.impressions.AbstractImpression;
+import com.locator_app.locator.service.GpsService;
+import com.locator_app.locator.util.DistanceCalculator;
 import com.locator_app.locator.view.map.MapsActivity;
 
 import rx.android.schedulers.AndroidSchedulers;
@@ -41,8 +43,22 @@ class LocationInfoViewHolder extends ImpressionViewHolder {
                 );
         city = (TextView) itemView.findViewById(R.id.city);
         city.setText(impressionRecyclerViewAdapter.location.city.title);
+
         distance = (TextView) itemView.findViewById(R.id.distance);
-        distance.setText("");
+        GpsService gpsService = new GpsService(activity);
+        gpsService.getCurLocation()
+                .subscribe(
+                        (pos) -> {
+                            double distanceVal = DistanceCalculator.distanceInKm(pos.getLatitude(), pos.getLongitude(),
+                                    impressionRecyclerViewAdapter.location.geoTag.getLatitude(),
+                                    impressionRecyclerViewAdapter.location.geoTag.getLongitude());
+
+                            distance.setText(String.format("%1$,.1f km", distanceVal));
+                        },
+                        (error) -> {
+
+                        }
+                );
         favorites = (TextView) itemView.findViewById(R.id.favorites);
         favorites.setText(Integer.toString(impressionRecyclerViewAdapter.location.favorites.size()));
         goToHeatmap = (ImageView) itemView.findViewById(R.id.heatmap);
