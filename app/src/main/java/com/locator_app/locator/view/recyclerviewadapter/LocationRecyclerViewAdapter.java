@@ -4,6 +4,7 @@ package com.locator_app.locator.view.recyclerviewadapter;
 import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,12 +41,18 @@ public class LocationRecyclerViewAdapter extends RecyclerView.Adapter<LocationRe
     private int descrColor = Color.BLACK;
     public void setDescrColor(int color) { descrColor = color; }
 
-    private ListItemFiller listItemFiller = (title, description, creationDate, imageView, location) -> {
+    private ListItemFiller listItemFiller = (TextView title, TextView description, TextView creationDate, CircleImageView imageView, LocatorLocation location) -> {
         title.setText(location.title);
         Glide.with(LocatorApplication.getAppContext())
                 .load(location.thumbnailUri())
                 .dontAnimate()
                 .into(imageView);
+        if (location.city.title.isEmpty()) {
+            title.setGravity(Gravity.CENTER_VERTICAL);
+            description.setVisibility(View.GONE);
+        } else {
+            description.setText(location.city.title);
+        }
         if (location.createDate != null) {
             String formattedDate = DateConverter.toddMMyyyy(location.createDate);
             creationDate.setText(formattedDate);

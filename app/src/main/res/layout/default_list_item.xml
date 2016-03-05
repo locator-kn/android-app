@@ -52,7 +52,7 @@
             android:ellipsize="end"
             android:singleLine="true"
             android:layout_weight="1"
-            android:gravity="center_vertical" />
+            android:gravity="bottom" />
 
         <TextView
             android:id="@+id/description"
