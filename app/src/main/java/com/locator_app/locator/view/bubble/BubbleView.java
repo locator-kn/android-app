@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -18,6 +19,10 @@ import com.locator_app.locator.R;
 import com.locator_app.locator.util.BitmapHelper;
 
 import java.util.concurrent.ExecutionException;
+
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class BubbleView extends View {
 
@@ -177,15 +182,5 @@ public class BubbleView extends View {
     public void setImage(int resourceId) {
         final String imageUri = "android.resource://" + getContext().getPackageName() + "/" + resourceId;
         setImage(imageUri);
-    }
-
-    public void setImage(String imageUri, int errorId) {
-        try {
-            Bitmap bitmap = Glide.with(getContext()).load(imageUri).asBitmap().into(-1, -1).get();
-            this.icon = BitmapHelper.getRoundBitmap(bitmap, bitmap.getWidth());
-        } catch (InterruptedException | ExecutionException e) {
-            setImage(errorId);
-            e.printStackTrace();
-        }
     }
 }
