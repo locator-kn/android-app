@@ -14,7 +14,7 @@ public class SchoenHierController {
 
     SchoenHierApiService schoenHierService;
 
-    public Observable<SchoenHiersNearbyResponse> schoenHiersNearby(double lon, double lat,
+    public Observable<SchoenHiersResponse> schoenHiersNearby(double lon, double lat,
                                                                    double dist, int max) {
         return schoenHierService.schoenHiersNearby(lon, lat, dist, max)
                 .subscribeOn(Schedulers.io())

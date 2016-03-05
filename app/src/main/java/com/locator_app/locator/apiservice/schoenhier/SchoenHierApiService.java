@@ -5,6 +5,7 @@ import com.locator_app.locator.apiservice.ServiceFactory;
 import com.locator_app.locator.apiservice.errorhandling.GenericErrorHandler;
 
 import java.net.UnknownHostException;
+import java.util.List;
 
 import retrofit.HttpException;
 import retrofit.Response;
@@ -21,7 +22,7 @@ public class SchoenHierApiService {
     public interface SchoenHierApi {
 
         @GET(Api.version + "/schoenhiers/nearby")
-        Observable<Response<SchoenHiersNearbyResponse>> schoenHiersNearby(@Query("long") double lon,
+        Observable<Response<List<SchoenHiersResponse>>> schoenHiersNearby(@Query("long") double lon,
                                                @Query("lat") double lat,
                                                @Query("maxDistance") double distance,
                                                @Query("limit") int limit);
@@ -32,10 +33,10 @@ public class SchoenHierApiService {
 
     private SchoenHierApi service = ServiceFactory.createService(SchoenHierApi.class);
 
-    public Observable<SchoenHiersNearbyResponse> schoenHiersNearby(double lon, double lat,
+    public Observable<SchoenHiersResponse> schoenHiersNearby(double lon, double lat,
                                                                 double distance,
                                                                 int limit) {
-        return GenericErrorHandler.wrapSingle(service.schoenHiersNearby(lon, lat, distance, limit));
+        return GenericErrorHandler.wrapList(service.schoenHiersNearby(lon, lat, distance, limit));
     }
 
     public Observable<SchoenHiersResponse> markAsSchoenHier(SchoenHierRequest request) {

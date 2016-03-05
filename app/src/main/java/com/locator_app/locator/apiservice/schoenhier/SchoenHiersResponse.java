@@ -2,19 +2,14 @@ package com.locator_app.locator.apiservice.schoenhier;
 
 import com.google.gson.annotations.SerializedName;
 import com.locator_app.locator.model.GeoTag;
+import com.locator_app.locator.model.SchoenHier;
 
 public class SchoenHiersResponse {
 
-    @SerializedName("geotag")
-    public GeoTag geoTag;
+    @SerializedName("dis")
+    public double distance = 0;
 
-    @SerializedName("create_date")
-    public String createDate;
-
-    @SerializedName("modified_date")
-    public String modifiedDate;
-
-    @SerializedName("id")
-    public String _id;
+    @SerializedName("obj")
+    public SchoenHier schoenHier = new SchoenHier();
 
 }

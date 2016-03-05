@@ -250,7 +250,6 @@ public class MapsController {
 
         SchoenHierController.getInstance().schoenHiersNearby(pos.longitude, pos.latitude,
                                                              loadableRadius(heatmapLoadedRect), 1000)
-                .flatMapIterable(response -> response.results)
                 .subscribe(
                         (item) -> {
                             double shLon = item.schoenHier.geoTag.getLongitude();

@@ -11,8 +11,6 @@ public class SchoenHiersNearbyResponse {
     @SerializedName("results")
     public List<SchoenHierResult> results;
 
-    @SerializedName("stats")
-    public SchoenHierStats stats;
 
     public class SchoenHierResult {
         @SerializedName("dis")
@@ -22,7 +20,4 @@ public class SchoenHiersNearbyResponse {
         public SchoenHier schoenHier;
     }
 
-    public class SchoenHierStats {
-
-    }
 }
