@@ -208,6 +208,7 @@ public class HomeActivity extends AppCompatActivity {
             if (glowAnimation != null &&
                     glowAnimation.isRunning()) {
                 glowAnimation.stop(false);
+                glow.setAlpha(0.f);
             }
         }
         return false;
