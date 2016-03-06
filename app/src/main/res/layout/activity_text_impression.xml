@@ -38,7 +38,7 @@
         android:textColor="@color/colorWhite"
         android:fontFamily="source-sans-pro"
         android:textAlignment="center"
-        android:inputType="textCapSentences"
+        android:inputType="textCapSentences|textMultiLine"
         android:hint="Schreib etwas"
         android:textColorHint="@color/colorHint"
         android:background="@null"
