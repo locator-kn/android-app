@@ -15,6 +15,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.github.tbouron.shakedetector.library.ShakeDetector;
 import com.locator_app.locator.R;
 import com.locator_app.locator.controller.DeviceController;
@@ -33,6 +35,8 @@ import com.locator_app.locator.view.bubble.RelativeBubbleLayout;
 import com.locator_app.locator.view.login.LoginRegisterStartActivity;
 import com.locator_app.locator.view.map.MapsActivity;
 import com.locator_app.locator.view.profile.ProfileActivity;
+import com.nineoldandroids.animation.Animator;
+import com.nineoldandroids.animation.AnimatorListenerAdapter;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -58,6 +62,9 @@ public class HomeActivity extends AppCompatActivity {
 
     @Bind(R.id.bubbleScreen)
     View bubbleScreen;
+
+    @Bind(R.id.glow)
+    ImageView glow;
 
     BubbleController bubbleController;
 
@@ -172,10 +179,29 @@ public class HomeActivity extends AppCompatActivity {
         gpsService.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
+    YoYo.YoYoString glowAnimation;
     @OnTouch(R.id.schoenHierBubble)
     boolean onSchoenHierBubbleTouch(MotionEvent arg1) {
         if (arg1.getAction()== MotionEvent.ACTION_DOWN) {
             schoenHierBubble.setAlpha((float) 0.6);
+
+
+            if (glowAnimation != null &&
+                glowAnimation.isRunning()) {
+                glowAnimation.stop(true);
+            }
+            glowAnimation = YoYo.with(Techniques.FadeIn)
+                    .duration(100)
+                    .withListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            super.onAnimationEnd(animation);
+                            glowAnimation = YoYo.with(Techniques.TakingOff)
+                                                .duration(1000)
+                                                .playOn(glow);
+                        }
+                    })
+                    .playOn(glow);
         }
         else if (arg1.getAction()==MotionEvent.ACTION_UP){
             schoenHierBubble.setAlpha((float) 1);

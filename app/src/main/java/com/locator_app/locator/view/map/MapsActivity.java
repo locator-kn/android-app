@@ -126,7 +126,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         gpsService.onActivityResult(requestCode, resultCode, data);
-        locationCreationController.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -164,6 +163,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     void onCreateLocationClick() {
         locationCreationController.startLocationCreation();
     }
+
 
     @OnClick(R.id.viewOptionsButton)
     void onviewOptionsButtonClick() {

@@ -5,13 +5,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/homescreen_background">
+
+    <ImageView
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:id="@+id/glow"
+        android:src="@drawable/glow_light_green"
+        android:alpha="0"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="150dp" />
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/homescreen_background"
         tools:context="com.locator_app.locator.view.home.HomeFragment"
         android:id="@+id/bubbleScreen">
 
@@ -73,4 +82,5 @@
         android:src="@drawable/splashscreen_small"
         android:scaleType="centerCrop"
         android:visibility="invisible" />
+
 </RelativeLayout>
