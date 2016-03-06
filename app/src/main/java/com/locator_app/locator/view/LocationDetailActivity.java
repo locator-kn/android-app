@@ -212,12 +212,12 @@ public class LocationDetailActivity extends FragmentActivity implements Impressi
 
     @Override
     public void onImpressionCreated(AbstractImpression.ImpressionType type) {
-        Toast.makeText(this, "Impression wurde hinzugefügt :-)", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Deine Impression wurde hinzugefügt :)", Toast.LENGTH_SHORT).show();
         loadImpressions();
     }
 
     @Override
     public void onImpressionCreationFailed(AbstractImpression.ImpressionType type, Throwable error) {
-        UiError.showError(this, error, "Impression konnte nich hinzugefügt werden");
+        UiError.showError(this, error, "Deine Impression konnte leider nicht hochgeladen werden :(");
     }
 }
