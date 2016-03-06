@@ -3,12 +3,12 @@ package com.locator_app.locator.view.recyclerviewadapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -20,7 +20,7 @@ import com.locator_app.locator.view.profile.ProfileActivity;
 import java.util.LinkedList;
 import java.util.List;
 
-import de.hdodenhof.circleimageview.CircleImageView;
+import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
 public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerViewAdapter.ViewHolder> {
 
@@ -35,10 +35,6 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
     public UserRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.default_list_item, parent, false);
-
-        CircleImageView civ = (CircleImageView) view.findViewById(R.id.bubbleView);
-        civ.setBorderColor(Color.LTGRAY);
-
         return new ViewHolder(view);
     }
 
@@ -60,12 +56,13 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
         return users.size();
     }
 
-    static class ViewHolder extends LocationRecyclerViewAdapter.GenericViewHolder {
+    static class ViewHolder extends RecyclerView.ViewHolder {
 
         public final View view;
         public final TextView name;
         public final TextView description;
-        public final CircleImageView imageView;
+        public final ImageView image;
+        public final ImageView circle;
 
         public ViewHolder(View view) {
             super(view);
@@ -74,23 +71,21 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
             description = (TextView) view.findViewById(R.id.description);
             description.setVisibility(View.GONE);
             name.setGravity(Gravity.CENTER_VERTICAL);
-            imageView = (CircleImageView)view.findViewById(R.id.bubbleView);
-            Glide.with(view.getContext()).load(R.drawable.profile).into(imageView);
+            image = (ImageView)view.findViewById(R.id.image);
+            circle = (ImageView)view.findViewById(R.id.circle);
 
             TextView bubbleInfo = (TextView) view.findViewById(R.id.bubble_info);
-            bubbleInfo.setVisibility(View.GONE);
-            bubbleInfo.setText("");
+            bubbleInfo.setVisibility(View.INVISIBLE);
         }
 
         public void update(User user) {
-            title.setText(user.name);
-
+            name.setText(user.name);
             Glide.with(LocatorApplication.getAppContext())
-                    .load(user.thumbnailUri())
-                    .asBitmap()
-                    .dontTransform()
+                    .load(user.getProfilePictureNormalSize())
+                    .error(R.drawable.profile_black)
+                    .bitmapTransform(new CropCircleTransformation(image.getContext()))
                     .dontAnimate()
-                    .into(imageView);
+                    .into(image);
         }
     }
 }

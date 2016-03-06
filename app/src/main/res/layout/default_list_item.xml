@@ -12,27 +12,35 @@
         android:orientation="vertical"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:layout_marginBottom="10dp">
 
         <TextView
             android:text="bubble info"
             android:layout_width="fill_parent"
-            android:layout_height="20dp"
+            android:layout_height="15dp"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:id="@+id/bubble_info"
             android:textColor="@android:color/black"
             android:gravity="center_vertical|center_horizontal" />
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/bubbleView"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:src="@drawable/com_facebook_profile_picture_blank_square"
-            app:civ_border_width="3dp"
-            app:civ_border_color="#FFFF00FF"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="10dp" />
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/circle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/circle_white"/>
+
+            <ImageView
+                android:id="@+id/image"
+                android:layout_margin="3dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </FrameLayout>
 
     </LinearLayout>
 

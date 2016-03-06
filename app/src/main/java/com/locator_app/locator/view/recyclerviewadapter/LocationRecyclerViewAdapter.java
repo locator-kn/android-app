@@ -4,26 +4,22 @@ package com.locator_app.locator.view.recyclerviewadapter;
 import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.google.android.gms.maps.model.Circle;
-import com.locator_app.locator.LocatorApplication;
 import com.locator_app.locator.R;
 import com.locator_app.locator.model.LocatorLocation;
 import com.locator_app.locator.util.DateConverter;
 import com.locator_app.locator.view.LocationDetailActivity;
-import com.locator_app.locator.view.bubble.BubbleView;
 
 import java.util.LinkedList;
 import java.util.List;
 
-import de.hdodenhof.circleimageview.CircleImageView;
+import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
 public class LocationRecyclerViewAdapter extends RecyclerView.Adapter<LocationRecyclerViewAdapter.ViewHolder> {
 
@@ -34,72 +30,26 @@ public class LocationRecyclerViewAdapter extends RecyclerView.Adapter<LocationRe
         notifyDataSetChanged();
     }
 
-    private int itemBackgroundColor = Color.WHITE;
-    public void setItemBackgroundColor(int color) { itemBackgroundColor = color; }
-    private int titleColor = Color.BLACK;
-    public void setTitleColor(int color) { titleColor = color; }
-    private int descrColor = Color.BLACK;
-    public void setDescrColor(int color) { descrColor = color; }
-
-    private ListItemFiller listItemFiller = (TextView title, TextView description, TextView creationDate, CircleImageView imageView, LocatorLocation location) -> {
-        title.setText(location.title);
-        Glide.with(LocatorApplication.getAppContext())
-                .load(location.thumbnailUri())
-                .dontAnimate()
-                .into(imageView);
-        if (location.city.title.isEmpty()) {
-            title.setGravity(Gravity.CENTER_VERTICAL);
-            description.setVisibility(View.GONE);
-        } else {
-            description.setText(location.city.title);
-        }
-        if (location.createDate != null) {
-            String formattedDate = DateConverter.toddMMyyyy(location.createDate);
-            creationDate.setText(formattedDate);
-        }
-    };
-    public void setListItemFiller(ListItemFiller filler) {
-        listItemFiller = filler;
-    }
-
-
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.default_list_item, parent, false);
 
-        view.setBackgroundColor(itemBackgroundColor);
-        TextView text = (TextView) view.findViewById(R.id.text);
-        TextView desc = (TextView) view.findViewById(R.id.description);
+        ImageView circle = (ImageView) view.findViewById(R.id.circle);
+        Glide.with(view.getContext()).load(R.drawable.circle_red).into(circle);
 
-        CircleImageView civ = (CircleImageView) view.findViewById(R.id.bubbleView);
-        civ.setBorderColor(Color.RED);
-
-        text.setTextColor(titleColor);
-        desc.setTextColor(descrColor);
-
-        return new ViewHolder(view, listItemFiller);
-    }
-
-    LocationClickHandler locationClickHandler = (v, location) -> {
-        Intent intent = new Intent(v.getContext(), LocationDetailActivity.class);
-        intent.putExtra("location", location);
-        v.getContext().startActivity(intent);
-    };
-
-    public void setLocationClickHandler(LocationClickHandler handler) {
-        locationClickHandler = handler;
-    }
-
-    public interface LocationClickHandler {
-        void handleLocationItemClick(View v, LocatorLocation location);
+        return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(final LocationRecyclerViewAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
         final LocatorLocation location = locations.get(position);
-        holder.update(location);
-        holder.view.setOnClickListener( v -> locationClickHandler.handleLocationItemClick(v, location));
+        holder.bind(location);
+        holder.view.setOnClickListener( v -> {
+            Intent intent = new Intent(v.getContext(), LocationDetailActivity.class);
+            intent.putExtra("location", location);
+            v.getContext().startActivity(intent);
+        });
     }
 
     @Override
@@ -107,41 +57,38 @@ public class LocationRecyclerViewAdapter extends RecyclerView.Adapter<LocationRe
         return locations.size();
     }
 
-    static abstract class GenericViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
 
         public final View view;
         public final TextView title;
         public final TextView description;
         public final TextView creationDate;
-        public final CircleImageView imageView;
+        public final ImageView image;
+        public final ImageView circle;
 
-        public GenericViewHolder(View view) {
+        public ViewHolder(View view) {
             super(view);
             this.view = view;
             title = (TextView) view.findViewById(R.id.text);
             description = (TextView) view.findViewById(R.id.description);
             creationDate = (TextView) view.findViewById(R.id.bubble_info);
-            imageView = (CircleImageView) view.findViewById(R.id.bubbleView);
-        }
-    }
-
-    static class ViewHolder extends GenericViewHolder {
-        private ListItemFiller listItemFiller;
-
-        public ViewHolder(View view, ListItemFiller filler) {
-            super(view);
-            listItemFiller = filler;
+            image = (ImageView) view.findViewById(R.id.image);
+            circle = (ImageView) view.findViewById(R.id.circle);
+            Glide.with(circle.getContext())
+                    .load(R.drawable.circle_silvergray)
+                    .into(circle);
         }
 
-        public void update(LocatorLocation location) {
-            listItemFiller.fillItem(title, description, creationDate, imageView, location);
+        public void bind(LocatorLocation location) {
+            title.setText(location.title);
+            description.setText(location.city.title);
+            creationDate.setText(DateConverter.toddMMyyyy(location.createDate));
+            Glide.with(image.getContext())
+                    .load(location.thumbnailUri())
+                    .error(R.drawable.location_auf_map)
+                    .bitmapTransform(new CropCircleTransformation(image.getContext()))
+                    .into(image);
         }
-    }
-
-    public interface ListItemFiller {
-        void fillItem(TextView title, TextView description,
-                      TextView creationDate, CircleImageView imageView,
-                      LocatorLocation location);
     }
 }
 

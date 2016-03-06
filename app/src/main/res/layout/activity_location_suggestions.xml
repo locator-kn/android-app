@@ -81,7 +81,7 @@
                         android:layout_alignParentBottom="true"
                         android:layout_centerHorizontal="true"
                         android:layout_marginBottom="20dp"
-                        android:src="@drawable/circle" />
+                        android:src="@drawable/circle_black" />
 
                     <ImageView
                         android:id="@+id/no"
