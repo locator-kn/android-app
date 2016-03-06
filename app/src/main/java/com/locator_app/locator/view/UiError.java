@@ -4,20 +4,15 @@ import android.content.Context;
 import android.widget.Toast;
 
 import com.locator_app.locator.apiservice.errorhandling.RequestError;
+import com.locator_app.locator.util.Debounce;
 
 public class UiError {
-    private final static int MIN_CALL_DELAY_MS = 15000;
-    private static long lastCall;
-    private static boolean calledRecently() {
-        long delay = System.currentTimeMillis() - lastCall;
-        lastCall = System.currentTimeMillis();
-        return delay < MIN_CALL_DELAY_MS;
-    }
+    private final static Debounce debounce = new Debounce(15000);
 
     public static boolean showError(Context context, Throwable error) {
         if (error instanceof RequestError &&
                 ((RequestError) error).getType() == RequestError.RequestErrorType.ServerUnreachable) {
-            if (!calledRecently()) {
+            if (!debounce.calledRecently()) {
                 Toast.makeText(context, "Kein Internet :(", Toast.LENGTH_SHORT).show();
             }
             return true;
