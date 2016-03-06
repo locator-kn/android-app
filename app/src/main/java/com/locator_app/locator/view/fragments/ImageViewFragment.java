@@ -1,6 +1,7 @@
 package com.locator_app.locator.view.fragments;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -9,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
-import com.locator_app.locator.R;
+import com.locator_app.locator.view.ImageActivity;
 
 public class ImageViewFragment extends Fragment {
 
@@ -23,6 +24,11 @@ public class ImageViewFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ImageView imageView = new ImageView(container.getContext());
         Glide.with(this).load(imageUri).centerCrop().into(imageView);
+        imageView.setOnClickListener(v -> {
+            Intent intent = new Intent(imageView.getContext(), ImageActivity.class);
+            intent.putExtra("uri", imageUri);
+            v.getContext().startActivity(intent);
+        });
         return imageView;
     }
 }
