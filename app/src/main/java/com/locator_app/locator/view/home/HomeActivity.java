@@ -179,6 +179,8 @@ public class HomeActivity extends AppCompatActivity {
         SchoenHierController.getInstance().markCurPosAsSchoenHier(gpsService)
                 .subscribe(
                         (response) -> {
+                            Intent intent = new Intent(HomeActivity.this, MapsActivity.class);
+                            startActivity(intent);
                         },
                         (error) -> {
                             UiError.showError(this, error);
@@ -198,12 +200,9 @@ public class HomeActivity extends AppCompatActivity {
 
     @OnClick(R.id.userProfileBubble)
     void onUserProfileBubbleClick() {
-        UserController userController = UserController.getInstance();
-        if (userController.loggedIn()) {
-            User me = userController.me();
-
+        if (UserController.getInstance().loggedIn()) {
             Intent intent = new Intent(this, ProfileActivity.class);
-            intent.putExtra("profile", me);
+            intent.putExtra("profile", UserController.getInstance().me());
             startActivity(intent);
         } else {
             jumpToLoginRegisterActivity();
