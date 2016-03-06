@@ -19,11 +19,11 @@
         android:layout_width="70dp"
         android:layout_height="70dp"
         android:id="@+id/schoenHierButton"
+        android:antialias="true"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="26dp"
-        android:src="@drawable/schoen_hier_clickable"
-        android:antialias="true"/>
+        android:src="@drawable/schoen_hier_clickable"/>
 
     <ImageView
         android:layout_width="45dp"
@@ -35,6 +35,16 @@
         android:layout_alignLeft="@+id/toggleHeatmapButton"
         android:layout_alignStart="@+id/toggleHeatmapButton"
         android:layout_alignTop="@+id/schoenHierButton" />
+
+    <ImageView
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginLeft="33dp"
+        android:id="@+id/createLocation"
+        android:src="@drawable/circle_white_add_location"
+        android:antialias="true"
+        android:layout_alignTop="@+id/schoenHierButton"
+        android:layout_alignBottom="@+id/schoenHierButton" />
 
     <ImageView
         android:layout_width="45dp"
@@ -65,7 +75,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/colorWelcome"
-        android:id="@+id/loadingScreen">
+        android:id="@+id/loadingScreen"
+        android:visibility="invisible">
 
         <ImageView
             android:layout_width="40dp"

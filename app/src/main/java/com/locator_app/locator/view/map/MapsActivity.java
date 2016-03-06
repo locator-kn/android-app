@@ -1,6 +1,7 @@
 package com.locator_app.locator.view.map;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -25,8 +26,11 @@ import com.google.maps.android.heatmaps.Gradient;
 import com.google.maps.android.heatmaps.HeatmapTileProvider;
 import com.locator_app.locator.R;
 import com.locator_app.locator.controller.SchoenHierController;
+import com.locator_app.locator.service.CameraService;
 import com.locator_app.locator.service.GpsService;
 import com.locator_app.locator.view.UiError;
+import com.locator_app.locator.view.locationcreation.LocationCreationController;
+import com.locator_app.locator.view.locationcreation.LocationSuggestions;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorListenerAdapter;
 
@@ -68,6 +72,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     boolean loadingScreenVisible = true;
 
     GpsService gpsService;
+    LocationCreationController locationCreationController;
 
     MapFragment mapFragment;
 
@@ -84,6 +89,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             initialCameraPosition = new LatLng(lat, lon);
         }
 
+
+        locationCreationController = new LocationCreationController(this);
         gpsService = new GpsService(this);
 
         mapFragment = (MapFragment) getSupportFragmentManager()
@@ -119,6 +126,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         gpsService.onActivityResult(requestCode, resultCode, data);
+        locationCreationController.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -150,6 +158,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             schoenHierButton.setAlpha((float) 1);
         }
         return false;
+    }
+
+    @OnClick(R.id.createLocation)
+    void onCreateLocationClick() {
+        locationCreationController.startLocationCreation();
     }
 
     @OnClick(R.id.viewOptionsButton)
