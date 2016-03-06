@@ -15,6 +15,7 @@ import com.locator_app.locator.util.DateConverter;
 import com.locator_app.locator.view.ImageActivity;
 import com.locator_app.locator.view.profile.ProfileActivity;
 
+import jp.wasabeef.glide.transformations.CropCircleTransformation;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -47,6 +48,7 @@ public class ImageImpressionViewHolder extends ImpressionViewHolder {
                             Glide.with(userImage.getContext())
                                     .load(user.thumbnailUri())
                                     .error(R.drawable.profile_black)
+                                    .bitmapTransform(new CropCircleTransformation(userImage.getContext()))
                                     .dontAnimate()
                                     .into(userImage);
                             userImage.setOnClickListener(v -> {
