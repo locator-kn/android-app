@@ -9,62 +9,26 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.locator_app.locator.LocatorApplication;
 import com.locator_app.locator.R;
 import com.locator_app.locator.controller.SearchController;
-import com.locator_app.locator.model.GoogleLocation;
 import com.locator_app.locator.model.LocatorLocation;
-import com.locator_app.locator.util.DateConverter;
 import com.locator_app.locator.view.DividerItemDecoration;
-import com.locator_app.locator.view.locationcreation.LocationSuggestions;
-import com.locator_app.locator.view.recyclerviewadapter.LocationRecyclerViewAdapter;
+import com.locator_app.locator.view.recyclerviewadapter.SearchRecyclerViewAdapter;
 
 import java.util.LinkedList;
 import java.util.List;
 
-import de.hdodenhof.circleimageview.CircleImageView;
-
 public class SearchResultsFragment extends Fragment {
 
     private SearchInteractionListener listener;
-    private LocationRecyclerViewAdapter adapter = new LocationRecyclerViewAdapter();
+    private final SearchRecyclerViewAdapter adapter;
     private RecyclerView view;
 
     public static class DummyLocation extends LocatorLocation{}
 
     public SearchResultsFragment() {
-        adapter.setItemBackgroundColor(Color.TRANSPARENT);
-        adapter.setTitleColor(Color.WHITE);
-        adapter.setDescrColor(Color.WHITE);
-        adapter.setListItemFiller((title, description, creationDate, imageView, location) -> {
-            if (location instanceof DummyLocation) {
-                title.setVisibility(View.INVISIBLE);
-                description.setVisibility(View.INVISIBLE);
-                creationDate.setVisibility(View.INVISIBLE);
-                imageView.setVisibility(View.INVISIBLE);
-            } else {
-                title.setVisibility(View.VISIBLE);
-                description.setVisibility(View.VISIBLE);
-                imageView.setVisibility(View.VISIBLE);
-                title.setText(location.title);
-                Glide.with(LocatorApplication.getAppContext())
-                        .load(location.thumbnailUri())
-                        .dontAnimate()
-                        .into(imageView);
-
-                if (location instanceof GoogleLocation) {
-                    description.setText("Vorschlag von Google");
-                } else {
-                    description.setText("Vorschlag von Locator");
-                }
-                creationDate.setText("");
-            }
-        });
-
-        adapter.setLocationClickHandler((v, location) -> {
+        adapter = new SearchRecyclerViewAdapter(location -> {
             if (listener != null) {
                 listener.onLocationClicked(location);
             }

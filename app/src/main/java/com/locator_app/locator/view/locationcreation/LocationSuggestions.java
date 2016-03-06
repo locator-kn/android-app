@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.locator_app.locator.LocatorApplication;
 import com.locator_app.locator.R;
 import com.locator_app.locator.controller.LocationController;
@@ -29,6 +30,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class LocationSuggestions extends FragmentActivity implements SearchResultsFragment.SearchInteractionListener {
+
     SearchResultsFragment searchResultsFragment;
     Bundle extras;
     GpsService gpsService;

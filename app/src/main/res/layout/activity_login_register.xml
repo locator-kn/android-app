@@ -16,7 +16,8 @@
         android:layout_weight="1"
         android:paddingLeft="50dp"
         android:paddingRight="50dp"
-        android:paddingTop="10dp"/>
+        android:paddingTop="10dp"
+        android:src="@drawable/locator_logo"/>
 
     <TextView
         android:layout_width="match_parent"
@@ -34,6 +35,7 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_weight="3"
+        android:src="@drawable/login"
         />
 
     <ImageView
@@ -41,7 +43,7 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_weight="3"
-        />
+        android:src="@drawable/login_facebook" />
 
     <ImageView
         android:id="@+id/register"
@@ -49,6 +51,7 @@
         android:layout_height="60dp"
         android:layout_gravity="center_horizontal"
         android:layout_weight="3"
+        android:src="@drawable/register"
         />
 
 </LinearLayout>

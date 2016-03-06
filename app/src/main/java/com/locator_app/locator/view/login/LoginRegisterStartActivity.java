@@ -37,7 +37,6 @@ public class LoginRegisterStartActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         setCustomActionBar();
         setupEventBus();
-        loadImages();
     }
 
     private void setupEventBus() {
@@ -70,21 +69,6 @@ public class LoginRegisterStartActivity extends AppCompatActivity {
         customActionBar.setTitle(getResources().getString(R.string.welcome_to));
         customActionBar.setBackButtonVisibility(View.INVISIBLE);
         customActionBar.setCrossButtonVisibility(View.INVISIBLE);
-//        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-//        getSupportActionBar().setCustomView(R.layout.actionbar_custom);
-//        View v = getSupportActionBar().getCustomView();
-//        TextView titleTxtView = (TextView) v.findViewById(R.id.actionbar_title);
-//        titleTxtView.setText(R.string.welcome_to);
-//        ImageView backButton = (ImageView) v.findViewById(R.id.actionbar_back);
-//        backButton.setVisibility(View.INVISIBLE);
-//        ImageView crossButton = (ImageView) v.findViewById(R.id.actionbar_cross);
-//        crossButton.setVisibility(View.INVISIBLE);
-    }
-
-    void loadImages() {
-        Glide.with(this).load(R.drawable.locator_logo).into(locatorLogo);
-        Glide.with(this).load(R.drawable.yes).into(loginYes);
-        Glide.with(this).load(R.drawable.no).into(loginNo);
     }
 
 
