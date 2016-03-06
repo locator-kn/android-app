@@ -4,10 +4,10 @@
     android:background="@color/colorWhite"
     android:layout_marginBottom="20dp">
 
-    <de.hdodenhof.circleimageview.CircleImageView
+    <ImageView
         android:id="@+id/userThumbnail"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="fill_parent"
         android:src="@drawable/profile_black"
         android:adjustViewBounds="false"
         android:layout_weight="1" />
