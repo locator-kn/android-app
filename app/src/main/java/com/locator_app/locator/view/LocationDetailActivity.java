@@ -2,6 +2,7 @@ package com.locator_app.locator.view;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.UiThread;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
@@ -12,6 +13,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
+import com.daimajia.androidanimations.library.specials.RollInAnimator;
 import com.locator_app.locator.R;
 import com.locator_app.locator.controller.LocationController;
 import com.locator_app.locator.controller.UserController;
@@ -28,8 +32,11 @@ import com.locator_app.locator.view.impressions.ImpressionRecyclerViewAdapter;
 
 import org.w3c.dom.Text;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -52,6 +59,12 @@ public class LocationDetailActivity extends FragmentActivity implements Impressi
 
     @Bind(R.id.heart)
     ImageView heartImageView;
+
+    @Bind(R.id.categorie1)
+    ImageView categorie1;
+
+    @Bind(R.id.categorie2)
+    ImageView categorie2;
 
     ImageFragmentAdapter imageFragmentAdapter;
     ImpressionRecyclerViewAdapter impressionAdapter;
@@ -186,12 +199,47 @@ public class LocationDetailActivity extends FragmentActivity implements Impressi
     private void setupLocationInformation() {
         locationTitle.setText(location.title);
         updateFavorHeart();
+        showCategories();
     }
 
     private void updateFavorHeart() {
         int heartResourceId = userFavorsLocation() ? R.drawable.small_heart_red : R.drawable.small_heart_white;
         Glide.with(getApplicationContext()).load(heartResourceId)
                 .into(heartImageView);
+    }
+
+    private static final Map<String, Integer> categorieToImage;
+    static {
+        Map<String, Integer> aMap = new HashMap<>();
+        aMap.put("culture",   R.drawable.category_culture);
+        aMap.put("gastro",    R.drawable.category_gastro);
+        aMap.put("holiday",   R.drawable.category_holiday);
+        aMap.put("nature",    R.drawable.category_natur);
+        aMap.put("nightlife", R.drawable.category_party);
+        aMap.put("secret",    R.drawable.category_secret);
+        categorieToImage = Collections.unmodifiableMap(aMap);
+    }
+
+    private void showCategories() {
+        loadCategorie(categorie2, 1, 200);
+        loadCategorie(categorie1, 0, 1200);
+    }
+
+    private void loadCategorie(ImageView v, int index, int delay) {
+        if (location.categories.size() > index) {
+            String categorie = location.categories.get(index);
+            v.setAlpha(0.f);
+            if (categorieToImage.containsKey(categorie)) {
+                Glide.with(this)
+                        .load(categorieToImage.get(categorie))
+                        .into(v);
+                new Handler().postDelayed(() ->
+                        YoYo.with(Techniques.RollIn)
+                            .duration(1000)
+                            .playOn(v),
+                        delay);
+            }
+        }
     }
 
     private boolean userFavorsLocation() {
