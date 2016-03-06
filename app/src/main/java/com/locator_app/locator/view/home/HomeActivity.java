@@ -188,7 +188,7 @@ public class HomeActivity extends AppCompatActivity {
 
             if (glowAnimation != null &&
                 glowAnimation.isRunning()) {
-                glowAnimation.stop(true);
+                glowAnimation.stop(false);
             }
             glowAnimation = YoYo.with(Techniques.FadeIn)
                     .duration(100)
@@ -197,14 +197,18 @@ public class HomeActivity extends AppCompatActivity {
                         public void onAnimationEnd(Animator animation) {
                             super.onAnimationEnd(animation);
                             glowAnimation = YoYo.with(Techniques.TakingOff)
-                                                .duration(1000)
-                                                .playOn(glow);
+                                    .duration(1000)
+                                    .playOn(glow);
                         }
                     })
                     .playOn(glow);
         }
         else if (arg1.getAction()==MotionEvent.ACTION_UP){
             schoenHierBubble.setAlpha((float) 1);
+            if (glowAnimation != null &&
+                    glowAnimation.isRunning()) {
+                glowAnimation.stop(false);
+            }
         }
         return false;
     }
