@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.github.tbouron.shakedetector.library.ShakeDetector;
 import com.locator_app.locator.R;
 import com.locator_app.locator.controller.DeviceController;
+import com.locator_app.locator.util.Debounce;
 import com.locator_app.locator.view.UiError;
 import com.locator_app.locator.view.locationcreation.LocationCreationController;
 import com.locator_app.locator.controller.MyController;
@@ -62,6 +63,8 @@ public class HomeActivity extends AppCompatActivity {
 
     GpsService gpsService;
 
+    Debounce shakeDebounce = new Debounce(2000);
+
     private static boolean isFirstTime = true;
 
     @Override
@@ -100,8 +103,14 @@ public class HomeActivity extends AppCompatActivity {
         }
         gpsService = new GpsService(this);
 
-        ShakeDetector.create(this, this::loadBubbleScreen);
+        ShakeDetector.create(this, this::onShake);
         loadBubbleScreen();
+    }
+
+    private void onShake() {
+        if (!shakeDebounce.calledRecently()) {
+            loadBubbleScreen();
+        }
     }
 
     private void loadBubbleScreen() {
