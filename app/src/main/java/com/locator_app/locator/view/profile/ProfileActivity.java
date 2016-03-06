@@ -2,6 +2,7 @@ package com.locator_app.locator.view.profile;
 
 import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentActivity;
@@ -41,7 +42,6 @@ public class ProfileActivity extends FragmentActivity {
     TextView userName;
 
     @Bind(R.id.profileImageView)
-    //CircleImageView profileImageBubbleView;
     ImageView profileImageBubbleView;
 
     @Bind(R.id.tabLayout)
@@ -70,6 +70,8 @@ public class ProfileActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
         ButterKnife.bind(this);
+
+        tabLayout.setSelectedTabIndicatorColor(Color.parseColor("#FFFFFF"));
 
         user = (User) getIntent().getSerializableExtra("profile");
 
