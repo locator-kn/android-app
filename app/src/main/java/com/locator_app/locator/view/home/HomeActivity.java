@@ -186,7 +186,7 @@ public class HomeActivity extends AppCompatActivity {
             schoenHierBubble.setAlpha((float) 0.6);
 
 
-            if (glowAnimation != null ||
+            if (glowAnimation != null &&
                 glowAnimation.isRunning()) {
                 glowAnimation.stop(true);
             }
