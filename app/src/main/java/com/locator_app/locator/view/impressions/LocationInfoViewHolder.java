@@ -12,6 +12,7 @@ import com.locator_app.locator.model.impressions.AbstractImpression;
 import com.locator_app.locator.service.GpsService;
 import com.locator_app.locator.util.DistanceCalculator;
 import com.locator_app.locator.view.map.MapsActivity;
+import com.locator_app.locator.view.profile.ProfileActivity;
 
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -36,6 +37,11 @@ class LocationInfoViewHolder extends ImpressionViewHolder {
                 .subscribe(
                         (user) -> {
                             locatorName.setText(user.name);
+                            itemView.setOnClickListener(v -> {
+                                Intent intent = new Intent(itemView.getContext(), ProfileActivity.class);
+                                intent.putExtra("profile", user);
+                                itemView.getContext().startActivity(intent);
+                            });
                         },
                         (err) -> {
                             locatorName.setText("(unknown)");
@@ -60,7 +66,7 @@ class LocationInfoViewHolder extends ImpressionViewHolder {
                         }
                 );
         favorites = (TextView) itemView.findViewById(R.id.favorites);
-        favorites.setText(Integer.toString(impressionRecyclerViewAdapter.location.favorites.size()));
+        updateFavorCounter();
         goToHeatmap = (ImageView) itemView.findViewById(R.id.heatmap);
 
         goToHeatmap.setOnClickListener(v -> {
@@ -77,6 +83,7 @@ class LocationInfoViewHolder extends ImpressionViewHolder {
     }
 
     public void updateFavorCounter() {
-        favorites.setText(Integer.toString(impressionRecyclerViewAdapter.location.favorites.size()));
+        favorites.setText(String.format("%d",
+                impressionRecyclerViewAdapter.location.favorites.size()));
     }
 }
