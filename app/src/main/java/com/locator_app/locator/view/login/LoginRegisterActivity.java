@@ -50,7 +50,6 @@ public class LoginRegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login_register);
         ButterKnife.bind(this);
         setCustomActionBar();
-        loadImages();
 
         FacebookSdk.sdkInitialize(getApplicationContext());
         FacebookSdk.setApplicationId(getResources().getString(R.string.facebook_app_id));
@@ -78,14 +77,6 @@ public class LoginRegisterActivity extends AppCompatActivity {
         customActionBar.setTitle(getResources().getString(R.string.welcome_to));
         customActionBar.setBackButtonVisibility(View.INVISIBLE);
         customActionBar.setCrossButtonJumpScreen(LoginRegisterStartActivity.class);
-    }
-
-    private void loadImages() {
-        // set images url's
-        Glide.with(this).load(R.drawable.locator_logo).into(locatorLogo);
-        Glide.with(this).load(R.drawable.login).into(login);
-        Glide.with(this).load(R.drawable.login_facebook).into(loginFacebook);
-        Glide.with(this).load(R.drawable.register).into(register);
     }
 
     private void facebookLogin() {

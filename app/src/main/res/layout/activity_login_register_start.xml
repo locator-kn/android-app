@@ -18,6 +18,7 @@
         android:paddingRight="50dp"
         android:paddingTop="10dp"
         android:adjustViewBounds="true"
+        android:src="@drawable/locator_logo"
         />
 
     <TextView
@@ -32,19 +33,21 @@
         />
 
     <ImageView
-        android:id="@+id/login_yes"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_weight="2"
-        />
-
-    <ImageView
         android:id="@+id/login_no"
         android:layout_width="70dp"
         android:layout_height="70dp"
         android:layout_gravity="center_horizontal"
         android:layout_weight="2"
+        android:src="@drawable/no"
+        />
+
+    <ImageView
+        android:id="@+id/login_yes"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="2"
+        android:src="@drawable/yes"
         />
 
 </LinearLayout>
