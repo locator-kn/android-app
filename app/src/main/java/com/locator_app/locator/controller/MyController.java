@@ -31,6 +31,12 @@ public class MyController {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
+    public Observable<Object> forgotPassword(String email) {
+        return myService.forgotPassword(email)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
     private static MyController instance;
     public static MyController getInstance() {
         if (instance == null) {

@@ -7,6 +7,7 @@ import com.locator_app.locator.apiservice.errorhandling.GenericErrorHandler;
 import retrofit.Response;
 import retrofit.http.Body;
 import retrofit.http.GET;
+import retrofit.http.POST;
 import retrofit.http.PUT;
 import retrofit.http.Query;
 import rx.Observable;
@@ -21,6 +22,9 @@ public class MyApiService {
 
         @PUT(Api.version + "/my/users/changePwd")
         Observable<Response<Object>> changePassword(@Body ChangePasswordRequest changePasswordRequest);
+
+        @POST(Api.version + "/my/users/forgetPassword")
+        Observable<Response<Object>> forgotPassword(@Body ForgotPasswordRequest forgotPasswordRequest);
     }
 
     MyApi service = ServiceFactory.createService(MyApi.class);
@@ -33,5 +37,7 @@ public class MyApiService {
         return GenericErrorHandler.wrapSingle(service.changePassword(new ChangePasswordRequest(oldPassword, newPassword)));
     }
 
-
+    public Observable<Object> forgotPassword(String email) {
+        return GenericErrorHandler.wrapSingle(service.forgotPassword(new ForgotPasswordRequest(email)));
+    }
 }

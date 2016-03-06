@@ -1,6 +1,8 @@
 package com.locator_app.locator.view.login;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +13,7 @@ import android.widget.Toast;
 
 import com.locator_app.locator.R;
 import com.locator_app.locator.apiservice.errorhandling.HttpError;
+import com.locator_app.locator.controller.MyController;
 import com.locator_app.locator.controller.UserController;
 import com.locator_app.locator.apiservice.users.LoginRequest;
 import com.locator_app.locator.view.UiError;
@@ -18,6 +21,7 @@ import com.locator_app.locator.view.home.HomeActivity;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -51,6 +55,28 @@ public class LoginPasswordActivity extends AppCompatActivity {
         LoginCustomActionBar customActionBar = new LoginCustomActionBar(getSupportActionBar(), this);
         customActionBar.setTitle(getResources().getString(R.string.login));
         customActionBar.setCrossButtonJumpScreen(LoginRegisterStartActivity.class);
+    }
+
+    @OnClick(R.id.forgotPassword)
+    void onForgotPasswordClick() {
+        new AlertDialog.Builder(this)
+                .setTitle("Super")
+                .setMessage("Ein neues Passwort wird an die angegebene Emailadresse gesendet")
+                .setPositiveButton("Okay", (dialog, which) -> {
+                })
+                .show();
+        MyController.getInstance().forgotPassword(getIntent().getStringExtra("mail"))
+                .subscribe(
+                        (res) -> {},
+                        (err) -> {
+                            if (err instanceof HttpError &&
+                                ((HttpError) err).getErrorCode() == HttpError.HttpErrorCode.notFound) {
+                                Toast.makeText(this, "Deine Emailadresse ist nicht registriert", Toast.LENGTH_SHORT).show();
+                            } else {
+                                UiError.showError(this, err, "Da ist was schief gelaufen :/");
+                            }
+                        }
+                );
     }
 
     void login(String mail, String password) {
