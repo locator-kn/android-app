@@ -21,16 +21,7 @@ class CreateImpressionViewHolder extends ImpressionViewHolder {
         this.impressionRecyclerViewAdapter = impressionRecyclerViewAdapter;
         numberOfImpressions = (TextView)itemView.findViewById(R.id.numberOfImpressions);
         numberOfImpressions.setText("");
-        LinearLayout impressionTypes = (LinearLayout) itemView.findViewById(R.id.impressionTypes);
-        impressionTypes.setVisibility(View.GONE);
-        LinearLayout showHideImpressionTypes = (LinearLayout) itemView.findViewById(R.id.showHideImpressionTypes);
-        showHideImpressionTypes.setOnClickListener(v -> {
-            if (impressionTypes.getVisibility() == View.GONE) {
-                impressionTypes.setVisibility(View.VISIBLE);
-            } else {
-                impressionTypes.setVisibility(View.GONE);
-            }
-        });
+
         ImageView image = (ImageView) itemView.findViewById(R.id.imageImpression);
         image.setOnClickListener(v -> {
             Intent intent = new Intent(v.getContext(), ImpressionController.class);
@@ -46,6 +37,7 @@ class CreateImpressionViewHolder extends ImpressionViewHolder {
             intent.putExtra("type", "video");
             v.getContext().startActivity(intent);
         });
+
         ImageView text = (ImageView) itemView.findViewById(R.id.textImpression);
         text.setOnClickListener(v -> {
             Intent intent = new Intent(v.getContext(), ImpressionController.class);
@@ -60,8 +52,8 @@ class CreateImpressionViewHolder extends ImpressionViewHolder {
     }
 
     public void setNumberOfImpressions(int count) {
-        if (numberOfImpressions != null && count > 0) {
-            numberOfImpressions.setText(Integer.toString(count) + " Impressions");
+        if (count > 0) {
+            numberOfImpressions.setText(String.format("%d Impressions", count));
         }
     }
 }

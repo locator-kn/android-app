@@ -53,7 +53,7 @@ class LocationInfoViewHolder extends ImpressionViewHolder {
                                     impressionRecyclerViewAdapter.location.geoTag.getLatitude(),
                                     impressionRecyclerViewAdapter.location.geoTag.getLongitude());
 
-                            distance.setText(String.format("%1$,.1f km", distanceVal));
+                            distance.setText(String.format(" · %1$,.1f km", distanceVal));
                         },
                         (error) -> {
 
