@@ -34,7 +34,7 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
+        android:layout_height="60dp"
         android:id="@+id/impressionTypes">
 
         <ImageView
@@ -44,10 +44,10 @@
             android:src="@drawable/small_gray_chat"
             android:adjustViewBounds="false"
             android:layout_weight="1"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp"
             android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp" />
+            android:layout_marginRight="30dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp" />
 
         <ImageView
             android:layout_width="0dp"
@@ -56,10 +56,10 @@
             android:src="@drawable/small_gray_photo"
             android:adjustViewBounds="false"
             android:layout_weight="1"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp"
             android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp" />
+            android:layout_marginRight="30dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp" />
 
         <ImageView
             android:layout_width="0dp"
@@ -68,10 +68,10 @@
             android:src="@drawable/small_gray_video"
             android:adjustViewBounds="false"
             android:layout_weight="1"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp"
             android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp" />
+            android:layout_marginRight="30dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp" />
 
     </LinearLayout>
 </LinearLayout>
