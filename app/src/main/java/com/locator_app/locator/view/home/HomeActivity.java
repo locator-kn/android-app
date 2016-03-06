@@ -220,6 +220,7 @@ public class HomeActivity extends AppCompatActivity {
                         (response) -> {
                             Intent intent = new Intent(HomeActivity.this, MapsActivity.class);
                             startActivity(intent);
+                            overridePendingTransition(R.anim.push_right_in, R.anim.push_left_out);
                         },
                         (error) -> {
                             UiError.showError(this, error);
