@@ -30,6 +30,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_gravity="left|center_vertical"
                 android:textSize="@dimen/text_size_big" />
+
         </FrameLayout>
 
         <FrameLayout
@@ -49,6 +50,15 @@
                 android:layout_centerHorizontal="true"
                 android:layout_gravity="left|center_vertical"
                 android:textColor="#000000" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageView2"
+                android:layout_gravity="right|center_vertical"
+                android:src="@drawable/small_right"
+                android:layout_marginTop="22dp"
+                android:layout_marginBottom="22dp" />
         </FrameLayout>
 
         <FrameLayout
@@ -68,6 +78,15 @@
                 android:layout_gravity="left|center_vertical"
                 android:textColor="#000000"
                 android:paddingLeft="20dp" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageView4"
+                android:layout_gravity="right|center_vertical"
+                android:src="@drawable/small_right"
+                android:layout_marginTop="22dp"
+                android:layout_marginBottom="22dp" />
         </FrameLayout>
 
         <FrameLayout
@@ -115,6 +134,35 @@
                 android:layout_gravity="right|center_vertical"
                 android:checked="true"
                 android:paddingRight="20dp" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="@drawable/divider_bottom"
+            android:id="@+id/frameLayout2"
+            android:layout_gravity="center_horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Nutzungsbedingungen"
+                android:id="@+id/textView16"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="left|center_vertical"
+                android:textColor="#000000"
+                android:paddingLeft="20dp" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageView11"
+                android:layout_gravity="right|center_vertical"
+                android:src="@drawable/small_right"
+                android:layout_marginTop="22dp"
+                android:layout_marginBottom="22dp" />
         </FrameLayout>
 
     </LinearLayout>
