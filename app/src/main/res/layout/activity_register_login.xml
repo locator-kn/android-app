@@ -43,7 +43,8 @@
         android:layout_weight="3"
         android:layout_marginBottom="5dp"
         android:layout_marginTop="5dp"
-        android:src="@drawable/login"
+        android:src="@drawable/login_small"
+        android:scaleType="fitEnd"
         />
 
     <ImageView
@@ -53,7 +54,7 @@
         android:layout_weight="3"
         android:layout_marginBottom="5dp"
         android:layout_marginTop="5dp"
-        android:src="@drawable/login_facebook" />
+        android:src="@drawable/login_facebook_small" />
 
     <ImageView
         android:id="@+id/register"
@@ -63,7 +64,7 @@
         android:layout_weight="3"
         android:layout_marginBottom="5dp"
         android:layout_marginTop="5dp"
-        android:src="@drawable/register"
+        android:src="@drawable/register_small"
         />
 
 </LinearLayout>
