@@ -25,6 +25,9 @@ public class ServiceFactory {
         if (retrofit == null) {
 
             OkHttpClient client = new OkHttpClient();
+            client.setFollowRedirects(true);
+            client.setFollowSslRedirects(true);
+            client.setWriteTimeout(100, TimeUnit.SECONDS);
             HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
             interceptor.setLevel(HttpLoggingInterceptor.Level.HEADERS);
             client.interceptors().add(interceptor);

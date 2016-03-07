@@ -6,6 +6,7 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -34,6 +35,7 @@ public class ImpressionController extends Activity {
     private String locationId;
     private Uri imageUri;
     File videoFile;
+    MediaRecorder mediaRecorder;
 
     ImageView imageView;
 
@@ -72,12 +74,13 @@ public class ImpressionController extends Activity {
     }
 
     private void createVideoImpression() {
-        videoFile = new File(getExternalCacheDir(), "videoimpression.mp4");
+        videoFile = new File(getExternalCacheDir(), "videoimpression.3gp");
 
         Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+        intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(videoFile));
         intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 10);
-        intent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, 6000000); // ~5.7MB
+        intent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, 6291456L);
         startActivityForResult(intent, VIDEO);
     }
 

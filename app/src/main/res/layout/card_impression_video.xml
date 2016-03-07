@@ -14,22 +14,19 @@
 
         <include layout="@layout/impression_header"/>
 
-        <RelativeLayout
+        <FrameLayout
             android:layout_width="fill_parent"
-            android:layout_height="270dp">
+            android:layout_height="270dp"
+            android:background="@android:color/black">
 
             <ImageView
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
                 android:id="@+id/videoPreview"
                 android:layout_gravity="center"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentRight="true"
-                android:src="@drawable/ic_play_light" />
+                android:src="@drawable/ic_play_dark" />
 
-        </RelativeLayout>
+        </FrameLayout>
 
     </LinearLayout>
 
