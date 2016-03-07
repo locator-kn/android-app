@@ -61,6 +61,7 @@ public class MarkerInfoWindow extends Fragment {
     public View getView() {
         titleTextView.setText(titleText);
         followersTextView.setText(followersText);
+        nameTextView.setText("     ");
 
         return view;
     }
