@@ -49,7 +49,7 @@ public class BubbleController {
         new Handler().postDelayed(() -> {
             initUserProfileBubble();
             initSchoenHierBubble();
-        }, 100);
+        }, 1000);
         layout.requestLayout();
         layout.refreshDrawableState();
     }
