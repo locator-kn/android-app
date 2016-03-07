@@ -1,38 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="40dp"
     android:orientation="horizontal"
     android:id="@+id/actionbar_custom_layout"
-    android:weightSum="5">
+    android:layout_marginTop="10dp"
+    >
 
     <ImageView
-        android:id="@+id/actionbar_back"
+        android:id="@+id/locatorHeaderBack"
         android:src="@drawable/back"
-        android:layout_width="15dp"
-        android:layout_height="15dp"
+        android:layout_width="0dp"
+        android:layout_height="fill_parent"
         android:layout_weight="1"
+        android:layout_margin="12dp"
         android:layout_gravity="center"
         />
 
     <TextView
-        android:id="@+id/actionbar_title"
-        android:layout_width="match_parent"
+        android:text="Change me"
+        android:id="@+id/locatorHeaderTitle"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:textAlignment="center"
         android:textColor="@color/colorWhite"
         android:fontFamily="source-sans-pro"
         android:textSize="16dp"
-        android:layout_weight="3"
+        android:layout_weight="5"
         />
 
     <ImageView
-        android:id="@+id/actionbar_cross"
+        android:id="@+id/locatorHeaderCancel"
         android:src="@drawable/cross"
-        android:layout_width="15dp"
-        android:layout_height="15dp"
+        android:layout_width="0dp"
+        android:layout_height="fill_parent"
         android:layout_weight="1"
+        android:layout_margin="12dp"
         android:layout_gravity="center"
         />
 </LinearLayout>

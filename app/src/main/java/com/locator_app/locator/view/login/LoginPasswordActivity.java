@@ -1,11 +1,10 @@
 package com.locator_app.locator.view.login;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
@@ -13,19 +12,18 @@ import android.widget.Toast;
 
 import com.locator_app.locator.R;
 import com.locator_app.locator.apiservice.errorhandling.HttpError;
+import com.locator_app.locator.apiservice.users.LoginRequest;
 import com.locator_app.locator.controller.MyController;
 import com.locator_app.locator.controller.UserController;
-import com.locator_app.locator.apiservice.users.LoginRequest;
+import com.locator_app.locator.view.LocatorHeader;
 import com.locator_app.locator.view.UiError;
 import com.locator_app.locator.view.home.HomeActivity;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
-public class LoginPasswordActivity extends AppCompatActivity {
+public class LoginPasswordActivity extends Activity {
 
     @Bind(R.id.loginPassword)
     TextView loginPassword;
@@ -35,7 +33,9 @@ public class LoginPasswordActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_password);
         ButterKnife.bind(this);
-        setCustomActionBar();
+
+        LocatorHeader header = new LocatorHeader(this);
+        header.setTitle(R.string.login);
 
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
@@ -49,12 +49,6 @@ public class LoginPasswordActivity extends AppCompatActivity {
             }
             return false;
         });
-    }
-
-    private void setCustomActionBar() {
-        LoginCustomActionBar customActionBar = new LoginCustomActionBar(getSupportActionBar(), this);
-        customActionBar.setTitle(getResources().getString(R.string.login));
-        customActionBar.setCrossButtonJumpScreen(LoginRegisterStartActivity.class);
     }
 
     @OnClick(R.id.forgotPassword)

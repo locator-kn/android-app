@@ -1,29 +1,22 @@
 package com.locator_app.locator.view.login;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.View;
 import android.widget.ImageView;
-import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
-import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.locator_app.locator.R;
 import com.locator_app.locator.controller.UserController;
+import com.locator_app.locator.view.LocatorHeader;
 import com.locator_app.locator.view.UiError;
 import com.locator_app.locator.view.home.HomeActivity;
 import com.locator_app.locator.view.register.RegisterNameActivity;
-
-import org.json.JSONObject;
 
 import java.util.Arrays;
 
@@ -31,7 +24,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class LoginRegisterActivity extends AppCompatActivity {
+public class LoginRegisterActivity extends Activity {
 
     @Bind(R.id.locator_logo)
     ImageView locatorLogo;
@@ -47,9 +40,11 @@ public class LoginRegisterActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login_register);
+        setContentView(R.layout.activity_register_login);
         ButterKnife.bind(this);
-        setCustomActionBar();
+
+        LocatorHeader header = new LocatorHeader(this);
+        header.setTitle(R.string.welcome_to);
 
         FacebookSdk.sdkInitialize(getApplicationContext());
         FacebookSdk.setApplicationId(getResources().getString(R.string.facebook_app_id));
@@ -70,13 +65,6 @@ public class LoginRegisterActivity extends AppCompatActivity {
     public void onRegisterClick() {
         Intent intent = new Intent(getApplicationContext(), RegisterNameActivity.class);
         startActivity(intent);
-    }
-
-    private void setCustomActionBar() {
-        LoginCustomActionBar customActionBar = new LoginCustomActionBar(getSupportActionBar(), this);
-        customActionBar.setTitle(getResources().getString(R.string.welcome_to));
-        customActionBar.setBackButtonVisibility(View.INVISIBLE);
-        customActionBar.setCrossButtonJumpScreen(LoginRegisterStartActivity.class);
     }
 
     private void facebookLogin() {
