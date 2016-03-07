@@ -143,7 +143,6 @@
         <activity
             android:name=".view.profile.ChangePasswordActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".view.profile.TermsOfServiceActivity"></activity>
     </application>
 
 </manifest>
