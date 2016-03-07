@@ -10,7 +10,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+import com.locator_app.locator.R;
 import com.locator_app.locator.controller.LocationController;
 import com.locator_app.locator.model.impressions.AbstractImpression;
 
@@ -21,6 +24,8 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
+import butterknife.ButterKnife;
+
 public class ImpressionController extends Activity {
 
     public static final int IMAGE = 100;
@@ -30,9 +35,13 @@ public class ImpressionController extends Activity {
     private Uri imageUri;
     File videoFile;
 
+    ImageView imageView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_impression_controller);
+        imageView = (ImageView)findViewById(R.id.imageView);
 
         locationId = getIntent().getStringExtra("locationId");
         String type = getIntent().getStringExtra("type");
@@ -68,7 +77,7 @@ public class ImpressionController extends Activity {
         Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(videoFile));
         intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 10);
-        intent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, 6291456); // 6MB
+        intent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, 6000000); // ~5.7MB
         startActivityForResult(intent, VIDEO);
     }
 
@@ -98,6 +107,8 @@ public class ImpressionController extends Activity {
     }
 
     private void doUploadImage() {
+        spin();
+
         try {
             Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
             LocationController.getInstance().createImageImpression(locationId, imageBitmap)
@@ -118,6 +129,8 @@ public class ImpressionController extends Activity {
     }
 
     private void doUploadVideo() {
+        spin();
+
         try {
             byte[] data = FileUtils.readFileToByteArray(videoFile);
             LocationController.getInstance().createVideoImpression(locationId, data)
@@ -136,6 +149,12 @@ public class ImpressionController extends Activity {
             e.printStackTrace();
             finish();
         }
+    }
+
+    private void spin() {
+        Glide.with(this).load(R.drawable.preloader)
+                .asGif()
+                .into(imageView);
     }
 
     private static Set<ImpressionObserver> observers = new HashSet<>();
