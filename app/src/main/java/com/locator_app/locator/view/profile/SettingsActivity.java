@@ -3,6 +3,7 @@ package com.locator_app.locator.view.profile;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.widget.CompoundButton;
 import android.widget.Switch;
@@ -53,6 +54,13 @@ public class SettingsActivity extends Activity {
                 (responses) -> {logOut();},
                 (err) -> {logOut();}
         );
+    }
+
+    @OnClick(R.id.termsOfService)
+    public void onTermsOfServiceClick() {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://locator-app.com/impressum"));
+        startActivity(intent);
+
     }
 
     private void logOut() {
