@@ -44,8 +44,17 @@ public class BubbleController {
 
     public BubbleController(RelativeBubbleLayout layout) {
         this.layout = layout;
+        layout.requestLayout();
+        layout.invalidate();
+        new Handler().postDelayed(() -> {
+            initUserProfileBubble();
+            initSchoenHierBubble();
+        }, 100);
+        layout.requestLayout();
+        layout.refreshDrawableState();
     }
 
+    synchronized
     private void initSchoenHierBubble() {
         if (schoenHierBubble == null) {
             schoenHierBubble = new Bubble();
@@ -59,6 +68,7 @@ public class BubbleController {
         }
     }
 
+    synchronized
     private void initUserProfileBubble() {
         if (userProfileBubble == null) {
             userProfileBubble = new Bubble();
@@ -73,9 +83,9 @@ public class BubbleController {
     }
 
     public void onBubbleScreenUpdate(BubbleScreenResponse response) {
-
         initUserProfileBubble();
         initSchoenHierBubble();
+
         if (bubbles.isEmpty()) {
             createNewBubblesFromBubbleScreenResponse(response);
         } else {
