@@ -1,6 +1,7 @@
 package com.locator_app.locator.view.home;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBar;
@@ -18,6 +19,7 @@ import android.widget.Toast;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.github.tbouron.shakedetector.library.ShakeDetector;
+import com.locator_app.locator.LocatorApplication;
 import com.locator_app.locator.R;
 import com.locator_app.locator.controller.DeviceController;
 import com.locator_app.locator.util.Debounce;
@@ -219,9 +221,12 @@ public class HomeActivity extends AppCompatActivity {
         SchoenHierController.getInstance().markCurPosAsSchoenHier(gpsService)
                 .subscribe(
                         (response) -> {
-                            Intent intent = new Intent(HomeActivity.this, MapsActivity.class);
-                            startActivity(intent);
-                            overridePendingTransition(R.anim.push_right_in, R.anim.push_left_out);
+                            SharedPreferences preferences = LocatorApplication.getSharedPreferences();
+                            if (preferences.getBoolean("map_on_sh_click", true)) {
+                                Intent intent = new Intent(HomeActivity.this, MapsActivity.class);
+                                startActivity(intent);
+                                overridePendingTransition(R.anim.push_right_in, R.anim.push_left_out);
+                            }
                         },
                         (error) -> {
                             UiError.showError(this, error);

@@ -70,6 +70,53 @@
                 android:paddingLeft="20dp" />
         </FrameLayout>
 
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="@drawable/divider_bottom"
+            android:paddingLeft="20dp"
+            android:layout_gravity="center_horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Sonstiges"
+                android:id="@+id/textView14"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="left|center_vertical"
+                android:textSize="@dimen/text_size_big" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="@drawable/divider_bottom"
+            android:id="@+id/frameLayout"
+            android:layout_gravity="center_horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Schön hier Button führt zur Karte"
+                android:id="@+id/textView"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="left|center_vertical"
+                android:textColor="#000000"
+                android:paddingLeft="20dp" />
+
+            <Switch
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/mapOnSchoenhier"
+                android:layout_gravity="right|center_vertical"
+                android:checked="true"
+                android:paddingRight="20dp" />
+        </FrameLayout>
+
     </LinearLayout>
 
     <FrameLayout

@@ -2,22 +2,36 @@ package com.locator_app.locator.view.profile;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 
+import com.locator_app.locator.LocatorApplication;
 import com.locator_app.locator.R;
 import com.locator_app.locator.controller.UserController;
 import com.locator_app.locator.view.login.LoginRegisterStartActivity;
 import com.locator_app.locator.view.register.RegisterProfilePictureActivity;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class SettingsActivity extends Activity {
+    @Bind(R.id.mapOnSchoenhier)
+    Switch mapOnSchoenHier;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         ButterKnife.bind(this);
+
+        SharedPreferences preferences = LocatorApplication.getSharedPreferences();
+        mapOnSchoenHier.setChecked(preferences.getBoolean("map_on_sh_click", true));
+        mapOnSchoenHier.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            preferences.edit().putBoolean("map_on_sh_click", isChecked).apply();
+        });
     }
 
     @OnClick(R.id.changeImage)
