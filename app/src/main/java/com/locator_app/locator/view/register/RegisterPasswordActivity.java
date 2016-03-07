@@ -1,9 +1,9 @@
 package com.locator_app.locator.view.register;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -12,16 +12,15 @@ import android.widget.Toast;
 import com.locator_app.locator.R;
 import com.locator_app.locator.apiservice.users.RegistrationRequest;
 import com.locator_app.locator.controller.UserController;
+import com.locator_app.locator.view.LocatorHeader;
 import com.locator_app.locator.view.UiError;
-import com.locator_app.locator.view.login.LoginCustomActionBar;
-import com.locator_app.locator.view.login.LoginRegisterStartActivity;
 
 import java.util.HashMap;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class RegisterPasswordActivity extends AppCompatActivity {
+public class RegisterPasswordActivity extends Activity {
 
     @Bind(R.id.registerPassword)
     EditText registerPassword;
@@ -33,7 +32,9 @@ public class RegisterPasswordActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_password);
         ButterKnife.bind(this);
-        setCustomActionBar();
+
+        LocatorHeader header = new LocatorHeader(this);
+        header.setTitle(R.string.register);
 
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
@@ -48,13 +49,6 @@ public class RegisterPasswordActivity extends AppCompatActivity {
             }
             return false;
         });
-    }
-
-    private void setCustomActionBar() {
-        LoginCustomActionBar customActionBar = new LoginCustomActionBar(getSupportActionBar(), this);
-        customActionBar.setTitle(getResources().getString(R.string.register));
-        customActionBar.setCrossButtonJumpScreen(LoginRegisterStartActivity.class);
-        customActionBar.setColor(R.color.colorRegister);
     }
 
     @Override

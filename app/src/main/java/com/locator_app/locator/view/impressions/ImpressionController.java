@@ -35,7 +35,6 @@ public class ImpressionController extends Activity {
     private String locationId;
     private Uri imageUri;
     File videoFile;
-    MediaRecorder mediaRecorder;
 
     ImageView imageView;
 

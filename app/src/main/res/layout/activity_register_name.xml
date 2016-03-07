@@ -7,6 +7,8 @@
     android:paddingRight="16dp"
     android:background="@color/colorRegister">
 
+    <include layout="@layout/locator_header" />
+
     <EditText
         android:id="@+id/registerName"
         android:layout_width="match_parent"

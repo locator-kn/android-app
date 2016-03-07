@@ -1,5 +1,6 @@
 package com.locator_app.locator.view.register;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -8,10 +9,8 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.locator_app.locator.R;
@@ -19,9 +18,9 @@ import com.locator_app.locator.controller.UserController;
 import com.locator_app.locator.service.CameraService;
 import com.locator_app.locator.util.BitmapHelper;
 import com.locator_app.locator.view.LoadingSpinner;
+import com.locator_app.locator.view.LocatorHeader;
 import com.locator_app.locator.view.UiError;
 import com.locator_app.locator.view.home.HomeActivity;
-import com.locator_app.locator.view.login.LoginCustomActionBar;
 
 import java.io.IOException;
 
@@ -29,7 +28,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class RegisterProfilePictureActivity extends AppCompatActivity {
+public class RegisterProfilePictureActivity extends Activity {
 
     private static final int SELECT_FILE = 1;
 
@@ -50,10 +49,14 @@ public class RegisterProfilePictureActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register_profile_picture);
         ButterKnife.bind(this);
 
+        LocatorHeader header = new LocatorHeader(this);
+        header.setTitle(R.string.register);
+        header.hideBackIcon();
+        header.hideCancelIcon();
+
         cameraService = new CameraService(this);
         loadingSpinner = new LoadingSpinner(this);
 
-        setCustomActionBar();
         loadImages();
     }
 
@@ -66,14 +69,6 @@ public class RegisterProfilePictureActivity extends AppCompatActivity {
     public void onProfileNoClick() {
         Intent intent = new Intent(this, HomeActivity.class);
         startActivity(intent);
-    }
-
-    private void setCustomActionBar() {
-        LoginCustomActionBar customActionBar = new LoginCustomActionBar(getSupportActionBar(), this);
-        customActionBar.setTitle(getResources().getString(R.string.register));
-        customActionBar.setBackButtonVisibility(View.GONE);
-        customActionBar.setCrossButtonVisibility(View.GONE);
-        customActionBar.setColor(R.color.colorRegister);
     }
 
     private void selectImage() {

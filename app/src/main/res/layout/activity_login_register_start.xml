@@ -8,6 +8,8 @@
     android:background="@color/colorWelcome"
     android:id="@+id/login_register_start_layout">
 
+    <include layout="@layout/locator_header" />
+
     <ImageView
         android:id="@+id/locator_logo"
         android:layout_width="wrap_content"

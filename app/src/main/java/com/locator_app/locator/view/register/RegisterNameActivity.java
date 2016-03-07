@@ -1,22 +1,23 @@
 package com.locator_app.locator.view.register;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
+
 import com.locator_app.locator.R;
-import com.locator_app.locator.view.login.LoginCustomActionBar;
-import com.locator_app.locator.view.login.LoginRegisterStartActivity;
+import com.locator_app.locator.view.LocatorHeader;
 
 import java.util.HashMap;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class RegisterNameActivity extends AppCompatActivity {
+public class RegisterNameActivity extends Activity {
 
     private static final int MIN_NAME_LENGTH = 3;
 
@@ -28,7 +29,9 @@ public class RegisterNameActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_name);
         ButterKnife.bind(this);
-        setCustomActionBar();
+
+        LocatorHeader header = new LocatorHeader(this);
+        header.setTitle(R.string.whats_your_name);
 
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
@@ -50,13 +53,6 @@ public class RegisterNameActivity extends AppCompatActivity {
             }
             return false;
         });
-    }
-
-    private void setCustomActionBar() {
-        LoginCustomActionBar customActionBar = new LoginCustomActionBar(getSupportActionBar(), this);
-        customActionBar.setTitle(getResources().getString(R.string.whats_your_name));
-        customActionBar.setCrossButtonJumpScreen(LoginRegisterStartActivity.class);
-        customActionBar.setColor(R.color.colorRegister);
     }
 
     private boolean checkUsernameLength() {
