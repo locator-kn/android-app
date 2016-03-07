@@ -77,10 +77,10 @@ public class ImpressionController extends Activity {
         videoFile = new File(getExternalCacheDir(), "videoimpression.3gp");
 
         Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-        intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0);
+        intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(videoFile));
         intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 10);
-        intent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, 50000L);
+        intent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, 6291456L);
         startActivityForResult(intent, VIDEO);
     }
 
