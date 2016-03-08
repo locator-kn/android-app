@@ -31,7 +31,7 @@ public class RegisterMailActivity extends Activity {
         ButterKnife.bind(this);
 
         LocatorHeader header = new LocatorHeader(this);
-        header.setTitle(R.string.register);
+        header.setTitle(R.string.whats_your_email);
 
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
