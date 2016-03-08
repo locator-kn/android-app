@@ -152,6 +152,7 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        schoenHierBubble.setAlpha((float) 1);
         ShakeDetector.start();
     }
 
