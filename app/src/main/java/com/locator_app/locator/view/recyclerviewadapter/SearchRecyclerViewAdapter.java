@@ -109,7 +109,7 @@ public class SearchRecyclerViewAdapter extends RecyclerView.Adapter<SearchRecycl
             title.setText(location.title);
             description.setText("Vorschlag von Google");
             Glide.with(image.getContext())
-                    .load(R.drawable.common_google_signin_btn_icon_dark_normal)
+                    .load(R.drawable.google_location)
                     .bitmapTransform(new CropCircleTransformation(image.getContext()))
                     .into(image);
         }
