@@ -50,7 +50,7 @@ public class RegisterProfilePictureActivity extends Activity {
         ButterKnife.bind(this);
 
         LocatorHeader header = new LocatorHeader(this);
-        header.setTitle(R.string.register);
+        header.setTitle(R.string.profile_picture);
         header.hideBackIcon();
         header.hideCancelIcon();
 
