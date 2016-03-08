@@ -102,10 +102,10 @@ public class LoginRegisterActivity extends Activity {
 
                     @Override
                     public void onError(FacebookException error) {
-            UiError.showError(LoginRegisterActivity.this,
-                    error,
-                    "Da ist was schiefgelaufen");
-                    }
+                    UiError.showError(LoginRegisterActivity.this,
+                            error,
+                            "Facebook nicht erreicht");
+                            }
                 });
     }
 
