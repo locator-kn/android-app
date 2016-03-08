@@ -107,7 +107,7 @@ public class BitmapHelper {
         return inSampleSize;
     }
 
-    private static String getRealPathFromURI(Uri contentURI) {
+    public static String getRealPathFromURI(Uri contentURI) {
         String result;
         Cursor cursor = LocatorApplication.getAppContext().getContentResolver().query(contentURI, null, null, null, null);
         if (cursor == null) { // Source is Dropbox or other similar local file path

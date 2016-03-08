@@ -35,6 +35,7 @@ import java.io.InputStream;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
 public class RegisterProfilePictureActivity extends Activity {
 
@@ -129,16 +130,14 @@ public class RegisterProfilePictureActivity extends Activity {
 
     private void uploadProfilePicture(Uri uri) {
         Bitmap profilePicture = BitmapHelper.get(uri, 500, 500);
-        uploadProfilePicture(profilePicture);
-    }
-
-    private void uploadProfilePicture(Bitmap profilePicture) {
         loadingSpinner.showSpinner();
         UserController.getInstance().setProfilePicture(profilePicture)
                 .subscribe(
                         (res) -> {
-                            Bitmap roundBitmap = BitmapHelper.getRoundBitmap(profilePicture, this.profilePicture.getWidth());
-                            this.profilePicture.setImageBitmap(roundBitmap);
+                            Glide.with(this).load(BitmapHelper.getRealPathFromURI(uri))
+                                    .asBitmap()
+                                    .transform(new CropCircleTransformation(this))
+                                    .into(this.profilePicture);
                             profilePictureText.setText(getResources().getString(R.string.your_profile_picture));
                             loadingSpinner.hideSpinner();
                             Glide.with(this).load(R.drawable.continue_white).into(profileNo);
