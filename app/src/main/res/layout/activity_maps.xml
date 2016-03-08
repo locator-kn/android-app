@@ -23,7 +23,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="26dp"
-        android:src="@drawable/schoenhier_small"/>
+        android:src="@drawable/schoenhier_200"/>
 
     <ImageView
         android:layout_width="45dp"

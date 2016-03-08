@@ -30,7 +30,7 @@ public class BubbleView extends View {
     int radius = 80;
 
     private Paint painter = new Paint(Paint.ANTI_ALIAS_FLAG);
-    private Paint bitmapPainter = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
+    private Paint bitmapPainter = new Paint(Paint.ANTI_ALIAS_FLAG);
     private String imageUri;
     private Bitmap icon;
 
@@ -88,12 +88,18 @@ public class BubbleView extends View {
         setStrokeWidth(a.getInteger(R.styleable.BubbleView_strokeWidth, 0));
         setShadowWidth(a.getInteger(R.styleable.BubbleView_shadowWidth, 0));
         a.recycle();
+
+        bitmapPainter.setAntiAlias(true);
+        bitmapPainter.setFilterBitmap(true);
+        bitmapPainter.setDither(true);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
+        final int shadowColor = 0x80000000;
+        painter.setShadowLayer(shadowWidth, 0, 0, shadowColor);
         painter.setStrokeWidth(strokeWidth);
         painter.setColor(strokeColor);
         painter.setStyle(Paint.Style.STROKE);

@@ -64,7 +64,7 @@ public class BubbleController {
             int radius = getRadiusByPriority(schoenHierBubble.priority);
             layout.setBubbleRadius(schoenHierBubble.view, radius);
             layout.setBubbleCenter(schoenHierBubble.view, 0.5, 0.38);
-            schoenHierBubble.view.setImage(R.drawable.schoenhier_mid);
+            schoenHierBubble.view.setImage(R.drawable.schoenhier_270);
         }
     }
 
