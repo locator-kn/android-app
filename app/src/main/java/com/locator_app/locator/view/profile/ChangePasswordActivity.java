@@ -46,6 +46,12 @@ public class ChangePasswordActivity extends Activity {
         }
         String pass1 = newPassword1.getText().toString();
         String pass2 = newPassword2.getText().toString();
+
+        if (pass1.length() < 3) {
+            Toast.makeText(this, "Das Passwort muss mindestens 3 Zeichen lang sein", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         if (!pass1.equals(pass2)) {
             Toast.makeText(this, "Die Passwörter stimmen nicht überein", Toast.LENGTH_SHORT).show();
             return;
