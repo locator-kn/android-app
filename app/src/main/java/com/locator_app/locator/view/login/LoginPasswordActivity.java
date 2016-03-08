@@ -44,6 +44,10 @@ public class LoginPasswordActivity extends Activity {
             if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
                 String mail = getIntent().getStringExtra("mail");
                 String password = loginPassword.getText().toString();
+                if (password.length() < 3) {
+                    Toast.makeText(this, "Das Passwort muss länger als 3 Zeichen sein", Toast.LENGTH_SHORT).show();
+                    return false;
+                }
                 login(mail, password);
                 return true;
             }
@@ -61,10 +65,11 @@ public class LoginPasswordActivity extends Activity {
                 .show();
         MyController.getInstance().forgotPassword(getIntent().getStringExtra("mail"))
                 .subscribe(
-                        (res) -> {},
+                        (res) -> {
+                        },
                         (err) -> {
                             if (err instanceof HttpError &&
-                                ((HttpError) err).getErrorCode() == HttpError.HttpErrorCode.notFound) {
+                                    ((HttpError) err).getErrorCode() == HttpError.HttpErrorCode.notFound) {
                                 Toast.makeText(this, "Deine Emailadresse ist nicht registriert", Toast.LENGTH_SHORT).show();
                             } else {
                                 UiError.showError(this, err, "Da ist was schief gelaufen :/");
@@ -93,8 +98,9 @@ public class LoginPasswordActivity extends Activity {
                                 ((HttpError) error).getErrorCode() == HttpError.HttpErrorCode.unauthorized) {
                                 UiError.showError(this, error, "E-Mail oder Passwort falsch");
                                 LoginPasswordActivity.this.finish();
+                            } else {
+                                UiError.showError(this, error, "Da ist was komisches passiert");
                             }
-                            UiError.showError(this, error, "Da ist was komisches passiert");
                         });
     }
 }
