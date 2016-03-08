@@ -3,6 +3,7 @@ package com.locator_app.locator.apiservice.schoenhier;
 import com.locator_app.locator.apiservice.Api;
 import com.locator_app.locator.apiservice.ServiceFactory;
 import com.locator_app.locator.apiservice.errorhandling.GenericErrorHandler;
+import com.locator_app.locator.model.SchoenHier;
 
 import java.net.UnknownHostException;
 import java.util.List;
@@ -28,7 +29,7 @@ public class SchoenHierApiService {
                                                @Query("limit") int limit);
 
         @POST(Api.version + "/schoenhiers")
-        Observable<Response<SchoenHiersResponse>> markAsSchoenHier(@Body SchoenHierRequest schoenHierRequest);
+        Observable<Response<SchoenHier>> markAsSchoenHier(@Body SchoenHierRequest schoenHierRequest);
     }
 
     private SchoenHierApi service = ServiceFactory.createService(SchoenHierApi.class);
@@ -39,7 +40,7 @@ public class SchoenHierApiService {
         return GenericErrorHandler.wrapList(service.schoenHiersNearby(lon, lat, distance, limit));
     }
 
-    public Observable<SchoenHiersResponse> markAsSchoenHier(SchoenHierRequest request) {
+    public Observable<SchoenHier> markAsSchoenHier(SchoenHierRequest request) {
         return GenericErrorHandler.wrapSingle(service.markAsSchoenHier(request));
     }
 

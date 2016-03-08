@@ -140,8 +140,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @OnClick(R.id.schoenHierButton)
     void onschoenHierButtonClick() {
         SchoenHierController.getInstance().markCurPosAsSchoenHier(gpsService)
-                .map(response -> new LatLng(response.schoenHier.geoTag.getLatitude(),
-                        response.schoenHier.geoTag.getLongitude()))
+                .map(response -> new LatLng(response.geoTag.getLatitude(),
+                        response.geoTag.getLongitude()))
                 .subscribe(
                         mapsController::addHeatpointAndRedraw,
                         (error) -> {
