@@ -77,6 +77,7 @@ public class LocationSuggestions extends FragmentActivity implements SearchResul
                                     location.getLatitude());
                         },
                         (err) -> {
+                            Toast.makeText(this, "Versuch es nochmal mit GPS", Toast.LENGTH_SHORT).show();
                             LocationSuggestions.this.finish();
                         }
                 );
