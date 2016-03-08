@@ -3,12 +3,15 @@ package com.locator_app.locator.view.register;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Rect;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -22,7 +25,12 @@ import com.locator_app.locator.view.LocatorHeader;
 import com.locator_app.locator.view.UiError;
 import com.locator_app.locator.view.home.HomeActivity;
 
+import java.io.File;
+import java.io.FileDescriptor;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -120,12 +128,8 @@ public class RegisterProfilePictureActivity extends Activity {
     }
 
     private void uploadProfilePicture(Uri uri) {
-        try {
-            Bitmap profilePicture = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-            uploadProfilePicture(profilePicture);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        Bitmap profilePicture = BitmapHelper.get(uri, 500, 500);
+        uploadProfilePicture(profilePicture);
     }
 
     private void uploadProfilePicture(Bitmap profilePicture) {
