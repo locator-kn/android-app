@@ -19,6 +19,8 @@ import com.locator_app.locator.R;
 import com.locator_app.locator.controller.LocationController;
 import com.locator_app.locator.controller.UserController;
 import com.locator_app.locator.model.impressions.AbstractImpression;
+import com.locator_app.locator.service.CameraService;
+import com.locator_app.locator.util.BitmapHelper;
 
 import org.apache.commons.io.FileUtils;
 
@@ -31,38 +33,43 @@ import butterknife.ButterKnife;
 
 public class ImpressionController extends Activity {
 
-    public static final int IMAGE = 100;
-    public static final int VIDEO = 200;
-    public static final int TEXT = 300;
+    public static final int VIDEO = 100;
+    public static final int TEXT = 200;
     private String locationId;
     private Uri imageUri;
     File videoFile;
 
     ImageView imageView;
+    CameraService cameraService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_impression_controller);
-
         if (!UserController.getInstance().loggedIn()) {
             Toast.makeText(getApplicationContext(), "Log dich erst ein", Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
 
+        cameraService = new CameraService(this);
         imageView = (ImageView)findViewById(R.id.imageView);
 
         locationId = getIntent().getStringExtra("locationId");
         String type = getIntent().getStringExtra("type");
-        if (type.equals("image")) {
-            createImageImpression();
-        } else if (type.equals("video")) {
-            createVideoImpression();
-        } else if (type.equals("text")) {
-            createTextImpression();
-        } else {
-            finish();
+        switch (type) {
+            case "image":
+                createImageImpression();
+                break;
+            case "video":
+                createVideoImpression();
+                break;
+            case "text":
+                createTextImpression();
+                break;
+            default:
+                finish();
+                break;
         }
     }
 
@@ -73,12 +80,15 @@ public class ImpressionController extends Activity {
     }
 
     private void createImageImpression() {
-        ContentValues values = new ContentValues();
-        imageUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                values);
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-        startActivityForResult(intent, IMAGE);
+        cameraService.takePhoto()
+                .subscribe(
+                        (uri) -> {
+                            this.imageUri = uri;
+                        },
+                        (err) -> {
+                            finish();
+                        }
+                );
     }
 
     private void createVideoImpression() {
@@ -98,7 +108,7 @@ public class ImpressionController extends Activity {
             finish();
             return;
         }
-        if (requestCode == IMAGE) {
+        if (requestCode == CameraService.CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
             doUploadImage();
         } else if (requestCode == VIDEO) {
             doUploadVideo();
@@ -120,23 +130,19 @@ public class ImpressionController extends Activity {
     private void doUploadImage() {
         spin();
 
-        try {
-            Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
-            LocationController.getInstance().createImageImpression(locationId, imageBitmap)
-                    .subscribe(
-                            (val) -> {
-                                notify(AbstractImpression.ImpressionType.IMAGE);
-                                finish();
-                            },
-                            (err) -> {
-                                notifyError(AbstractImpression.ImpressionType.IMAGE,
-                                        new Throwable("Dein Bild konnte leider nicht hochgeladen werden"));
-                                finish();
-                            }
-                    );
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        Bitmap impression = BitmapHelper.get(imageUri, 1200, 1200);
+        LocationController.getInstance().createImageImpression(locationId, impression)
+                .subscribe(
+                        (val) -> {
+                            notify(AbstractImpression.ImpressionType.IMAGE);
+                            finish();
+                        },
+                        (err) -> {
+                            notifyError(AbstractImpression.ImpressionType.IMAGE,
+                                    new Throwable("Dein Bild konnte leider nicht hochgeladen werden"));
+                            finish();
+                        }
+                );
     }
 
     private void doUploadVideo() {

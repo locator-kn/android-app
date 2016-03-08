@@ -69,7 +69,7 @@ public class LocationsApiService {
         @Multipart
         @POST(Api.version + "/locations/{locationId}/impressions/video")
         Observable<Response<Object>> postVideoImpression(@Path("locationId") String locationId,
-             @Part("file\"; filename=impression.mp4") RequestBody file);
+             @Part("file\"; filename=impression.3gp") RequestBody file);
 
         @POST(Api.version + "/locations/{locationId}/impressions/text")
         Observable<Response<Object>> postTextImpression(@Path("locationId") String locationId,
@@ -117,7 +117,7 @@ public class LocationsApiService {
     }
 
     public Observable<Object> createVideoImpression(String locationId, byte[] videoData) {
-        RequestBody requestBody = RequestBody.create(MediaType.parse("video/mp4"), videoData);
+        RequestBody requestBody = RequestBody.create(MediaType.parse("video/3gpp"), videoData);
         return GenericErrorHandler.wrapSingle(service.postVideoImpression(locationId, requestBody));
     }
 
