@@ -12,10 +12,12 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.locator_app.locator.R;
 import com.locator_app.locator.controller.LocationController;
+import com.locator_app.locator.controller.UserController;
 import com.locator_app.locator.model.impressions.AbstractImpression;
 
 import org.apache.commons.io.FileUtils;
@@ -42,6 +44,13 @@ public class ImpressionController extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_impression_controller);
+
+        if (!UserController.getInstance().loggedIn()) {
+            Toast.makeText(getApplicationContext(), "Log dich erst ein", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+
         imageView = (ImageView)findViewById(R.id.imageView);
 
         locationId = getIntent().getStringExtra("locationId");
