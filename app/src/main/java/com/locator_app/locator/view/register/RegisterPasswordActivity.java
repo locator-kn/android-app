@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.locator_app.locator.R;
+import com.locator_app.locator.apiservice.errorhandling.HttpError;
 import com.locator_app.locator.apiservice.users.RegistrationRequest;
 import com.locator_app.locator.controller.UserController;
 import com.locator_app.locator.view.LocatorHeader;
@@ -86,9 +87,12 @@ public class RegisterPasswordActivity extends Activity {
                             startActivity(intent);
                         },
                         (error) -> {
-                            UiError.showError(context,
-                                    error,
-                                    "Da ist was schiefgelaufen, versuchs nochmal");
+                            if (error instanceof HttpError &&
+                                ((HttpError) error).getErrorCode() == HttpError.HttpErrorCode.conflict) {
+                                UiError.showError(this, error, "Diese E-Mail ist bereits registriert");
+                            } else {
+                                UiError.showError(this, error, "Da ist was schiefgelaufen, versuchs nochmal");
+                            }
                         }
                 );
     }

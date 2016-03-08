@@ -12,6 +12,7 @@ import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.locator_app.locator.R;
+import com.locator_app.locator.apiservice.errorhandling.HttpError;
 import com.locator_app.locator.controller.UserController;
 import com.locator_app.locator.view.LocatorHeader;
 import com.locator_app.locator.view.UiError;
@@ -82,9 +83,14 @@ public class LoginRegisterActivity extends Activity {
                                             startActivity(intent);
                                         },
                                         (error) -> {
-                                            UiError.showError(LoginRegisterActivity.this,
-                                                    error,
-                                                    "Da ist was schiefgelaufen");
+                                            if (error instanceof HttpError &&
+                                                    ((HttpError) error).getErrorCode() == HttpError.HttpErrorCode.conflict) {
+                                                UiError.showError(LoginRegisterActivity.this, error, "Diese E-Mail ist bereits registriert");
+                                            } else {
+                                                UiError.showError(LoginRegisterActivity.this,
+                                                        error,
+                                                        "Da ist was schiefgelaufen");
+                                            }
                                         }
                                 );
                     }
@@ -96,9 +102,9 @@ public class LoginRegisterActivity extends Activity {
 
                     @Override
                     public void onError(FacebookException error) {
-                        UiError.showError(LoginRegisterActivity.this,
-                                error,
-                                "Da ist was schiefgelaufen");
+            UiError.showError(LoginRegisterActivity.this,
+                    error,
+                    "Da ist was schiefgelaufen");
                     }
                 });
     }
