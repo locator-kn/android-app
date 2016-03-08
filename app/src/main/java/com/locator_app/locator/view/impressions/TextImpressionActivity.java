@@ -51,6 +51,14 @@ public class TextImpressionActivity extends Activity {
             public void afterTextChanged(Editable s) {
             }
         });
+
+        textImpression.setOnKeyListener((v1, keyCode, event) -> {
+            if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
+                onSendTextImpressionClick();
+                return true;
+            }
+            return false;
+        });
     }
 
     @OnClick(R.id.cancelButton)
@@ -77,6 +85,8 @@ public class TextImpressionActivity extends Activity {
                         finish();
                     }
             );
+        } else {
+            Toast.makeText(this, "Schreibe mindestens 3 Zeichen", Toast.LENGTH_SHORT).show();
         }
     }
 
