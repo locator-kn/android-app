@@ -98,8 +98,6 @@ public class BubbleView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        final int shadowColor = 0x80000000;
-        painter.setShadowLayer(shadowWidth, 0, 0, shadowColor);
         painter.setStrokeWidth(strokeWidth);
         painter.setColor(strokeColor);
         painter.setStyle(Paint.Style.STROKE);
