@@ -237,11 +237,7 @@ public class HomeActivity extends AppCompatActivity {
 
     @OnLongClick(R.id.schoenHierBubble)
     boolean onSchoenHierBubbleLongClick() {
-        if (UserController.getInstance().loggedIn()) {
-            locationCreationController.startLocationCreation();
-        } else {
-            Toast.makeText(this, "Whooop whooop! Erst anmelden!", Toast.LENGTH_SHORT).show();
-        }
+        locationCreationController.startLocationCreation();
         return true;
     }
 

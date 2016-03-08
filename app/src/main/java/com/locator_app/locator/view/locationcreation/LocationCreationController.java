@@ -3,7 +3,9 @@ package com.locator_app.locator.view.locationcreation;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
+import android.widget.Toast;
 
+import com.locator_app.locator.controller.UserController;
 import com.locator_app.locator.service.CameraService;
 import com.locator_app.locator.view.locationcreation.LocationSuggestions;
 
@@ -18,8 +20,12 @@ public class LocationCreationController {
     }
 
     public void startLocationCreation() {
-        cameraService.takePhoto().subscribe((uri) -> imageUri = uri,
-                                            (error) -> {});
+        if (UserController.getInstance().loggedIn()) {
+            cameraService.takePhoto().subscribe((uri) -> imageUri = uri,
+                    (error) -> {});
+        } else {
+            Toast.makeText(activity, "Whooop whooop! Erst anmelden!", Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
