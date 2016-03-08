@@ -41,6 +41,10 @@ public class NameLocation extends Activity {
         });
 
         extras = getIntent().getExtras();
+        String nameHint = extras.getString("name_hint");
+        if (nameHint != null) {
+            locationNameEdit.setText(nameHint);
+        }
     }
 
     @OnClick(R.id.next)

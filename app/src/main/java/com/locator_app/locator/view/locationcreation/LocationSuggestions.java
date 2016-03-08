@@ -103,8 +103,8 @@ public class LocationSuggestions extends FragmentActivity implements SearchResul
     @Override
     public void onLocationClicked(LocatorLocation location) {
         if (location instanceof GoogleLocation) {
-            Intent intent = new Intent(this, ChooseCategories.class);
-            extras.putString("name", location.title);
+            Intent intent = new Intent(this, NameLocation.class);
+            extras.putString("name_hint", location.title);
             intent.putExtras(extras);
             startActivityForResult(intent, LocationCreationController.LOCATION_CREATION_REQUEST);
         } else {
