@@ -52,10 +52,6 @@ public class RegisterPasswordActivity extends Activity {
         });
     }
 
-    @Override
-    public void onBackPressed() {
-    }
-
     private void confirmInput() {
         if (registerPassword.getText().length() >= 3 &&
                 registerPassword.getText().length() <= 30) {
