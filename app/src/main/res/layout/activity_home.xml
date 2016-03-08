@@ -38,8 +38,9 @@
                 android:layout_width="0dp"
                 android:layout_height="fill_parent"
                 android:layout_weight="1"
-                android:src="@drawable/locator_logo"
-                android:adjustViewBounds="true" />
+                android:src="@drawable/locator_logo_small"
+                android:adjustViewBounds="true"
+                android:antialias="true" />
 
             <Space
                 android:layout_width="0dp"

@@ -30,7 +30,7 @@ public class BubbleView extends View {
     int radius = 80;
 
     private Paint painter = new Paint(Paint.ANTI_ALIAS_FLAG);
-    private Paint bitmapPainter = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private Paint bitmapPainter = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
     private String imageUri;
     private Bitmap icon;
 
