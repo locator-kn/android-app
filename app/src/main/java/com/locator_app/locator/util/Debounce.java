@@ -10,7 +10,11 @@ public class Debounce {
 
     public boolean calledRecently() {
         long delay = System.currentTimeMillis() - lastCall;
-        lastCall = System.currentTimeMillis();
-        return delay < minCallDelay;
+        if (delay < minCallDelay) {
+            return true;
+        } else {
+            lastCall = System.currentTimeMillis();
+            return false;
+        }
     }
 }
