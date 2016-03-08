@@ -17,6 +17,7 @@ import com.bumptech.glide.Glide;
 import com.locator_app.locator.R;
 import com.locator_app.locator.controller.LocationController;
 import com.locator_app.locator.model.impressions.AbstractImpression;
+import com.locator_app.locator.util.BitmapHelper;
 
 import org.apache.commons.io.FileUtils;
 
@@ -111,23 +112,19 @@ public class ImpressionController extends Activity {
     private void doUploadImage() {
         spin();
 
-        try {
-            Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
-            LocationController.getInstance().createImageImpression(locationId, imageBitmap)
-                    .subscribe(
-                            (val) -> {
-                                notify(AbstractImpression.ImpressionType.IMAGE);
-                                finish();
-                            },
-                            (err) -> {
-                                notifyError(AbstractImpression.ImpressionType.IMAGE,
-                                        new Throwable("Dein Bild konnte leider nicht hochgeladen werden"));
-                                finish();
-                            }
-                    );
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        Bitmap impression = BitmapHelper.get(imageUri, 1200, 1200);
+        LocationController.getInstance().createImageImpression(locationId, impression)
+                .subscribe(
+                        (val) -> {
+                            notify(AbstractImpression.ImpressionType.IMAGE);
+                            finish();
+                        },
+                        (err) -> {
+                            notifyError(AbstractImpression.ImpressionType.IMAGE,
+                                    new Throwable("Dein Bild konnte leider nicht hochgeladen werden"));
+                            finish();
+                        }
+                );
     }
 
     private void doUploadVideo() {
