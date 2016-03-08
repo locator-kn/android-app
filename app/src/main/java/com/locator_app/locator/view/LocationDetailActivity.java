@@ -204,7 +204,9 @@ public class LocationDetailActivity extends FragmentActivity implements Impressi
 
     private void updateFavorHeart() {
         int heartResourceId = userFavorsLocation() ? R.drawable.small_heart_red : R.drawable.small_heart_white;
-        Glide.with(getApplicationContext()).load(heartResourceId)
+        Glide.with(getApplicationContext())
+                .load(heartResourceId)
+                .dontAnimate()
                 .into(heartImageView);
     }
 
@@ -221,7 +223,7 @@ public class LocationDetailActivity extends FragmentActivity implements Impressi
     }
 
     private void showCategories() {
-        loadCategorie(categorie2, 1, 200);
+        loadCategorie(categorie2, 1, 500);
         loadCategorie(categorie1, 0, 1200);
     }
 
