@@ -69,6 +69,7 @@ public class TextImpressionActivity extends Activity {
     @OnClick(R.id.sendTextImpression)
     void onSendTextImpressionClick() {
         if (reachedMinImpressionLength()) {
+            sendTextImpression.setEnabled(false);
             String impression = textImpression.getText().toString();
             LocationController.getInstance().createTextImpression(locationId, impression)
             .subscribe(

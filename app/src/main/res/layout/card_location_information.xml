@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="70dp"
+    android:layout_height="60dp"
     android:background="@android:color/white">
 
         <LinearLayout
@@ -63,7 +63,7 @@
                         android:ellipsize="end"
                         android:singleLine="true"
                         android:textSize="@dimen/text_size_small"
-                        android:gravity="center_vertical" />
+                        android:gravity="top|center_vertical" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -73,7 +73,7 @@
                         android:id="@+id/textView2"
                         android:singleLine="true"
                         android:textSize="@dimen/text_size_small"
-                        android:gravity="center_vertical" />
+                        android:gravity="top|center_vertical" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -82,7 +82,7 @@
                         android:text="0"
                         android:id="@+id/favorites"
                         android:textSize="@dimen/text_size_small"
-                        android:gravity="center_vertical" />
+                        android:gravity="top|center_vertical" />
 
                     <ImageView
                         android:layout_width="20dp"
@@ -91,7 +91,9 @@
                         android:src="@drawable/location_detail_likes"
                         android:antialias="true"
                         android:layout_weight="0.01"
-                        android:layout_marginLeft="5dp" />
+                        android:layout_marginLeft="5dp"
+                        android:layout_gravity="top"
+                        android:layout_marginBottom="10dp" />
 
                 </LinearLayout>
 
@@ -102,7 +104,8 @@
                 android:layout_height="fill_parent"
                 android:id="@+id/heatmap"
                 android:layout_weight="1"
-                android:src="@drawable/map_icon_black" />
+                android:src="@drawable/map_icon_black"
+                android:layout_margin="5dp" />
         </LinearLayout>
 
 </LinearLayout>

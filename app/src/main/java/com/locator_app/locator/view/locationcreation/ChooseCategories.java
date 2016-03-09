@@ -114,6 +114,7 @@ public class ChooseCategories extends Activity {
     void onNextClicked() {
         synchronized (selectedCategories) {
             if (selectedCategories.size() > 0) {
+                next.setEnabled(false);
 
                 Bitmap imageBitmap;
                 try {
@@ -121,6 +122,7 @@ public class ChooseCategories extends Activity {
                 } catch (Exception e) {
                     Toast.makeText(ChooseCategories.this, "Could not find Image file",
                             Toast.LENGTH_SHORT).show();
+                    next.setEnabled(true);
                     return;
                 }
 
@@ -143,6 +145,7 @@ public class ChooseCategories extends Activity {
                             finish();
                         },
                         (error) -> {
+                            next.setEnabled(true);
                             loadingSpinner.hideSpinner();
                             cancelButton.setVisibility(View.VISIBLE);
                             loading = false;
