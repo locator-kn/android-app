@@ -46,7 +46,6 @@ public class StrokeTransformation extends BitmapTransformation {
         Paint paint = new Paint();
         paint.setAntiAlias(true);
         paint.setStyle(Paint.Style.FILL);
-        paint.setStrokeWidth(strokeWidth);
         paint.setColor(strokeColor);
         float circleMiddle = size / 2f;
         canvas.drawCircle(circleMiddle, circleMiddle, circleMiddle, paint);
