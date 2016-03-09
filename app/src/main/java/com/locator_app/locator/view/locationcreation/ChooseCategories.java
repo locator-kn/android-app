@@ -124,6 +124,7 @@ public class ChooseCategories extends Activity {
                     return;
                 }
 
+                next.setEnabled(false);
                 loading = true;
                 loadingSpinner.showSpinner();
                 cancelButton.setVisibility(View.GONE);
