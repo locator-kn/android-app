@@ -1,8 +1,6 @@
 package com.locator_app.locator.view.recyclerviewadapter;
 
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -94,15 +92,15 @@ public class SearchRecyclerViewAdapter extends RecyclerView.Adapter<SearchRecycl
         private void hideViewElements() {
             title.setVisibility(View.INVISIBLE);
             description.setVisibility(View.INVISIBLE);
-            circle.setVisibility(View.INVISIBLE);
             image.setVisibility(View.INVISIBLE);
+            circle.setVisibility(View.INVISIBLE);
         }
 
         private void showViewElements() {
             title.setVisibility(View.VISIBLE);
             description.setVisibility(View.VISIBLE);
-            circle.setVisibility(View.VISIBLE);
             image.setVisibility(View.VISIBLE);
+            circle.setVisibility(View.VISIBLE);
         }
 
         private void bindGoogleLocation(GoogleLocation location) {
@@ -121,6 +119,7 @@ public class SearchRecyclerViewAdapter extends RecyclerView.Adapter<SearchRecycl
                     .load(location.thumbnailUri())
                     .error(R.drawable.location_auf_map)
                     .bitmapTransform(new CropCircleTransformation(image.getContext()))
+                    .dontAnimate()
                     .into(image);
         }
     }
