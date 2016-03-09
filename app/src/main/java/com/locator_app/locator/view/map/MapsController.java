@@ -60,11 +60,9 @@ public class MapsController {
 
         Glide.with(mapsActivity).load(R.drawable.location_auf_map)
             .asBitmap()
-            .override(70, 70)
             .into(new SimpleTarget<Bitmap>() {
                 @Override
-                public void onResourceReady(Bitmap resource, GlideAnimation glideAnimation) {
-                    Bitmap icon = Bitmap.createScaledBitmap(resource, 70, 70, false);
+                public void onResourceReady(Bitmap icon, GlideAnimation glideAnimation) {
                     locationIcon = BitmapDescriptorFactory.fromBitmap(icon);
                 }
             });
