@@ -62,7 +62,6 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
         public final TextView name;
         public final TextView description;
         public final ImageView image;
-        public final ImageView circle;
 
         public ViewHolder(View view) {
             super(view);
@@ -72,7 +71,6 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
             description.setVisibility(View.GONE);
             name.setGravity(Gravity.CENTER_VERTICAL);
             image = (ImageView)view.findViewById(R.id.image);
-            circle = (ImageView)view.findViewById(R.id.circle);
 
             TextView bubbleInfo = (TextView) view.findViewById(R.id.bubble_info);
             bubbleInfo.setVisibility(View.INVISIBLE);

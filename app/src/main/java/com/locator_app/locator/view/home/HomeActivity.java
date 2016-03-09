@@ -157,6 +157,9 @@ public class HomeActivity extends AppCompatActivity {
         super.onResume();
         schoenHierBubble.setAlpha((float) 1);
         ShakeDetector.start();
+        if (UserController.getInstance().loggedIn()) {
+            refreshUserProfilePicture(UserController.getInstance().me());
+        }
     }
 
     @Override
@@ -264,13 +267,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void onUserIsLoggedIn(User user) {
-        ImageView userProfileBubble = (ImageView) findViewById(R.id.userProfileBubble);
-        Glide.with(this).load(user.getProfilePictureNormalSize())
-                .error(R.drawable.profile)
-                .bitmapTransform(new StrokeTransformation(this, 10, Color.WHITE))
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .skipMemoryCache(true)
-                .into(userProfileBubble);
+        refreshUserProfilePicture(user);
         new Handler().postDelayed(
                 () -> welcomeScreen.setVisibility(View.INVISIBLE),
                 1000);
@@ -281,4 +278,12 @@ public class HomeActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    private void refreshUserProfilePicture(User user) {
+        ImageView userProfileBubble = (ImageView) findViewById(R.id.userProfileBubble);
+        Glide.with(this).load(user.getProfilePictureNormalSize())
+                .error(R.drawable.profile)
+                .bitmapTransform(new StrokeTransformation(this, 10, Color.WHITE))
+                .dontAnimate()
+                .into(userProfileBubble);
+    }
 }
