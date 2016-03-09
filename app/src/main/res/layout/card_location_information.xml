@@ -21,7 +21,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:gravity="center_vertical">
+                    android:gravity="bottom"
+                    android:paddingBottom="2dp">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -52,7 +53,8 @@
                     android:layout_height="0dp"
                     android:weightSum="1"
                     android:id="@+id/linearLayout"
-                    android:layout_weight="1">
+                    android:layout_weight="1"
+                    android:paddingTop="2dp">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -99,13 +101,21 @@
 
             </LinearLayout>
 
-            <ImageView
+            <FrameLayout
                 android:layout_width="0dp"
                 android:layout_height="fill_parent"
-                android:id="@+id/heatmap"
                 android:layout_weight="1"
-                android:src="@drawable/map_icon_black"
-                android:layout_margin="5dp" />
+                android:paddingTop="10dp"
+                android:paddingRight="10dp"
+                android:id="@+id/heatmap">
+
+                <ImageView
+                    android:layout_width="23dp"
+                    android:layout_height="23dp"
+                    android:src="@drawable/map_icon_black_no_border"
+                    android:layout_gravity="right|top" />
+            </FrameLayout>
+
         </LinearLayout>
 
 </LinearLayout>

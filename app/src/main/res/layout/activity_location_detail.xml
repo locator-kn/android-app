@@ -19,14 +19,14 @@
 
             <RelativeLayout
                 android:layout_width="fill_parent"
-                android:layout_height="0dp"
+                android:layout_height="300dp"
                 android:layout_weight="2"
                 app:layout_scrollFlags="scroll|snap">
 
                 <android.support.v4.view.ViewPager
                     android:id="@+id/viewPager"
                     android:layout_width="fill_parent"
-                    android:layout_height="300dp" />
+                    android:layout_height="fill_parent" />
 
                 <View
                     android:layout_width="fill_parent"
@@ -34,71 +34,84 @@
                     android:background="@drawable/shape_gradient"
                     android:id="@+id/view" />
 
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="fill_parent"
                     android:layout_height="60dp"
                     android:layout_alignParentTop="true">
 
                     <ImageView
                         android:id="@+id/goBack"
-                        android:layout_width="0dp"
+                        android:layout_width="60dp"
                         android:layout_height="fill_parent"
-                        android:layout_weight="1"
                         android:src="@drawable/go_back_icon_white"
                         android:adjustViewBounds="true"
-                        android:layout_marginTop="20dp"
-                        android:layout_marginBottom="20dp" />
+                        android:paddingTop="20dp"
+                        android:paddingBottom="20dp"
+                        android:paddingRight="30dp"
+                        android:paddingLeft="10dp"
+                        android:antialias="true" />
 
                     <TextView
                         android:id="@+id/locationTitle"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="fill_parent"
-                        android:layout_weight="5"
                         android:textColor="@color/colorWhite"
                         android:gravity="start|center"
                         android:textAppearance="@android:style/TextAppearance.Medium"
                         android:text="LOCATION-TITEL"
-                        android:singleLine="true" />
+                        android:singleLine="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_centerHorizontal="true" />
 
                     <ImageView
                         android:id="@+id/bubblescreen"
-                        android:layout_width="0dp"
+                        android:layout_width="60dp"
                         android:layout_height="fill_parent"
-                        android:layout_weight="1"
-                        android:src="@drawable/go_to_bubblescreen"
+                        android:src="@drawable/go_to_bubblescreen_small"
                         android:adjustViewBounds="true"
-                        android:layout_marginTop="20dp"
-                        android:layout_marginBottom="20dp" />
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"
+                        android:paddingTop="20dp"
+                        android:paddingBottom="20dp"
+                        android:paddingRight="10dp"
+                        android:paddingLeft="30dp"
+                        android:antialias="true" />
 
-                </LinearLayout>
+                </RelativeLayout>
 
                 <ImageView
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
                     android:src="@drawable/small_heart_white"
-                    android:layout_below="@+id/view"
                     android:layout_alignParentRight="true"
-                    android:layout_marginTop="125dp"
-                    android:layout_marginRight="15dp"
-                    android:id="@+id/heart" />
+                    android:id="@+id/heart"
+                    android:paddingTop="25dp"
+                    android:paddingBottom="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingLeft="25dp"
+                    android:layout_alignParentBottom="true"
+                    android:antialias="true" />
 
                 <ImageView
                     android:layout_width="55dp"
                     android:layout_height="55dp"
                     android:id="@+id/categorie2"
-                    android:layout_alignBottom="@+id/heart"
-                    android:layout_marginLeft="29dp"
-                    android:layout_marginStart="60dp" />
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="46dp"
+                    android:antialias="true" />
 
                 <ImageView
                     android:layout_width="55dp"
                     android:layout_height="55dp"
                     android:id="@+id/categorie1"
-                    android:layout_alignBottom="@+id/heart"
                     android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
-                    android:layout_marginLeft="29dp"
-                    android:layout_marginStart="24dp" />
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:antialias="true"/>
 
             </RelativeLayout>
 
