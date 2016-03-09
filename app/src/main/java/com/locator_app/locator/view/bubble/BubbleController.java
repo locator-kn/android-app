@@ -62,6 +62,7 @@ public class BubbleController {
             int radius = getRadiusByPriority(schoenHierBubble.priority);
             layout.setBubbleRadius(schoenHierBubble.view, radius);
             layout.setBubbleCenter(schoenHierBubble.view, 0.5, 0.38);
+            schoenHierBubble.view.setVisibility(View.VISIBLE);
         }
     }
 
@@ -75,6 +76,7 @@ public class BubbleController {
             int radius = getRadiusByPriority(10);
             layout.setBubbleRadius(userProfileBubble.view, radius);
             layout.setBubbleCenter(userProfileBubble.view, 0.5, 0.89);
+            userProfileBubble.view.setVisibility(View.VISIBLE);
         }
     }
 
