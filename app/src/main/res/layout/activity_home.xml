@@ -58,19 +58,18 @@
             android:layout_weight="12"
             tools:context=".MainActivity">
 
-            <com.locator_app.locator.view.bubble.BubbleView
+            <ImageView
                 android:id="@+id/schoenHierBubble"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                custom:shadowWidth="10"
-                custom:strokeWidth="0" />
+                android:layout_width="180dp"
+                android:layout_height="180dp"
+                android:src="@drawable/schoenhier"
+                />
 
-            <com.locator_app.locator.view.bubble.BubbleView
+            <ImageView
                 android:id="@+id/userProfileBubble"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                custom:shadowWidth="10"
-                custom:strokeWidth="0" />
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:src="@drawable/profile"/>
 
         </com.locator_app.locator.view.bubble.RelativeBubbleLayout>
 
