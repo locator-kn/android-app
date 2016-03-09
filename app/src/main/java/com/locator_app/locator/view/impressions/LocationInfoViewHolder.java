@@ -24,7 +24,7 @@ class LocationInfoViewHolder extends ImpressionViewHolder {
     TextView distance;
     TextView city;
     TextView favorites;
-    ImageView goToHeatmap;
+    View goToHeatmap;
     Activity activity;
 
     public LocationInfoViewHolder(ImpressionRecyclerViewAdapter impressionRecyclerViewAdapter,
@@ -67,7 +67,7 @@ class LocationInfoViewHolder extends ImpressionViewHolder {
                 );
         favorites = (TextView) itemView.findViewById(R.id.favorites);
         updateFavorCounter();
-        goToHeatmap = (ImageView) itemView.findViewById(R.id.heatmap);
+        goToHeatmap = itemView.findViewById(R.id.heatmap);
 
         goToHeatmap.setOnClickListener(v -> {
             Intent intent = new Intent(activity, MapsActivity.class);
