@@ -106,12 +106,12 @@
                 android:layout_height="fill_parent"
                 android:layout_weight="1"
                 android:paddingTop="10dp"
-                android:paddingRight="10dp">
+                android:paddingRight="10dp"
+                android:id="@+id/heatmap">
 
                 <ImageView
                     android:layout_width="23dp"
                     android:layout_height="23dp"
-                    android:id="@+id/heatmap"
                     android:src="@drawable/map_icon_black_no_border"
                     android:layout_gravity="right|top" />
             </FrameLayout>
