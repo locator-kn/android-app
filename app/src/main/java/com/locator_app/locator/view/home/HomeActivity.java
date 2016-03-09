@@ -2,6 +2,7 @@ package com.locator_app.locator.view.home;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBar;
@@ -11,6 +12,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.github.tbouron.shakedetector.library.ShakeDetector;
@@ -24,6 +27,7 @@ import com.locator_app.locator.model.User;
 import com.locator_app.locator.service.GpsService;
 import com.locator_app.locator.util.Debounce;
 import com.locator_app.locator.view.OnSwipeTouchListener;
+import com.locator_app.locator.view.StrokeTransformation;
 import com.locator_app.locator.view.UiError;
 import com.locator_app.locator.view.bubble.BubbleController;
 import com.locator_app.locator.view.bubble.BubbleView;
@@ -40,6 +44,10 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnLongClick;
 import butterknife.OnTouch;
+import jp.wasabeef.glide.transformations.CropCircleTransformation;
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -49,10 +57,10 @@ public class HomeActivity extends AppCompatActivity {
     RelativeBubbleLayout bubbleLayout;
 
     @Bind(R.id.schoenHierBubble)
-    BubbleView schoenHierBubble;
+    ImageView schoenHierBubble;
 
     @Bind(R.id.userProfileBubble)
-    BubbleView userProfileBubble;
+    ImageView userProfileBubble;
 
     @Bind(R.id.welcomeScreen)
     ImageView welcomeScreen;
@@ -141,7 +149,7 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        //loadBubbleScreen();
+
     }
 
     @Override
@@ -182,7 +190,6 @@ public class HomeActivity extends AppCompatActivity {
     boolean onSchoenHierBubbleTouch(MotionEvent arg1) {
         if (arg1.getAction()== MotionEvent.ACTION_DOWN) {
             schoenHierBubble.setAlpha((float) 0.6);
-
 
             if (glowAnimation != null &&
                 glowAnimation.isRunning()) {
@@ -257,8 +264,13 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void onUserIsLoggedIn(User user) {
-//        Animation animationFadeOut = AnimationUtils.loadAnimation(this, R.anim.fadeout);
-//        welcomeScreen.startAnimation(animationFadeOut);
+        ImageView userProfileBubble = (ImageView) findViewById(R.id.userProfileBubble);
+        Glide.with(this).load(user.getProfilePictureNormalSize())
+                .error(R.drawable.profile)
+                .bitmapTransform(new StrokeTransformation(this, 10, Color.WHITE))
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .skipMemoryCache(true)
+                .into(userProfileBubble);
         new Handler().postDelayed(
                 () -> welcomeScreen.setVisibility(View.INVISIBLE),
                 1000);

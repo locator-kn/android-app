@@ -5,7 +5,6 @@ import android.graphics.Point;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
-import android.widget.Toast;
 
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
@@ -24,13 +23,12 @@ import java.util.List;
 import java.util.Random;
 
 import rx.Observable;
-import rx.functions.Action1;
 
 
 public class BubbleController {
 
     class Bubble {
-        BubbleView view;
+        View view;
         LocatorObject data;
         int priority;
         boolean positionFixed = false;
@@ -60,11 +58,10 @@ public class BubbleController {
             schoenHierBubble = new Bubble();
             schoenHierBubble.priority = -1;
             schoenHierBubble.positionFixed = true;
-            schoenHierBubble.view = (BubbleView)layout.findViewById(R.id.schoenHierBubble);
+            schoenHierBubble.view = layout.findViewById(R.id.schoenHierBubble);
             int radius = getRadiusByPriority(schoenHierBubble.priority);
             layout.setBubbleRadius(schoenHierBubble.view, radius);
             layout.setBubbleCenter(schoenHierBubble.view, 0.5, 0.38);
-            schoenHierBubble.view.setImage(R.drawable.schoenhier_270);
         }
     }
 
@@ -74,11 +71,10 @@ public class BubbleController {
             userProfileBubble = new Bubble();
             userProfileBubble.priority = -1;
             userProfileBubble.positionFixed = true;
-            userProfileBubble.view = (BubbleView)layout.findViewById(R.id.userProfileBubble);
+            userProfileBubble.view = layout.findViewById(R.id.userProfileBubble);
             int radius = getRadiusByPriority(10);
             layout.setBubbleRadius(userProfileBubble.view, radius);
             layout.setBubbleCenter(userProfileBubble.view, 0.5, 0.89);
-            userProfileBubble.view.setImage(R.drawable.profile_small);
         }
     }
 
@@ -275,9 +271,8 @@ public class BubbleController {
         return new Point(x, y);
     }
 
-
     private int getRadiusByPriority(int priority) {
-        double widthFactor = 0.09;
+        double widthFactor = 0.1;
         if (priority == -1) {
             widthFactor = 0.2;
         }
@@ -291,7 +286,7 @@ public class BubbleController {
     }
 
     private int getStrokeWidthByPriority(int priority) {
-        return (int) (layout.getWidth() * 0.013);
+        return (int) (layout.getWidth() * 0.015);
     }
 
     private int color(int id) {
