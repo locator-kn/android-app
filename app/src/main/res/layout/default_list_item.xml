@@ -24,13 +24,14 @@
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_marginTop="5dp">
 
             <ImageView
                 android:id="@+id/circle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:src="@drawable/circle_white"/>
+                android:src="@drawable/circle_silvergray"/>
 
             <ImageView
                 android:id="@+id/image"
