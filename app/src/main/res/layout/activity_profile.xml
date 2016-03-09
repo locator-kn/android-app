@@ -31,40 +31,53 @@
                 app:layout_scrollFlags="scroll|snap">
 
                 <!-- go back, user name + map-icon -->
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp">
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="50dp"
+                    android:layout_alignParentTop="true">
 
                     <ImageView
-                        android:layout_width="0dp"
-                        android:layout_height="fill_parent"
                         android:id="@+id/goBack"
+                        android:layout_width="50dp"
+                        android:layout_height="fill_parent"
                         android:src="@drawable/go_back_icon_white"
-                        android:layout_weight="1"
-                        android:layout_marginTop="15dp"
-                        android:layout_marginBottom="15dp" />
+                        android:adjustViewBounds="true"
+                        android:paddingTop="15dp"
+                        android:paddingBottom="15dp"
+                        android:paddingRight="10dp"
+                        android:paddingLeft="20dp"
+                        android:antialias="true" />
+
 
                     <TextView
                         android:id="@+id/userName"
-                        android:layout_width="0dp"
                         android:layout_height="fill_parent"
+                        android:layout_width="wrap_content"
                         android:textAppearance="?android:attr/textAppearanceLarge"
                         android:text="User Name"
                         android:gravity="center"
                         android:layout_weight="5"
                         android:enabled="false"
-                        android:textColor="@android:color/white" />
+                        android:textColor="@android:color/white"
+                        android:layout_alignParentTop="true"
+                        android:layout_centerHorizontal="true" />
 
                     <ImageView
                         android:id="@+id/goToHomeScreen"
-                        android:layout_width="0dp"
+                        android:layout_width="50dp"
                         android:layout_height="fill_parent"
-                        android:src="@drawable/go_to_bubblescreen"
-                        android:layout_weight="1"
-                        android:layout_marginTop="15dp"
-                        android:layout_marginBottom="15dp" />
-                </LinearLayout>
+                        android:src="@drawable/go_to_bubblescreen_small"
+                        android:adjustViewBounds="true"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"
+                        android:paddingTop="15dp"
+                        android:paddingBottom="15dp"
+                        android:paddingRight="20dp"
+                        android:paddingLeft="10dp"
+                        android:antialias="true" />
+
+                </RelativeLayout>
 
                 <!-- user profile picture -->
                 <ImageView
@@ -159,7 +172,8 @@
                             android:layout_height="wrap_content"
                             android:src="@drawable/follow_user_small"
                             android:layout_margin="10dp"
-                            android:id="@+id/unFollowImage" />
+                            android:id="@+id/unFollowImage"
+                            android:layout_gravity="right|center_vertical" />
                     </FrameLayout>
 
                 </LinearLayout>

@@ -213,18 +213,22 @@ public class LocationDetailActivity extends FragmentActivity implements Impressi
     private static final Map<String, Integer> categorieToImage;
     static {
         Map<String, Integer> aMap = new HashMap<>();
-        aMap.put("culture",   R.drawable.category_culture);
-        aMap.put("gastro",    R.drawable.category_gastro);
-        aMap.put("holiday",   R.drawable.category_holiday);
-        aMap.put("nature",    R.drawable.category_natur);
-        aMap.put("nightlife", R.drawable.category_party);
-        aMap.put("secret",    R.drawable.category_secret);
+        aMap.put("culture",   R.drawable.category_culture_small);
+        aMap.put("gastro",    R.drawable.category_gastro_small);
+        aMap.put("holiday",   R.drawable.category_holiday_small);
+        aMap.put("nature",    R.drawable.category_natur_small);
+        aMap.put("nightlife", R.drawable.category_party_small);
+        aMap.put("secret",    R.drawable.category_secret_small);
         categorieToImage = Collections.unmodifiableMap(aMap);
     }
 
     private void showCategories() {
-        loadCategorie(categorie2, 1, 500);
-        loadCategorie(categorie1, 0, 1200);
+        if (location.categories.size() > 1) {
+            loadCategorie(categorie2, 1, 500);
+            loadCategorie(categorie1, 0, 1200);
+        } else {
+            loadCategorie(categorie1, 0, 500);
+        }
     }
 
     private void loadCategorie(ImageView v, int index, int delay) {

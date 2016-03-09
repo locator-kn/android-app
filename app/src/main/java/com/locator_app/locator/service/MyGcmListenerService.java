@@ -78,7 +78,7 @@ public class MyGcmListenerService extends GcmListenerService {
     void startIntentOnClick(String title, String message, Class<?> intentClass, Map<String, Serializable> data) {
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.drawable.go_to_bubblescreen)
+                        .setSmallIcon(R.drawable.go_to_bubblescreen_small)
                         .setLights(Color.GREEN, 1000, 2000)
                         .setContentTitle(title)
                         .setContentText(message)
