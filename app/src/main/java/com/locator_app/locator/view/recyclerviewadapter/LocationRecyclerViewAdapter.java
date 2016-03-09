@@ -11,10 +11,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.locator_app.locator.R;
 import com.locator_app.locator.model.LocatorLocation;
 import com.locator_app.locator.util.DateConverter;
 import com.locator_app.locator.view.LocationDetailActivity;
+import com.locator_app.locator.view.StrokeTransformation;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -34,10 +36,6 @@ public class LocationRecyclerViewAdapter extends RecyclerView.Adapter<LocationRe
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.default_list_item, parent, false);
-
-        ImageView circle = (ImageView) view.findViewById(R.id.circle);
-        Glide.with(view.getContext()).load(R.drawable.circle_red).into(circle);
-
         return new ViewHolder(view);
     }
 
@@ -64,7 +62,6 @@ public class LocationRecyclerViewAdapter extends RecyclerView.Adapter<LocationRe
         public final TextView description;
         public final TextView creationDate;
         public final ImageView image;
-        public final ImageView circle;
 
         public ViewHolder(View view) {
             super(view);
@@ -73,10 +70,6 @@ public class LocationRecyclerViewAdapter extends RecyclerView.Adapter<LocationRe
             description = (TextView) view.findViewById(R.id.description);
             creationDate = (TextView) view.findViewById(R.id.bubble_info);
             image = (ImageView) view.findViewById(R.id.image);
-            circle = (ImageView) view.findViewById(R.id.circle);
-            Glide.with(circle.getContext())
-                    .load(R.drawable.circle_silvergray)
-                    .into(circle);
         }
 
         public void bind(LocatorLocation location) {
@@ -87,6 +80,7 @@ public class LocationRecyclerViewAdapter extends RecyclerView.Adapter<LocationRe
                     .load(location.thumbnailUri())
                     .error(R.drawable.location_auf_map)
                     .bitmapTransform(new CropCircleTransformation(image.getContext()))
+                    .dontAnimate()
                     .into(image);
         }
     }
