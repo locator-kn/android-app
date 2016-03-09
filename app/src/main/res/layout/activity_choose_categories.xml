@@ -73,7 +73,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="0dp"
                                 android:id="@+id/imageView5"
-                                android:src="@drawable/category_natur"
+                                android:src="@drawable/category_natur_small"
                                 android:layout_weight="1" />
 
                             <TextView
@@ -99,7 +99,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="0dp"
                                 android:id="@+id/imageView6"
-                                android:src="@drawable/category_party"
+                                android:src="@drawable/category_party_small"
                                 android:layout_weight="1" />
 
                             <TextView
@@ -136,7 +136,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="0dp"
                                 android:id="@+id/imageView7"
-                                android:src="@drawable/category_culture"
+                                android:src="@drawable/category_culture_small"
                                 android:layout_weight="1" />
 
                             <TextView
@@ -162,7 +162,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="0dp"
                                 android:id="@+id/imageView8"
-                                android:src="@drawable/category_secret"
+                                android:src="@drawable/category_secret_small"
                                 android:layout_weight="1" />
 
                             <TextView
@@ -199,7 +199,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="0dp"
                                 android:id="@+id/imageView9"
-                                android:src="@drawable/category_gastro"
+                                android:src="@drawable/category_gastro_small"
                                 android:layout_weight="1" />
 
                             <TextView
@@ -226,7 +226,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="0dp"
                                 android:id="@+id/imageView10"
-                                android:src="@drawable/category_holiday"
+                                android:src="@drawable/category_holiday_small"
                                 android:layout_weight="1" />
 
                             <TextView
