@@ -18,7 +18,9 @@ public class MyApiService {
 
         @GET(Api.version + "/my/bubblescreen")
         Observable<Response<BubbleScreenResponse>> bubbleScreen(@Query("long") double lon,
-                                                                @Query("lat") double lat);
+                                                                @Query("lat") double lat,
+                                                                @Query("maxDistance") double maxDistance,
+                                                                @Query("limit") int limit);
 
         @PUT(Api.version + "/my/users/changePwd")
         Observable<Response<Object>> changePassword(@Body ChangePasswordRequest changePasswordRequest);
@@ -30,7 +32,9 @@ public class MyApiService {
     MyApi service = ServiceFactory.createService(MyApi.class);
 
     public Observable<BubbleScreenResponse> bubbleScreen(double lon, double lat) {
-        return GenericErrorHandler.wrapSingle(service.bubbleScreen(lon, lat));
+        final double maxDistance = 30000; // in km
+        final int limit = 20;
+        return GenericErrorHandler.wrapSingle(service.bubbleScreen(lon, lat, maxDistance, limit));
     }
 
     public Observable<Object> changePassword(String oldPassword, String newPassword) {
