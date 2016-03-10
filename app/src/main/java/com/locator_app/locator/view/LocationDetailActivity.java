@@ -3,7 +3,6 @@ package com.locator_app.locator.view;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.UiThread;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,7 +14,6 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
-import com.daimajia.androidanimations.library.specials.RollInAnimator;
 import com.locator_app.locator.R;
 import com.locator_app.locator.controller.LocationController;
 import com.locator_app.locator.controller.UserController;
@@ -23,7 +21,6 @@ import com.locator_app.locator.model.LocatorLocation;
 import com.locator_app.locator.model.impressions.AbstractImpression;
 import com.locator_app.locator.model.impressions.ImageImpression;
 import com.locator_app.locator.service.GpsService;
-import com.locator_app.locator.util.DistanceCalculator;
 import com.locator_app.locator.view.fragments.ImageFragmentAdapter;
 import com.locator_app.locator.view.home.HomeActivity;
 import com.locator_app.locator.view.impressions.ImpressionController;
@@ -31,8 +28,6 @@ import com.locator_app.locator.view.impressions.ImpressionObserver;
 import com.locator_app.locator.view.impressions.ImpressionRecyclerViewAdapter;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorListenerAdapter;
-
-import org.w3c.dom.Text;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -65,11 +60,11 @@ public class LocationDetailActivity extends FragmentActivity implements Impressi
     @Bind(R.id.heart)
     ImageView heartImageView;
 
-    @Bind(R.id.categorie1)
-    ImageView categorie1;
+    @Bind(R.id.category1)
+    ImageView category1;
 
-    @Bind(R.id.categorie2)
-    ImageView categorie2;
+    @Bind(R.id.category2)
+    ImageView category2;
 
     ImageFragmentAdapter imageFragmentAdapter;
     ImpressionRecyclerViewAdapter impressionAdapter;
@@ -218,7 +213,7 @@ public class LocationDetailActivity extends FragmentActivity implements Impressi
                 .into(heartImageView);
     }
 
-    private static final Map<String, Integer> categorieToImage;
+    private static final Map<String, Integer> categoryToImage;
     static {
         Map<String, Integer> aMap = new HashMap<>();
         aMap.put("culture",   R.drawable.category_culture_small);
@@ -227,39 +222,40 @@ public class LocationDetailActivity extends FragmentActivity implements Impressi
         aMap.put("nature",    R.drawable.category_natur_small);
         aMap.put("nightlife", R.drawable.category_party_small);
         aMap.put("secret",    R.drawable.category_secret_small);
-        categorieToImage = Collections.unmodifiableMap(aMap);
+        categoryToImage = Collections.unmodifiableMap(aMap);
     }
 
     private void showCategories() {
-        if (location.categories.size() > 1) {
-            loadCategorie(categorie2, 1, 500);
-            loadCategorie(categorie1, 0, 1200);
-        } else {
-            loadCategorie(categorie1, 0, 500);
+        if (location.categories.isEmpty()) {
+            bubblescreen.setEnabled(true);
+            goBack.setEnabled(true);
+        } else if (location.categories.size() == 1) {
+            loadCategory(category1, 0, 500);
+        } else if (location.categories.size() == 2) {
+            loadCategory(category2, 1, 500);
+            loadCategory(category1, 0, 1200);
         }
     }
 
-    private void loadCategorie(ImageView v, int index, int delay) {
-        if (location.categories.size() > index) {
-            String categorie = location.categories.get(index);
-            v.setAlpha(0.f);
-            if (categorieToImage.containsKey(categorie)) {
-                Glide.with(this)
-                        .load(categorieToImage.get(categorie))
-                        .into(v);
-                new Handler().postDelayed(() ->
-                        YoYo.with(Techniques.RollIn)
-                            .duration(1000)
-                            .withListener(new AnimatorListenerAdapter() {
-                                @Override
-                                public void onAnimationEnd(Animator animation) {
-                                    bubblescreen.setEnabled(true);
-                                    goBack.setEnabled(true);
-                                }
-                            })
-                            .playOn(v),
-                        delay);
-            }
+    private void loadCategory(ImageView v, int index, int delay) {
+        String category = location.categories.get(index);
+        v.setAlpha(0.f);
+        if (categoryToImage.containsKey(category)) {
+            Glide.with(this)
+                    .load(categoryToImage.get(category))
+                    .into(v);
+            new Handler().postDelayed(() ->
+                    YoYo.with(Techniques.RollIn)
+                        .duration(1000)
+                        .withListener(new AnimatorListenerAdapter() {
+                            @Override
+                            public void onAnimationEnd(Animator animation) {
+                                bubblescreen.setEnabled(true);
+                                goBack.setEnabled(true);
+                            }
+                        })
+                        .playOn(v),
+                    delay);
         }
     }
 
