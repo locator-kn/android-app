@@ -24,29 +24,43 @@
         tools:context="com.locator_app.locator.view.home.HomeFragment"
         android:id="@+id/bubbleScreen">
 
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/header"
             android:layout_width="fill_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:layout_marginTop="10dp">
-            <Space
-                android:layout_width="0dp"
-                android:layout_height="fill_parent"
-                android:layout_weight="1"/>
-            <ImageView
-                android:layout_width="0dp"
-                android:layout_height="fill_parent"
-                android:layout_weight="1"
-                android:src="@drawable/locator_logo_small"
-                android:adjustViewBounds="true"
-                android:antialias="true" />
+            android:layout_height="60dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:layout_alignParentTop="true">
 
             <Space
-                android:layout_width="0dp"
+                android:layout_width="60dp"
                 android:layout_height="fill_parent"
-                android:layout_weight="1" />
-        </LinearLayout>
+                />
+
+            <ImageView
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:src="@drawable/locator_logo_small"
+                android:adjustViewBounds="true"
+                android:antialias="true"
+                android:gravity="start|center"/>
+
+            <ImageView
+                android:id="@+id/imageViewShowHeatmap"
+                android:layout_width="60dp"
+                android:layout_height="fill_parent"
+                android:src="@drawable/map_icon_white"
+                android:adjustViewBounds="true"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:paddingRight="10dp"
+                android:paddingLeft="30dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:antialias="true" />
+
+        </RelativeLayout>
 
         <com.locator_app.locator.view.bubble.RelativeBubbleLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
@@ -55,7 +69,7 @@
             android:id="@+id/bubbleLayout"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="12"
+            android:layout_weight="13"
             tools:context=".MainActivity">
 
             <ImageView

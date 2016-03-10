@@ -1,19 +1,16 @@
 package com.locator_app.locator.view.home;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.github.tbouron.shakedetector.library.ShakeDetector;
@@ -30,7 +27,6 @@ import com.locator_app.locator.view.OnSwipeTouchListener;
 import com.locator_app.locator.view.StrokeTransformation;
 import com.locator_app.locator.view.UiError;
 import com.locator_app.locator.view.bubble.BubbleController;
-import com.locator_app.locator.view.bubble.BubbleView;
 import com.locator_app.locator.view.bubble.RelativeBubbleLayout;
 import com.locator_app.locator.view.locationcreation.LocationCreationController;
 import com.locator_app.locator.view.login.LoginRegisterStartActivity;
@@ -44,12 +40,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnLongClick;
 import butterknife.OnTouch;
-import jp.wasabeef.glide.transformations.CropCircleTransformation;
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
-public class HomeActivity extends AppCompatActivity {
+public class HomeActivity extends Activity {
 
     LocationCreationController locationCreationController;
 
@@ -109,10 +101,6 @@ public class HomeActivity extends AppCompatActivity {
         bubbleController = new BubbleController(bubbleLayout);
         locationCreationController = new LocationCreationController(this);
 
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.hide();
-        }
         gpsService = new GpsService(this);
 
         ShakeDetector.create(this, this::onShake);
@@ -255,6 +243,13 @@ public class HomeActivity extends AppCompatActivity {
         } else {
             jumpToLoginRegisterActivity();
         }
+    }
+
+    @OnClick(R.id.imageViewShowHeatmap)
+    void onImageViewShowHeatmapClicked() {
+        Intent intent = new Intent(HomeActivity.this, MapsActivity.class);
+        startActivity(intent);
+        overridePendingTransition(R.anim.push_right_in, R.anim.push_left_out);
     }
 
     private void handleLoginError(Throwable throwable) {

@@ -29,6 +29,8 @@ import com.locator_app.locator.view.home.HomeActivity;
 import com.locator_app.locator.view.impressions.ImpressionController;
 import com.locator_app.locator.view.impressions.ImpressionObserver;
 import com.locator_app.locator.view.impressions.ImpressionRecyclerViewAdapter;
+import com.nineoldandroids.animation.Animator;
+import com.nineoldandroids.animation.AnimatorListenerAdapter;
 
 import org.w3c.dom.Text;
 
@@ -47,6 +49,9 @@ public class LocationDetailActivity extends FragmentActivity implements Impressi
 
     @Bind(R.id.goBack)
     ImageView goBack;
+
+    @Bind(R.id.bubblescreen)
+    ImageView bubblescreen;
 
     @Bind(R.id.locationTitle)
     TextView locationTitle;
@@ -79,6 +84,9 @@ public class LocationDetailActivity extends FragmentActivity implements Impressi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_location_detail);
         ButterKnife.bind(this);
+        bubblescreen.setEnabled(false);
+        goBack.setEnabled(false);
+
         ImpressionController.addImpressionObserver(this);
 
         location = (LocatorLocation) getIntent().getSerializableExtra("location");
@@ -242,6 +250,13 @@ public class LocationDetailActivity extends FragmentActivity implements Impressi
                 new Handler().postDelayed(() ->
                         YoYo.with(Techniques.RollIn)
                             .duration(1000)
+                            .withListener(new AnimatorListenerAdapter() {
+                                @Override
+                                public void onAnimationEnd(Animator animation) {
+                                    bubblescreen.setEnabled(true);
+                                    goBack.setEnabled(true);
+                                }
+                            })
                             .playOn(v),
                         delay);
             }
