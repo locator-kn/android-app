@@ -33,6 +33,16 @@ public class MyGcmListenerService extends GcmListenerService {
     @Override
     public void onMessageReceived(String from, Bundle data) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN  && validData(data)) {
+
+            // we need to call 'checkProtected' because otherwise
+            // we are not logged in of the app was closed when the push
+            // notification was received.
+            UserController.getInstance().checkProtected()
+                    .subscribe(
+                            (me) -> {},
+                            (err) -> {}
+                    );
+
             String title = data.getString("title", "");
             String message = data.getString("message", "");
             String entity = data.getString("entity", "");
