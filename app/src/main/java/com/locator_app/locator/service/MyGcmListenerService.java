@@ -6,6 +6,8 @@ import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.location.Location;
 import android.media.RingtoneManager;
@@ -77,9 +79,13 @@ public class MyGcmListenerService extends GcmListenerService {
     }
 
     void startIntentOnClick(String title, String message, Class<?> intentClass, Map<String, Serializable> data) {
+
+        Bitmap locatorIcon = BitmapFactory.decodeResource(getResources(), R.drawable.locator_app_icon);
+
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.drawable.go_to_bubblescreen_small)
+                        .setLargeIcon(locatorIcon)
                         .setLights(Color.GREEN, 500, 500)
                         .setContentTitle(title)
                         .setContentText(message)
