@@ -20,6 +20,7 @@ import com.locator_app.locator.util.BitmapHelper;
 
 import java.util.concurrent.ExecutionException;
 
+import jp.wasabeef.glide.transformations.CropCircleTransformation;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -117,6 +118,7 @@ public class BubbleView extends View {
                     .asBitmap()
                     .dontAnimate()
                     .override(imageSize, imageSize)
+                    .transform(new CropCircleTransformation(getContext()))
                     .into(new SimpleTarget<Bitmap>() {
                         @Override
                         public void onResourceReady(Bitmap resource, GlideAnimation glideAnimation) {
