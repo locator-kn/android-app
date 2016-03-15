@@ -100,6 +100,7 @@ public class MyGcmListenerService extends GcmListenerService {
                         .setContentTitle(title)
                         .setContentText(message)
                         .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
+                        .setVibrate(getVibrationPattern())
                         .setAutoCancel(true);
 
         Intent intent = new Intent(this, intentClass);
@@ -128,5 +129,12 @@ public class MyGcmListenerService extends GcmListenerService {
         mNotificationManager.notify(5, builder.build());
     }
 
+
+    private long[] getVibrationPattern() {
+        final long timeUntilFirstVibration = 5000;
+        final long vibrationTime = 250;
+        long[] pattern = {timeUntilFirstVibration, vibrationTime};
+        return pattern;
+    }
 
 }
