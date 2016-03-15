@@ -96,7 +96,7 @@ public class MyGcmListenerService extends GcmListenerService {
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.drawable.go_to_bubblescreen_small)
                         .setLargeIcon(locatorIcon)
-                        .setLights(Color.GREEN, 500, 500)
+                        .setLights(Color.GREEN, 1000, 1000)
                         .setContentTitle(title)
                         .setContentText(message)
                         .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
