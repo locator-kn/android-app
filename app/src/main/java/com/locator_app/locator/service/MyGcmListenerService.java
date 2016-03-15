@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.location.Location;
+import android.media.RingtoneManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
@@ -79,9 +80,10 @@ public class MyGcmListenerService extends GcmListenerService {
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.drawable.go_to_bubblescreen_small)
-                        .setLights(Color.GREEN, 1000, 2000)
+                        .setLights(Color.GREEN, 500, 500)
                         .setContentTitle(title)
                         .setContentText(message)
+                        .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                         .setAutoCancel(true);
 
         Intent intent = new Intent(this, intentClass);
