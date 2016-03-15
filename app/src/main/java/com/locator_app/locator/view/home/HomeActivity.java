@@ -68,6 +68,7 @@ public class HomeActivity extends Activity {
     GpsService gpsService;
 
     Debounce shakeDebounce = new Debounce(2000);
+    Debounce schoenHierDebounce = new Debounce(1500);
 
     private static boolean isFirstTime = true;
 
@@ -212,20 +213,22 @@ public class HomeActivity extends Activity {
 
     @OnClick(R.id.schoenHierBubble)
     void onSchoenHierBubbleClick() {
-        SchoenHierController.getInstance().markCurPosAsSchoenHier(gpsService)
-                .subscribe(
-                        (response) -> {
-                            SharedPreferences preferences = LocatorApplication.getSharedPreferences();
-                            if (preferences.getBoolean("map_on_sh_click", true)) {
-                                Intent intent = new Intent(HomeActivity.this, MapsActivity.class);
-                                startActivity(intent);
-                                overridePendingTransition(R.anim.push_right_in, R.anim.push_left_out);
+        if (!schoenHierDebounce.calledRecently()) {
+            SchoenHierController.getInstance().markCurPosAsSchoenHier(gpsService)
+                    .subscribe(
+                            (response) -> {
+                                SharedPreferences preferences = LocatorApplication.getSharedPreferences();
+                                if (preferences.getBoolean("map_on_sh_click", true)) {
+                                    Intent intent = new Intent(HomeActivity.this, MapsActivity.class);
+                                    startActivity(intent);
+                                    overridePendingTransition(R.anim.push_right_in, R.anim.push_left_out);
+                                }
+                            },
+                            (error) -> {
+                                UiError.showError(this, error);
                             }
-                        },
-                        (error) -> {
-                            UiError.showError(this, error);
-                        }
-                );
+                    );
+        }
     }
 
     @OnLongClick(R.id.schoenHierBubble)
@@ -234,14 +237,18 @@ public class HomeActivity extends Activity {
         return true;
     }
 
+    Debounce profileBubbleDebounce = new Debounce(1500);
+
     @OnClick(R.id.userProfileBubble)
     void onUserProfileBubbleClick() {
-        if (UserController.getInstance().loggedIn()) {
-            Intent intent = new Intent(this, ProfileActivity.class);
-            intent.putExtra("profile", UserController.getInstance().me());
-            startActivity(intent);
-        } else {
-            jumpToLoginRegisterActivity();
+        if (!profileBubbleDebounce.calledRecently()) {
+            if (UserController.getInstance().loggedIn()) {
+                Intent intent = new Intent(this, ProfileActivity.class);
+                intent.putExtra("profile", UserController.getInstance().me());
+                startActivity(intent);
+            } else {
+                jumpToLoginRegisterActivity();
+            }
         }
     }
 

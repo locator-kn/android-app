@@ -13,6 +13,7 @@ import com.locator_app.locator.apiservice.my.BubbleScreenResponse;
 import com.locator_app.locator.controller.LocationController;
 import com.locator_app.locator.model.LocatorLocation;
 import com.locator_app.locator.model.LocatorObject;
+import com.locator_app.locator.util.Debounce;
 import com.locator_app.locator.view.LocationDetailActivity;
 import com.locator_app.locator.view.UiError;
 import com.nineoldandroids.animation.Animator;
@@ -208,20 +209,25 @@ public class BubbleController {
         return list.indexOf(o);
     }
 
+
+    Debounce bubbleDebounce = new Debounce(1500);
+
     private void handleOnLocationBubbleClicked(Bubble bubble) {
-        LocatorLocation location = (LocatorLocation) bubble.data;
-        LocationController.getInstance()
-                .getLocationById(location.id)
-                .subscribe(
-                        (result) -> {
-                            Intent intent = new Intent(layout.getContext(), LocationDetailActivity.class);
-                            intent.putExtra("location", result);
-                            layout.getContext().startActivity(intent);
-                        },
-                        (err) -> {
-                            UiError.showError(layout.getContext(), err, "Die Location konnte nicht geladen werden :(");
-                        }
-                );
+        if (!bubbleDebounce.calledRecently()) {
+            LocatorLocation location = (LocatorLocation) bubble.data;
+            LocationController.getInstance()
+                    .getLocationById(location.id)
+                    .subscribe(
+                            (result) -> {
+                                Intent intent = new Intent(layout.getContext(), LocationDetailActivity.class);
+                                intent.putExtra("location", result);
+                                layout.getContext().startActivity(intent);
+                            },
+                            (err) -> {
+                                UiError.showError(layout.getContext(), err, "Die Location konnte nicht geladen werden :(");
+                            }
+                    );
+        }
     }
 
     private void positionBubblesInDifferentQuadrants() {
