@@ -6,8 +6,11 @@ import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.location.Location;
+import android.media.RingtoneManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
@@ -30,6 +33,16 @@ public class MyGcmListenerService extends GcmListenerService {
     @Override
     public void onMessageReceived(String from, Bundle data) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN  && validData(data)) {
+
+            // we need to call 'checkProtected' because otherwise
+            // we are not logged in of the app was closed when the push
+            // notification was received.
+            UserController.getInstance().checkProtected()
+                    .subscribe(
+                            (me) -> {},
+                            (err) -> {}
+                    );
+
             String title = data.getString("title", "");
             String message = data.getString("message", "");
             String entity = data.getString("entity", "");
@@ -76,12 +89,18 @@ public class MyGcmListenerService extends GcmListenerService {
     }
 
     void startIntentOnClick(String title, String message, Class<?> intentClass, Map<String, Serializable> data) {
+
+        Bitmap locatorIcon = BitmapFactory.decodeResource(getResources(), R.drawable.locator_app_icon);
+
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.drawable.go_to_bubblescreen_small)
-                        .setLights(Color.GREEN, 1000, 2000)
+                        .setLargeIcon(locatorIcon)
+                        .setLights(Color.GREEN, 1000, 1000)
                         .setContentTitle(title)
                         .setContentText(message)
+                        .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
+                        .setVibrate(getVibrationPattern())
                         .setAutoCancel(true);
 
         Intent intent = new Intent(this, intentClass);
@@ -110,5 +129,12 @@ public class MyGcmListenerService extends GcmListenerService {
         mNotificationManager.notify(5, builder.build());
     }
 
+
+    private long[] getVibrationPattern() {
+        final long timeUntilFirstVibration = 5000;
+        final long vibrationTime = 250;
+        long[] pattern = {timeUntilFirstVibration, vibrationTime};
+        return pattern;
+    }
 
 }
