@@ -45,6 +45,9 @@ public class LocatorLocation implements LocatorObject, Serializable {
     @SerializedName("categories")
     public List<String> categories = new LinkedList<>();
 
+    @SerializedName("markerImage")
+    public String markerImage = "http://static.oac-head.com/img/icons/items/blue_easter_egg.png";
+
     @Override
     public boolean equals(Object other) {
         return other == this || other instanceof LocatorLocation && id.equals(((LocatorLocation)other).id);

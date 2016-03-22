@@ -195,32 +195,48 @@ public class MapsController {
                 .doOnCompleted(this::drawNewLocations);
     }
 
+    boolean alreadyDrawn;
     public void drawNewLocations() {
         boolean drawnNew = false;
+        alreadyDrawn = false;
         while (!newLocations.isEmpty()) {
             LocatorLocation location = newLocations.poll();
             if (drawnlocations.contains(location)) {
                 continue;
             }
             drawnNew = true;
-            //drawLocation(location.geoTag.getLongitude(), location.geoTag.getLatitude());
-            LocationMarker marker = new LocationMarker(location.geoTag.getLatitude(),
-                                                       location.geoTag.getLongitude(),
-                    locationIcon);
-            clusterManager.addItem(marker);
-            markerToLocation.put(marker, location);
+            if (!location.markerImage.equals("")) {
+                Glide.with(mapsActivity).load(location.markerImage)
+                        .asBitmap()
+                        .error(R.drawable.location_auf_map)
+                        .into(new SimpleTarget<Bitmap>() {
+                            @Override
+                            public void onResourceReady(Bitmap icon, GlideAnimation glideAnimation) {
+                                BitmapDescriptor bDIcon = BitmapDescriptorFactory.fromBitmap(icon);
+                                drawMarker(bDIcon, location);
+                                if (alreadyDrawn) {
+                                    clusterManager.cluster();
+                                }
+                            }
+                        });
+            }
+            else {
+                drawMarker(locationIcon, location);
+            }
             drawnlocations.add(location);
         }
         if (drawnNew) {
+            alreadyDrawn = true;
             clusterManager.cluster();
         }
     }
 
-    private void drawLocation(double lon, double lat) {
-//        googleMap.addMarker(new MarkerOptions()
-//                .icon(BitmapDescriptorFactory.fromBitmap(locationIcon))
-//                .anchor(0.5f, 0.5f)
-//                .position(new LatLng(lat, lon)));
+    private void drawMarker(BitmapDescriptor icon, LocatorLocation location) {
+        LocationMarker marker = new LocationMarker(location.geoTag.getLatitude(),
+                location.geoTag.getLongitude(),
+                icon);
+        clusterManager.addItem(marker);
+        markerToLocation.put(marker, location);
     }
 
     private List<LatLng> heatPoints = new LinkedList<>();
