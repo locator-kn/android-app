@@ -38,6 +38,15 @@ public class Images implements Serializable {
         return get(small);
     }
 
+    @SerializedName("egg")
+    public String egg = "";
+    public String getEgg() {
+        return get(egg);
+    }
+    public boolean hasEgg() {
+        return egg.isEmpty();
+    }
+
     private String get(String size) {
         return Api.serverUrl + size;
     }

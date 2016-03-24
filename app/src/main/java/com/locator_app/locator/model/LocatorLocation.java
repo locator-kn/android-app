@@ -2,6 +2,7 @@ package com.locator_app.locator.model;
 
 import com.google.gson.annotations.SerializedName;
 import com.locator_app.locator.R;
+import com.locator_app.locator.apiservice.Api;
 
 import java.io.Serializable;
 import java.util.LinkedList;
@@ -44,9 +45,6 @@ public class LocatorLocation implements LocatorObject, Serializable {
 
     @SerializedName("categories")
     public List<String> categories = new LinkedList<>();
-
-    @SerializedName("markerImage")
-    public String markerImage = "http://static.oac-head.com/img/icons/items/blue_easter_egg.png";
 
     @Override
     public boolean equals(Object other) {

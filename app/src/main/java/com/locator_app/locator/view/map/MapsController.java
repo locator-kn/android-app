@@ -205,8 +205,8 @@ public class MapsController {
                 continue;
             }
             drawnNew = true;
-            if (!location.markerImage.equals("")) {
-                Glide.with(mapsActivity).load(location.markerImage)
+            if (!location.images.hasEgg()) {
+                Glide.with(mapsActivity).load(location.images.getEgg())
                         .asBitmap()
                         .error(R.drawable.location_auf_map)
                         .into(new SimpleTarget<Bitmap>() {
