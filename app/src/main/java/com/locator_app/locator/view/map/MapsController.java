@@ -212,7 +212,8 @@ public class MapsController {
                         .into(new SimpleTarget<Bitmap>() {
                             @Override
                             public void onResourceReady(Bitmap icon, GlideAnimation glideAnimation) {
-                                BitmapDescriptor bDIcon = BitmapDescriptorFactory.fromBitmap(icon);
+                                Bitmap resized = Bitmap.createScaledBitmap(icon, 50, 50, false);
+                                BitmapDescriptor bDIcon = BitmapDescriptorFactory.fromBitmap(resized);
                                 drawMarker(bDIcon, location);
                                 if (alreadyDrawn) {
                                     clusterManager.cluster();
