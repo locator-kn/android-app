@@ -15,7 +15,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.VisibleRegion;
+import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
+import com.google.maps.android.clustering.view.ClusterRenderer;
+import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.locator_app.locator.LocatorApplication;
 import com.locator_app.locator.R;
 import com.locator_app.locator.apiservice.schoenhier.SchoenHiersResponse;
@@ -33,6 +36,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import rx.Observable;
@@ -86,6 +90,9 @@ public class MapsController {
 
     private void setUpClusterer() {
         clusterManager = new ClusterManager<>(LocatorApplication.getAppContext(), googleMap);
+
+        clusterManager.setRenderer(new HideClusterRenderer(LocatorApplication.getAppContext(),
+                googleMap, clusterManager));
 
         googleMap.setOnCameraChangeListener(clusterManager);
         googleMap.setOnMarkerClickListener(clusterManager);
