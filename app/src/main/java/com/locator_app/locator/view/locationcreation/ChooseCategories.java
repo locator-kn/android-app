@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.locator_app.locator.R;
 import com.locator_app.locator.controller.LocationController;
+import com.locator_app.locator.model.Categories;
 import com.locator_app.locator.view.LocationDetailActivity;
 import com.locator_app.locator.view.UiError;
 import com.locator_app.locator.view.home.HomeActivity;
@@ -45,13 +46,6 @@ public class ChooseCategories extends Activity {
 
     LoadingSpinner loadingSpinner;
 
-    private static final String NATURE_ID    = "nature";
-    private static final String NIGHTLIFE_ID = "nightlife";
-    private static final String CULTURE_ID   = "culture";
-    private static final String SECRET_ID    = "secret";
-    private static final String GASTRO_ID    = "gastro";
-    private static final String HOLIDAY_ID   = "holiday";
-
     @Bind(R.id.next)
     ImageView next;
 
@@ -66,17 +60,17 @@ public class ChooseCategories extends Activity {
     }
 
     @OnClick(R.id.nature)
-    void onNatureClicked()    { toggleCategory(nature, NATURE_ID); }
+    void onNatureClicked()    { toggleCategory(nature, Categories.NATURE); }
     @OnClick(R.id.nightlife)
-    void onNightlifeClicked() { toggleCategory(nightlife, NIGHTLIFE_ID); }
+    void onNightlifeClicked() { toggleCategory(nightlife, Categories.NIGHTLIFE); }
     @OnClick(R.id.culture)
-    void onCultureClicked()   { toggleCategory(culture, CULTURE_ID); }
+    void onCultureClicked()   { toggleCategory(culture, Categories.CULTURE); }
     @OnClick(R.id.secret)
-    void onSecretClicked()    { toggleCategory(secret, SECRET_ID); }
+    void onSecretClicked()    { toggleCategory(secret, Categories.SECRET); }
     @OnClick(R.id.gastro)
-    void onGastroClicked()    { toggleCategory(gastro, GASTRO_ID); }
+    void onGastroClicked()    { toggleCategory(gastro, Categories.GASTRO); }
     @OnClick(R.id.holiday)
-    void onHolidayClicked()   { toggleCategory(holiday, HOLIDAY_ID); }
+    void onHolidayClicked()   { toggleCategory(holiday, Categories.HOLIDAY); }
 
     private final ArrayList<String> selectedCategories = new ArrayList<>();
     private static final int MAX_CATEGORIES = 2;

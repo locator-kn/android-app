@@ -1,7 +1,9 @@
 package com.locator_app.locator.view.map;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -9,6 +11,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.google.android.gms.maps.GoogleMap;
@@ -24,7 +27,9 @@ import com.locator_app.locator.R;
 import com.locator_app.locator.apiservice.schoenhier.SchoenHiersResponse;
 import com.locator_app.locator.controller.LocationController;
 import com.locator_app.locator.controller.SchoenHierController;
+import com.locator_app.locator.model.Categories;
 import com.locator_app.locator.model.LocatorLocation;
+import com.locator_app.locator.util.BitmapHelper;
 import com.locator_app.locator.util.DistanceCalculator;
 import com.locator_app.locator.view.LocationDetailActivity;
 import com.locator_app.locator.view.UiError;
@@ -36,6 +41,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutionException;
 
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -53,10 +59,13 @@ public class MapsController {
 
     private BitmapDescriptor locationIcon;
 
+    private Map<String, BitmapDescriptor> categoryIcons = new HashMap<>();
 
     public MapsController(MapsActivity maps, GoogleMap map) {
         mapsActivity = maps;
         googleMap = map;
+
+        loadCategoryIcons();
 
         Glide.with(mapsActivity).load(R.drawable.location_auf_map)
             .asBitmap()
@@ -70,6 +79,23 @@ public class MapsController {
         setUpClusterer();
     }
 
+    private void loadCategoryIcons() {
+        loadCategoryIcon(Categories.CULTURE);
+        loadCategoryIcon(Categories.GASTRO);
+        loadCategoryIcon(Categories.HOLIDAY);
+        loadCategoryIcon(Categories.NATURE);
+        loadCategoryIcon(Categories.NIGHTLIFE);
+        loadCategoryIcon(Categories.SECRET);
+    }
+
+    private void loadCategoryIcon(String category) {
+        final int thumbnailSize = 80;
+        final int id = Categories.getLightCategoryIcon(category);
+        final Bitmap bitmap = BitmapFactory.decodeResource(mapsActivity.getResources(), id);
+        final Bitmap resized = Bitmap.createScaledBitmap(bitmap, thumbnailSize, thumbnailSize, false);
+        final BitmapDescriptor descriptor = BitmapDescriptorFactory.fromBitmap(resized);
+        categoryIcons.put(category, descriptor);
+    }
 
     private ClusterManager<LocationMarker> clusterManager;
     MarkerInfoWindow infoWindow;
@@ -87,26 +113,23 @@ public class MapsController {
                 clusterManager,
                 markerIDToLocationMarker));
 
-        clusterManager.setOnClusterItemInfoWindowClickListener(new ClusterManager.OnClusterItemInfoWindowClickListener<LocationMarker>() {
-            @Override
-            public void onClusterItemInfoWindowClick(LocationMarker locationMarker) {
-                if (markerToLocation.containsKey(locationMarker)) {
-                    LocatorLocation location = markerToLocation.get(locationMarker);
+        clusterManager.setOnClusterItemInfoWindowClickListener(locationMarker -> {
+            if (markerToLocation.containsKey(locationMarker)) {
+                LocatorLocation location = markerToLocation.get(locationMarker);
 
-                    LocationController.getInstance().getLocationById(location.id)
-                            .subscribe(
-                                    (newLocationFromServer) -> {
-                                        Intent intent = new Intent(mapsActivity, LocationDetailActivity.class);
-                                        intent.putExtra("location", newLocationFromServer);
-                                        mapsActivity.startActivity(intent);
-                                    },
-                                    (error) -> {
-                                        Intent intent = new Intent(mapsActivity, LocationDetailActivity.class);
-                                        intent.putExtra("location", location);
-                                        mapsActivity.startActivity(intent);
-                                    }
-                            );
-                }
+                LocationController.getInstance().getLocationById(location.id)
+                        .subscribe(
+                                (newLocationFromServer) -> {
+                                    Intent intent = new Intent(mapsActivity, LocationDetailActivity.class);
+                                    intent.putExtra("location", newLocationFromServer);
+                                    mapsActivity.startActivity(intent);
+                                },
+                                (error) -> {
+                                    Intent intent = new Intent(mapsActivity, LocationDetailActivity.class);
+                                    intent.putExtra("location", location);
+                                    mapsActivity.startActivity(intent);
+                                }
+                        );
             }
         });
 
@@ -188,15 +211,27 @@ public class MapsController {
 
         return LocationController.getInstance().getLocationsNearby(position.longitude, position.latitude,
                 loadableRadius(locationsLoadedRect), 100)
-                .doOnError((error) -> UiError.showError(mapsActivity,
-                        error,
-                        "Locations nicht bekommen"))
                 .doOnNext(newLocations::add)
                 .doOnCompleted(this::drawNewLocations);
     }
 
+    private int getLocationMapThumbnailIcon(LocatorLocation location) {
+        if (location.categories.isEmpty()) {
+            return R.drawable.location_auf_map;
+        }
+        String category = location.categories.get(0);
+        int id = Categories.getLightCategoryIcon(category);
+        if (id == Categories.NO_ICON) {
+            return R.drawable.location_auf_map;
+        }
+        return id;
+    }
+
     boolean alreadyDrawn;
     public void drawNewLocations() {
+
+        final int width = 80;
+
         boolean drawnNew = false;
         alreadyDrawn = false;
         while (!newLocations.isEmpty()) {
@@ -208,13 +243,13 @@ public class MapsController {
             if (!location.images.hasEgg()) {
                 Glide.with(mapsActivity).load(location.images.getEgg())
                         .asBitmap()
-                        .error(R.drawable.location_auf_map)
+                        .error(getLocationMapThumbnailIcon(location))
                         .into(new SimpleTarget<Bitmap>() {
                             @Override
                             public void onResourceReady(Bitmap icon, GlideAnimation glideAnimation) {
-                                Bitmap resized = Bitmap.createScaledBitmap(icon, 50, 50, false);
-                                BitmapDescriptor bDIcon = BitmapDescriptorFactory.fromBitmap(resized);
-                                drawMarker(bDIcon, location);
+                                Bitmap resized = Bitmap.createScaledBitmap(icon, width, width, false);
+                                BitmapDescriptor descriptor = BitmapDescriptorFactory.fromBitmap(resized);
+                                drawMarker(descriptor, location);
                                 if (alreadyDrawn) {
                                     clusterManager.cluster();
                                 }
@@ -222,7 +257,24 @@ public class MapsController {
                         });
             }
             else {
-                drawMarker(locationIcon, location);
+                BitmapDescriptor descriptor = locationIcon;
+                if (!location.categories.isEmpty()) {
+                    final String category = location.categories.get(0);
+                    descriptor = categoryIcons.get(category);
+                    drawMarker(descriptor, location);
+                }
+                drawMarker(descriptor, location);
+                /*Glide.with(mapsActivity).load(getLocationMapThumbnailIcon(location))
+                        .asBitmap()
+                        .error(R.drawable.location_auf_map)
+                        .into(new SimpleTarget<Bitmap>() {
+                            @Override
+                            public void onResourceReady(Bitmap icon, GlideAnimation glideAnimation) {
+                                Bitmap resized = Bitmap.createScaledBitmap(icon, width, width, false);
+                                BitmapDescriptor descriptor = BitmapDescriptorFactory.fromBitmap(resized);
+                                drawMarker(descriptor, location);
+                            }
+                        });*/
             }
             drawnlocations.add(location);
         }
