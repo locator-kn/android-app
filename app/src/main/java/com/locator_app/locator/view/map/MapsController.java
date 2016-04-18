@@ -261,20 +261,8 @@ public class MapsController {
                 if (!location.categories.isEmpty()) {
                     final String category = location.categories.get(0);
                     descriptor = categoryIcons.get(category);
-                    drawMarker(descriptor, location);
                 }
                 drawMarker(descriptor, location);
-                /*Glide.with(mapsActivity).load(getLocationMapThumbnailIcon(location))
-                        .asBitmap()
-                        .error(R.drawable.location_auf_map)
-                        .into(new SimpleTarget<Bitmap>() {
-                            @Override
-                            public void onResourceReady(Bitmap icon, GlideAnimation glideAnimation) {
-                                Bitmap resized = Bitmap.createScaledBitmap(icon, width, width, false);
-                                BitmapDescriptor descriptor = BitmapDescriptorFactory.fromBitmap(resized);
-                                drawMarker(descriptor, location);
-                            }
-                        });*/
             }
             drawnlocations.add(location);
         }
