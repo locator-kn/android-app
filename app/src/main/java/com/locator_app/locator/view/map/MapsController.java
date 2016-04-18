@@ -1,17 +1,11 @@
 package com.locator_app.locator.view.map;
 
 import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.location.Location;
-import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.google.android.gms.maps.GoogleMap;
@@ -29,7 +23,6 @@ import com.locator_app.locator.controller.LocationController;
 import com.locator_app.locator.controller.SchoenHierController;
 import com.locator_app.locator.model.Categories;
 import com.locator_app.locator.model.LocatorLocation;
-import com.locator_app.locator.util.BitmapHelper;
 import com.locator_app.locator.util.DistanceCalculator;
 import com.locator_app.locator.view.LocationDetailActivity;
 import com.locator_app.locator.view.UiError;
@@ -41,11 +34,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutionException;
 
 import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 public class MapsController {
 
@@ -57,24 +47,19 @@ public class MapsController {
     private MapsActivity mapsActivity;
     private GoogleMap googleMap;
 
-    private BitmapDescriptor locationIcon;
 
     private Map<String, BitmapDescriptor> categoryIcons = new HashMap<>();
+    private BitmapDescriptor locationIcon;
+    final int thumbnailSize = 80;
 
     public MapsController(MapsActivity maps, GoogleMap map) {
         mapsActivity = maps;
         googleMap = map;
 
         loadCategoryIcons();
-
-        Glide.with(mapsActivity).load(R.drawable.location_auf_map)
-            .asBitmap()
-            .into(new SimpleTarget<Bitmap>() {
-                @Override
-                public void onResourceReady(Bitmap icon, GlideAnimation glideAnimation) {
-                    locationIcon = BitmapDescriptorFactory.fromBitmap(icon);
-                }
-            });
+        final Bitmap bitmap = BitmapFactory.decodeResource(mapsActivity.getResources(), R.drawable.location_auf_map);
+        final Bitmap resized = Bitmap.createScaledBitmap(bitmap, thumbnailSize, thumbnailSize, false);
+        locationIcon = BitmapDescriptorFactory.fromBitmap(resized);
 
         setUpClusterer();
     }
@@ -89,7 +74,6 @@ public class MapsController {
     }
 
     private void loadCategoryIcon(String category) {
-        final int thumbnailSize = 80;
         final int id = Categories.getLightCategoryIcon(category);
         final Bitmap bitmap = BitmapFactory.decodeResource(mapsActivity.getResources(), id);
         final Bitmap resized = Bitmap.createScaledBitmap(bitmap, thumbnailSize, thumbnailSize, false);
