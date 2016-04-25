@@ -14,12 +14,8 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.VisibleRegion;
-import com.google.maps.android.clustering.Cluster;
-import com.google.maps.android.clustering.ClusterManager;
-import com.google.maps.android.clustering.view.ClusterRenderer;
-import com.google.maps.android.clustering.view.DefaultClusterRenderer;
-import com.locator_app.locator.LocatorApplication;
 import com.locator_app.locator.R;
 import com.locator_app.locator.apiservice.schoenhier.SchoenHiersResponse;
 import com.locator_app.locator.controller.LocationController;
@@ -28,7 +24,6 @@ import com.locator_app.locator.model.Categories;
 import com.locator_app.locator.model.LocatorLocation;
 import com.locator_app.locator.util.DistanceCalculator;
 import com.locator_app.locator.view.LocationDetailActivity;
-import com.locator_app.locator.view.UiError;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -36,7 +31,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import rx.Observable;
@@ -44,8 +38,7 @@ import rx.Observable;
 public class MapsController {
 
     private HashSet<LocatorLocation> drawnlocations = new HashSet<>();
-    private Map<LocationMarker, LocatorLocation> markerToLocation = new ConcurrentHashMap<>();
-    private Map<String, LocationMarker> markerIDToLocationMarker = new ConcurrentHashMap<>();
+    private Map<Marker, LocatorLocation> markerIdToLocation = new ConcurrentHashMap<>();
     private Queue<LocatorLocation> newLocations = new LinkedList<>();
 
     private MapsActivity mapsActivity;
@@ -65,7 +58,7 @@ public class MapsController {
         final Bitmap resized = Bitmap.createScaledBitmap(bitmap, thumbnailSize, thumbnailSize, false);
         locationIcon = BitmapDescriptorFactory.fromBitmap(resized);
 
-        setUpClusterer();
+        setupInfoWindow();
     }
 
     private void loadCategoryIcons() {
@@ -85,107 +78,65 @@ public class MapsController {
         categoryIcons.put(category, descriptor);
     }
 
-    private ClusterManager<LocationMarker> clusterManager;
     MarkerInfoWindow infoWindow;
-
-    private void setUpClusterer() {
-        clusterManager = new ClusterManager<>(LocatorApplication.getAppContext(), googleMap);
-
-        clusterManager.setRenderer(new HideClusterRenderer(LocatorApplication.getAppContext(),
-                googleMap, clusterManager));
-
-        googleMap.setOnCameraChangeListener(clusterManager);
-        googleMap.setOnMarkerClickListener(clusterManager);
-        googleMap.setOnInfoWindowClickListener(clusterManager);
-        googleMap.setInfoWindowAdapter(clusterManager.getMarkerManager());
-
-        clusterManager.setRenderer(new LocationMarkerRenderer(LocatorApplication.getAppContext(),
-                googleMap,
-                clusterManager,
-                markerIDToLocationMarker));
-
-        clusterManager.setOnClusterItemInfoWindowClickListener(locationMarker -> {
-            if (markerToLocation.containsKey(locationMarker)) {
-                LocatorLocation location = markerToLocation.get(locationMarker);
-
-                LocationController.getInstance().getLocationById(location.id)
-                        .subscribe(
-                                (newLocationFromServer) -> {
-                                    Intent intent = new Intent(mapsActivity, LocationDetailActivity.class);
-                                    intent.putExtra("location", newLocationFromServer);
-                                    mapsActivity.startActivity(intent);
-                                },
-                                (error) -> {
-                                    Intent intent = new Intent(mapsActivity, LocationDetailActivity.class);
-                                    intent.putExtra("location", location);
-                                    mapsActivity.startActivity(intent);
-                                }
-                        );
-            }
-        });
+    private void setupInfoWindow() {
 
         infoWindow = new MarkerInfoWindow();
         infoWindow.onCreateView(mapsActivity.getLayoutInflater(), null, null);
 
-        clusterManager.getMarkerCollection().setOnInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
-            @Override
-            public View getInfoContents(Marker marker) {
-                return null;
-            }
+        googleMap.setOnInfoWindowClickListener(marker -> {
+            LocatorLocation location = markerIdToLocation.get(marker);
 
-            @Override
-            public View getInfoWindow(Marker marker) {
-                if (markerIDToLocationMarker.containsKey(marker.getId())) {
-                    LocationMarker locationMarker = markerIDToLocationMarker.get(marker.getId());
-                    if (markerToLocation.containsKey(locationMarker)) {
-                        LocatorLocation location = markerToLocation.get(locationMarker);
+            LocationController.getInstance().getLocationById(location.id)
+                    .subscribe(
+                            (newLocationFromServer) -> {
+                                Intent intent = new Intent(mapsActivity, LocationDetailActivity.class);
+                                intent.putExtra("location", newLocationFromServer);
+                                mapsActivity.startActivity(intent);
+                            },
+                            (error) -> {
+                                Intent intent = new Intent(mapsActivity, LocationDetailActivity.class);
+                                intent.putExtra("location", location);
+                                mapsActivity.startActivity(intent);
+                            }
+                    );
+        });
 
+        googleMap.setInfoWindowAdapter(
+                new GoogleMap.InfoWindowAdapter() {
+                    @Override
+                    public View getInfoContents(Marker marker) {
+                        return null;
+                    }
+
+                    @Override
+                    public View getInfoWindow(Marker marker) {
+                        LocatorLocation location = markerIdToLocation.get(marker);
                         infoWindow.setFollowers(location.favorites.size());
                         infoWindow.setLocationTitle(location.title);
                         infoWindow.setImage(location.images.getNormal(), mapsActivity, marker);
                         infoWindow.setCreatorName(location.userId, marker);
-
                         return infoWindow.getView();
                     }
-                }
-                return null;
-            }
-        });
+                });
     }
 
     public void setAllLocationsInvisible() {
-        googleMap.setOnCameraChangeListener(null);
-        googleMap.setOnMarkerClickListener(null);
-        googleMap.setOnInfoWindowClickListener(null);
-        googleMap.setInfoWindowAdapter(null);
-        for (Marker marker : clusterManager.getClusterMarkerCollection().getMarkers()) {
-            marker.setVisible(false);
-        }
-        for (Marker marker : clusterManager.getMarkerCollection().getMarkers()) {
+        for (Marker marker : markerIdToLocation.keySet()) {
             marker.setVisible(false);
         }
     }
 
     public void setAllLocationsVisible() {
-        for (Marker marker : clusterManager.getClusterMarkerCollection().getMarkers()) {
+        for (Marker marker : markerIdToLocation.keySet()) {
             marker.setVisible(true);
         }
-        for (Marker marker : clusterManager.getMarkerCollection().getMarkers()) {
-            marker.setVisible(true);
-        }
-        clusterManager.onCameraChange(googleMap.getCameraPosition());
-        googleMap.setOnCameraChangeListener(clusterManager);
-        googleMap.setOnMarkerClickListener(clusterManager);
-        googleMap.setOnInfoWindowClickListener(clusterManager);
-        googleMap.setInfoWindowAdapter(clusterManager.getMarkerManager());
     }
 
     public void redrawLocationsAt(LatLng position) {
         drawLocationsAt(position).subscribe(
-                (res) -> {
-                },
-                (err) -> {
-                }
+                (res) -> {},
+                (err) -> {}
         );
     }
 
@@ -218,32 +169,22 @@ public class MapsController {
         return id;
     }
 
-    boolean alreadyDrawn;
     public void drawNewLocations() {
-
-        final int width = 80;
-
-        boolean drawnNew = false;
-        alreadyDrawn = false;
         while (!newLocations.isEmpty()) {
             LocatorLocation location = newLocations.poll();
             if (drawnlocations.contains(location)) {
                 continue;
             }
-            drawnNew = true;
-            if (!location.images.hasEgg()) {
+            if (location.images.hasEgg()) {
                 Glide.with(mapsActivity).load(location.images.getEgg())
                         .asBitmap()
                         .error(getLocationMapThumbnailIcon(location))
                         .into(new SimpleTarget<Bitmap>() {
                             @Override
                             public void onResourceReady(Bitmap icon, GlideAnimation glideAnimation) {
-                                Bitmap resized = Bitmap.createScaledBitmap(icon, width, width, false);
+                                Bitmap resized = Bitmap.createScaledBitmap(icon, thumbnailSize, thumbnailSize, false);
                                 BitmapDescriptor descriptor = BitmapDescriptorFactory.fromBitmap(resized);
                                 drawMarker(descriptor, location);
-                                if (alreadyDrawn) {
-                                    clusterManager.cluster();
-                                }
                             }
                         });
             }
@@ -257,18 +198,13 @@ public class MapsController {
             }
             drawnlocations.add(location);
         }
-        if (drawnNew) {
-            alreadyDrawn = true;
-            clusterManager.cluster();
-        }
     }
 
     private void drawMarker(BitmapDescriptor icon, LocatorLocation location) {
-        LocationMarker marker = new LocationMarker(location.geoTag.getLatitude(),
-                location.geoTag.getLongitude(),
-                icon);
-        clusterManager.addItem(marker);
-        markerToLocation.put(marker, location);
+        LatLng latLng = new LatLng(location.geoTag.getLatitude(), location.geoTag.getLongitude());
+        MarkerOptions markerOptions = new MarkerOptions().position(latLng).icon(icon);
+        Marker marker = googleMap.addMarker(markerOptions);
+        markerIdToLocation.put(marker, location);
     }
 
     private List<LatLng> heatPoints = new LinkedList<>();
@@ -307,9 +243,6 @@ public class MapsController {
 
         return SchoenHierController.getInstance().schoenHiersNearby(pos.longitude, pos.latitude,
                 loadableRadius(heatmapLoadedRect), 1000)
-                .doOnError((error) -> UiError.showError(mapsActivity,
-                        error,
-                        "Schön hier nicht bekommen"))
                 .doOnNext((item) -> {
                     double shLon = item.schoenHier.geoTag.getLongitude();
                     double shLat = item.schoenHier.geoTag.getLatitude();

@@ -44,7 +44,7 @@ public class Images implements Serializable {
         return get(egg);
     }
     public boolean hasEgg() {
-        return egg.isEmpty();
+        return !egg.isEmpty();
     }
 
     private String get(String size) {
