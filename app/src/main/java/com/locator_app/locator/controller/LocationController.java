@@ -3,12 +3,11 @@ package com.locator_app.locator.controller;
 
 import android.graphics.Bitmap;
 
+import com.locator_app.locator.apiservice.locations.LocationsApiService;
 import com.locator_app.locator.apiservice.locations.UnFavorResponse;
 import com.locator_app.locator.model.LocatorLocation;
-import com.locator_app.locator.apiservice.locations.LocationsApiService;
 import com.locator_app.locator.model.impressions.AbstractImpression;
-
-import org.xml.sax.Locator;
+import com.locator_app.locator.util.AppTracker;
 
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -53,24 +52,28 @@ public class LocationController {
 
     public Observable<UnFavorResponse> favorLocation(String locationId) {
         return locationService.favorLocation(locationId)
+                .doOnNext((val) -> AppTracker.getInstance().track("Locationview | like"))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
     public Observable<UnFavorResponse> unfavorLocation(String locationId) {
         return locationService.unfavorLocation(locationId)
+                .doOnNext((val) -> AppTracker.getInstance().track("Locationview | unlike"))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
     public Observable<Object> createImageImpression(String locationId, Bitmap image) {
         return locationService.createImageImpression(locationId, image)
+                .doOnNext((val) -> AppTracker.getInstance().track("Locationview | imageimpression success"))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
     public Observable<Object> createVideoImpression(String locationId, byte[] videoData) {
         return locationService.createVideoImpression(locationId, videoData)
+                .doOnNext((val) -> AppTracker.getInstance().track("Locationview | videoimpression success"))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
@@ -87,6 +90,7 @@ public class LocationController {
 
     public Observable<Object> createTextImpression(String locationId, String text) {
         return locationService.createTextImpression(locationId, text)
+                .doOnNext((val) -> AppTracker.getInstance().track("Locationview | textimpression success"))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }

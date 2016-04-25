@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.widget.ImageView;
 
 import com.locator_app.locator.R;
+import com.locator_app.locator.util.AppTracker;
 import com.locator_app.locator.view.LocatorHeader;
 import com.locator_app.locator.view.home.HomeActivity;
 

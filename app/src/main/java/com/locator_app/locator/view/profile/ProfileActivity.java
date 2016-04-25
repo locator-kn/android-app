@@ -1,5 +1,6 @@
 package com.locator_app.locator.view.profile;
 
+import android.app.ActivityManager;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -17,6 +18,7 @@ import com.locator_app.locator.R;
 import com.locator_app.locator.controller.LocationController;
 import com.locator_app.locator.controller.UserController;
 import com.locator_app.locator.model.User;
+import com.locator_app.locator.util.AppTracker;
 import com.locator_app.locator.view.UiError;
 import com.locator_app.locator.view.fragments.FavoritesFragment;
 import com.locator_app.locator.view.fragments.FragmentAdapter;
@@ -85,6 +87,8 @@ public class ProfileActivity extends FragmentActivity {
         setupViewPager();
         setupTabLayout();
         updateUserInformation();
+
+        AppTracker.getInstance().track("Userview | load");
     }
 
     private void hideActionBar() {
@@ -243,6 +247,7 @@ public class ProfileActivity extends FragmentActivity {
         UserController.getInstance().unfollowUser(user.id)
                 .subscribe(
                         (res) -> {
+                            AppTracker.getInstance().track("Userview | unfollow");
                             updateUserInformation();
                         },
                         (err) -> {
@@ -260,6 +265,7 @@ public class ProfileActivity extends FragmentActivity {
         UserController.getInstance().followUser(user.id)
                 .subscribe(
                         (res) -> {
+                            AppTracker.getInstance().track("Userview | follow");
                             updateUserInformation();
                         },
                         (err) -> {

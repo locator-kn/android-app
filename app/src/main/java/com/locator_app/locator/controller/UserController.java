@@ -9,6 +9,7 @@ import com.locator_app.locator.apiservice.users.LogoutResponse;
 import com.locator_app.locator.apiservice.users.RegistrationRequest;
 import com.locator_app.locator.apiservice.users.UsersApiService;
 import com.locator_app.locator.model.User;
+import com.locator_app.locator.util.AppTracker;
 
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -44,6 +45,10 @@ public class UserController {
     public Observable<User> login(LoginRequest loginRequest) {
         return userService.login(loginRequest)
                 .doOnNext(this::handleLogin)
+                .doOnNext((user) -> {
+                    AppTracker.getInstance().track("App | Login");
+                    AppTracker.getInstance().setIdentity(user.id, user.name, user.mail);
+                })
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread());
     }
@@ -80,6 +85,7 @@ public class UserController {
     public Observable<LogoutResponse> logout() {
         return userService.logout()
                 .doOnNext(this::handleLogout)
+                .doOnNext((val) -> AppTracker.getInstance().track("App | Logout"))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
