@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.locator_app.locator.apiservice.my.BubbleScreenResponse;
 import com.locator_app.locator.apiservice.my.MyApiService;
+import com.locator_app.locator.util.AppTracker;
 
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;

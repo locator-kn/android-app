@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'me.tatarka.retrolambda'
-
+apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion 23
@@ -70,6 +70,8 @@ dependencies {
     compile 'com.google.maps.android:android-maps-utils:0.4'
 
     compile 'com.jakewharton:butterknife:7.0.1'
+
+    compile "com.mixpanel.android:mixpanel-android:4.+"
 
     compile 'com.nineoldandroids:library:2.4.0'
 

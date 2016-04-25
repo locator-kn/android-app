@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.daimajia.androidanimations.library.Techniques;
@@ -22,6 +23,7 @@ import com.locator_app.locator.controller.SchoenHierController;
 import com.locator_app.locator.controller.UserController;
 import com.locator_app.locator.model.User;
 import com.locator_app.locator.service.GpsService;
+import com.locator_app.locator.util.AppTracker;
 import com.locator_app.locator.util.Debounce;
 import com.locator_app.locator.view.OnSwipeTouchListener;
 import com.locator_app.locator.view.StrokeTransformation;
@@ -84,6 +86,8 @@ public class HomeActivity extends Activity {
             welcomeScreen.setVisibility(View.VISIBLE);
 
             UserController.getInstance().checkProtected()
+                    .doOnNext((val) -> AppTracker.getInstance().track("App | launch as user"))
+                    .doOnError((val) -> AppTracker.getInstance().track("App | launch as guest"))
                     .subscribe(
                             this::onUserIsLoggedIn,
                             this::handleLoginError
@@ -110,6 +114,7 @@ public class HomeActivity extends Activity {
 
     private void onShake() {
         if (!shakeDebounce.calledRecently()) {
+            AppTracker.getInstance().track("Bubble | shake");
             loadBubbleScreen();
         }
     }
@@ -144,6 +149,7 @@ public class HomeActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
+        Toast.makeText(getApplicationContext(), "onResume", Toast.LENGTH_SHORT).show();
         schoenHierBubble.setAlpha((float) 1);
         ShakeDetector.start();
         if (UserController.getInstance().loggedIn()) {

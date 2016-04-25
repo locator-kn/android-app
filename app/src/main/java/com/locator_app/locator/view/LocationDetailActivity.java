@@ -21,6 +21,7 @@ import com.locator_app.locator.model.LocatorLocation;
 import com.locator_app.locator.model.impressions.AbstractImpression;
 import com.locator_app.locator.model.impressions.ImageImpression;
 import com.locator_app.locator.service.GpsService;
+import com.locator_app.locator.util.AppTracker;
 import com.locator_app.locator.view.fragments.ImageFragmentAdapter;
 import com.locator_app.locator.view.home.HomeActivity;
 import com.locator_app.locator.view.impressions.ImpressionController;
@@ -156,6 +157,7 @@ public class LocationDetailActivity extends FragmentActivity implements Impressi
 
     private void loadImpressions() {
         LocationController.getInstance().getImpressionsByLocationId(location.id)
+                .doOnNext((val) -> AppTracker.getInstance().track("Locationview | load"))
                 .toList()
                 .subscribe(
                         this::handleImpressions,
