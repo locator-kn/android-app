@@ -58,6 +58,8 @@
             android:name=".service.RegistrationIntentService"
             android:exported="false"></service>
 
+        <meta-data android:name="asset_statements" android:resource="@string/asset_statements" />
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
