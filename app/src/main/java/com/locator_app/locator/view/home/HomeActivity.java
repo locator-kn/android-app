@@ -149,7 +149,6 @@ public class HomeActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        Toast.makeText(getApplicationContext(), "onResume", Toast.LENGTH_SHORT).show();
         schoenHierBubble.setAlpha((float) 1);
         ShakeDetector.start();
         if (UserController.getInstance().loggedIn()) {

@@ -29,4 +29,13 @@
     <string name="locations_exist">Es gibt schon Locations mit diesen Koordinaten.</string>
     <string name="location_name">Name eintragen</string>
     <string name="choose_categories">Kategorien wählen</string>
+    <string name="asset_statements">
+        [{
+        \"relation\": [\"delegate_permission/common.share_location\"],
+        \"target\": {
+          \"namespace\": \"web\",
+          \"site\": \"https://lorenz.locator-app.com\"
+        }
+      }]
+    </string>
 </resources>

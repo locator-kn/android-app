@@ -5,6 +5,9 @@ import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.multidex.MultiDex;
+import android.util.Log;
+
+import com.locator_app.locator.util.AppTracker;
 
 public class LocatorApplication extends Application {
 
@@ -13,6 +16,7 @@ public class LocatorApplication extends Application {
     public void onCreate() {
         super.onCreate();
         context = getApplicationContext();
+        AppTracker.getInstance().track("App | become active");
     }
 
     protected void attachBaseContext(Context base) {

@@ -113,7 +113,7 @@ public class BubbleController {
     }
 
     private void createNewBubblesFromBubbleScreenResponse(BubbleScreenResponse response) {
-        int numberOfLocations = Math.min(response.locations.size(), random.nextInt(4) + 10);
+        int numberOfLocations = Math.min(response.locations.size(), random.nextInt(4) + 7);
 
         Observable.from(response.locations)
                 .take(numberOfLocations)

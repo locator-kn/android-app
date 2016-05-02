@@ -5,6 +5,7 @@ import com.locator_app.locator.apiservice.schoenhier.SchoenHierRequest;
 import com.locator_app.locator.apiservice.schoenhier.SchoenHiersResponse;
 import com.locator_app.locator.model.SchoenHier;
 import com.locator_app.locator.service.GpsService;
+import com.locator_app.locator.util.AppTracker;
 
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -35,6 +36,7 @@ public class SchoenHierController {
 
     public Observable<SchoenHier> markAsSchoenHier(SchoenHierRequest request) {
         return schoenHierService.markAsSchoenHier(request)
+                .doOnNext((val) -> AppTracker.getInstance().track("App | schoen hier"))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
