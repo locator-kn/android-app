@@ -10,7 +10,7 @@ android {
         applicationId "com.locator_app.locator"
         minSdkVersion 15
         targetSdkVersion 23
-        versionCode 10
+        versionCode 11
         versionName "2.0.2"
         multiDexEnabled = true
     }
